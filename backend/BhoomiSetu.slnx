@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BhoomiSetu.API/BhoomiSetu.API.csproj" />
+  <Project Path="BhoomiSetu.Application/BhoomiSetu.Application.csproj" />
+  <Project Path="BhoomiSetu.Domain/BhoomiSetu.Domain.csproj" />
+  <Project Path="BhoomiSetu.Infrastructure/BhoomiSetu.Infrastructure.csproj" />
+</Solution>

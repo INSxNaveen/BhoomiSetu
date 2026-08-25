@@ -1,0 +1,219 @@
+<div class="user-mgmt-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">User Management</h1>
+      <p class="page-subtitle">Manage users, roles and organizational access across the platform</p>
+    </div>
+    <button class="btn btn-primary" (click)="openAddUserDrawer()">
+      + Add User
+    </button>
+  </div>
+
+  <!-- Filter & Search Bar -->
+  <div class="card filter-bar">
+    <div class="search-input">
+      <span class="icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Search by name, email, or username..."
+        [(ngModel)]="searchQuery"
+        (input)="onFilterChange()"
+      />
+    </div>
+
+    <div class="filter-controls">
+      <select [(ngModel)]="selectedRole" (change)="onFilterChange()">
+        <option value="">All Roles</option>
+        <option value="SuperAdmin">Super Admin</option>
+        <option value="CentralAdmin">Central Admin</option>
+        <option value="StateAdmin">State Admin</option>
+        <option value="DistrictAdmin">District Admin</option>
+        <option value="ProjectAgency">Project Agency</option>
+      </select>
+
+      <select [(ngModel)]="selectedOrganization" (change)="onFilterChange()">
+        <option value="">All Organizations</option>
+        <option *ngFor="let org of organizations" [value]="org.id">{{ org.name }}</option>
+      </select>
+
+      <select [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+        <option value="">All Statuses</option>
+        <option value="true">Active</option>
+        <option value="false">Inactive</option>
+      </select>
+
+      <button class="btn btn-secondary" (click)="resetFilters()">Reset</button>
+    </div>
+  </div>
+
+  <!-- User Data Table -->
+  <div class="card table-card">
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div> Loading users...
+    </div>
+
+    <table *ngIf="!loading" class="admin-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Email / Phone</th>
+          <th>Role</th>
+          <th>Organization</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Last Login</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of users">
+          <td>
+            <div class="user-cell">
+              <div class="user-avatar">{{ u.firstName.charAt(0) }}{{ u.lastName.charAt(0) }}</div>
+              <div>
+                <strong class="user-full-name">{{ u.firstName }} {{ u.lastName }}</strong>
+                <span class="user-username">&#64;{{ u.username }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div>{{ u.email }}</div>
+            <div class="text-sub">{{ u.phone || 'N/A' }}</div>
+          </td>
+          <td>
+            <span class="role-badge" [ngClass]="getRoleBadgeClass(u.role)">
+              {{ u.role }}
+            </span>
+          </td>
+          <td>{{ u.organizationName }}</td>
+          <td>
+            <span *ngIf="u.stateName">{{ u.stateName }}</span>
+            <span *ngIf="u.districtName">, {{ u.districtName }}</span>
+            <span *ngIf="!u.stateName && !u.districtName" class="text-muted">National</span>
+          </td>
+          <td>
+            <span class="status-badge" [ngClass]="u.isActive ? 'active' : 'inactive'">
+              ● {{ u.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td class="text-sub">{{ u.lastLoginAt ? (u.lastLoginAt | date:'short') : 'Never' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon" title="Edit User" (click)="openEditUserDrawer(u)">✏️</button>
+              <button
+                class="btn-icon"
+                [title]="u.isActive ? 'Deactivate User' : 'Activate User'"
+                (click)="confirmToggleStatus(u)"
+              >
+                {{ u.isActive ? '⛔' : '✅' }}
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="users.length === 0">
+          <td colspan="8" class="empty-state">
+            No users match the search criteria.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Side Drawer: Add / Edit User -->
+  <div class="drawer-overlay" *ngIf="isDrawerOpen" (click)="closeDrawer()"></div>
+  <div class="side-drawer" [class.open]="isDrawerOpen">
+    <div class="drawer-header">
+      <h2>{{ isEditMode ? 'Edit User' : 'Add New User' }}</h2>
+      <button class="close-btn" (click)="closeDrawer()">✕</button>
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="saveUser()" class="drawer-body">
+      <div class="form-group">
+        <label>Username *</label>
+        <input type="text" formControlName="username" placeholder="e.g. john.doe" [readonly]="isEditMode" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" formControlName="firstName" placeholder="First Name" />
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" formControlName="lastName" placeholder="Last Name" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email Address *</label>
+        <input type="email" formControlName="email" placeholder="user@gov.in" />
+      </div>
+
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" formControlName="phone" placeholder="+91 98765 43210" />
+      </div>
+
+      <div class="form-group">
+        <label>Role Assignment *</label>
+        <select formControlName="role">
+          <option value="SuperAdmin">Super Admin</option>
+          <option value="CentralAdmin">Central Admin</option>
+          <option value="StateAdmin">State Admin</option>
+          <option value="DistrictAdmin">District Admin</option>
+          <option value="ProjectAgency">Project Agency</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Organization *</label>
+        <select formControlName="organizationId">
+          <option *ngFor="let org of organizations" [value]="org.id">{{ org.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Account Status</label>
+        <select formControlName="isActive">
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-banner">{{ errorMessage }}</div>
+
+      <div class="drawer-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDrawer()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid || submitting">
+          {{ submitting ? 'Saving...' : (isEditMode ? 'Update User' : 'Create User') }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Confirmation Modal for Activation / Deactivation -->
+  <div class="modal-overlay" *ngIf="selectedUserForToggle" (click)="cancelStatusToggle()">
+    <div class="confirm-modal" (click)="$event.stopPropagation()">
+      <h3>{{ selectedUserForToggle.isActive ? 'Deactivate User?' : 'Activate User?' }}</h3>
+      <p>
+        Are you sure you want to {{ selectedUserForToggle.isActive ? 'deactivate' : 'activate' }}
+        <strong>{{ selectedUserForToggle.firstName }} {{ selectedUserForToggle.lastName }}</strong> (&#64;{{ selectedUserForToggle.username }})?
+      </p>
+      <p *ngIf="selectedUserForToggle.isActive" class="warning-text">
+        The user will no longer be able to log in to the BhoomiSetu platform.
+      </p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="cancelStatusToggle()">Cancel</button>
+        <button
+          class="btn"
+          [ngClass]="selectedUserForToggle.isActive ? 'btn-danger' : 'btn-success'"
+          (click)="executeStatusToggle()"
+        >
+          {{ selectedUserForToggle.isActive ? 'Deactivate User' : 'Activate User' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

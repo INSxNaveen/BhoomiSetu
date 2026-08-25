@@ -1,0 +1,78 @@
+<div class="admin-shell">
+  <!-- Top Navigation Header -->
+  <header class="admin-topbar">
+    <div class="topbar-left">
+      <span class="emblem" (click)="goToHome()" title="Return to Portal Home">🏛️</span>
+      <div class="brand">
+        <div class="brand-row">
+          <span class="brand-name">BHOOMISETU</span>
+          <span class="platform-tag">PLATFORM GOVERNANCE</span>
+        </div>
+        <span class="console-tag">Super Administrator Control Console</span>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search platform users, organizations, security logs..." />
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="system-status-indicator">
+        <span class="bs-pulse-dot"></span> Core Cluster Healthy
+      </div>
+      <div class="notification-bell" title="System Notifications">🔔</div>
+      <div class="user-profile">
+        <div class="avatar">SA</div>
+        <div class="user-details">
+          <span class="user-name">{{ user()?.firstName }} {{ user()?.lastName }}</span>
+          <span class="user-role">Super Administrator</span>
+        </div>
+      </div>
+      <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="logout()">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- Sidebar & Main Content Workspace -->
+  <div class="admin-workspace">
+    <aside class="admin-sidebar">
+      <div class="sidebar-section-title">PLATFORM CONTROL</div>
+      <nav class="sidebar-nav">
+        <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">System Dashboard</span>
+        </a>
+        <a routerLink="/admin/users" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span class="nav-label">User Management</span>
+        </a>
+        <a routerLink="/admin/organizations" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🏢</span>
+          <span class="nav-label">Organizations & Access</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-section-title">SYSTEM GOVERNANCE</div>
+      <nav class="sidebar-nav">
+        <a routerLink="/admin/audit" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🛡️</span>
+          <span class="nav-label">Compliance Audit Trail</span>
+        </a>
+        <a routerLink="/central/dashboard" class="nav-item nav-crosslink">
+          <span class="nav-icon">🌐</span>
+          <span class="nav-label">National Operations →</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="bs-btn bs-btn-sm bs-btn-outline w-100" (click)="goToHome()">← Public Portal Home</button>
+      </div>
+    </aside>
+
+    <main class="admin-content-area">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

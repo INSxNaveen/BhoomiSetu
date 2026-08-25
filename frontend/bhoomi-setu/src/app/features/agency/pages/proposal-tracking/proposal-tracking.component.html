@@ -1,0 +1,189 @@
+<div class="proposal-tracking-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>Project Agency</span>
+        <span class="divider">/</span>
+        <span class="active">Proposal Tracking</span>
+      </div>
+      <h1 class="page-title">Digital Acquisition Workflow Tracker</h1>
+      <p class="page-subtitle">
+        Real-time statutory status monitoring across RFCTLARR lifecycle: District Scrutiny, SLMC Sanction, Section 11 Gazette, and Award
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/agency/proposals/create" class="bs-btn bs-btn-primary">
+        <span>➕</span> New Proposal
+      </a>
+      <button class="bs-btn bs-btn-outline" (click)="loadTracking()" [disabled]="loading()">
+        <span>🔄</span> Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && proposals().length === 0">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading statutory workflow tracker...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadTracking()">Retry</button>
+  </div>
+
+  <!-- Main 2-Column Split Workspace -->
+  <div class="tracking-split-layout" *ngIf="proposals().length > 0">
+    <!-- Left Column: Proposal Master List -->
+    <div class="bs-card list-panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Proposals Ledger</h3>
+        <span class="counter-badge">{{ getFilteredProposals().length }}</span>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-container">
+        <div class="search-input-box">
+          <span>🔍</span>
+          <input
+            type="text"
+            placeholder="Search proposal or project..."
+            [(ngModel)]="searchQuery"
+          />
+        </div>
+
+        <select class="bs-select" [(ngModel)]="selectedStatus">
+          <option value="">All Workflow Statuses</option>
+          <option value="Draft">Draft</option>
+          <option value="Submitted">Submitted</option>
+          <option value="DistrictVerification">District Verification</option>
+          <option value="ReturnedForCorrection">Returned for Correction</option>
+          <option value="StateReview">State Review</option>
+          <option value="Approved">Approved</option>
+        </select>
+      </div>
+
+      <!-- Proposal Cards List -->
+      <div class="proposal-cards-scroll">
+        <div
+          class="proposal-item-card"
+          *ngFor="let p of getFilteredProposals()"
+          [class.selected]="selectedProposal()?.proposalId === p.proposalId"
+          (click)="selectProposal(p)"
+        >
+          <div class="p-card-top">
+            <span class="prop-no font-mono">{{ p.proposalNumber }}</span>
+            <span class="bs-badge" [ngClass]="p.status === 'Approved' ? 'bs-badge-success' : (p.status === 'ReturnedForCorrection' ? 'bs-badge-danger' : (p.status === 'Draft' ? 'bs-badge-secondary' : 'bs-badge-primary'))">
+              {{ p.status }}
+            </span>
+          </div>
+
+          <h4 class="prop-name">{{ p.projectName }}</h4>
+          <span class="prop-stage text-xs">{{ p.currentStage }}</span>
+
+          <div class="p-card-footer text-xs font-mono text-muted">
+            <span>Submitted: {{ p.submittedDate ? (p.submittedDate | date:'mediumDate') : 'Draft' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Proposal Statutory Timeline Detail -->
+    <div class="detail-panel" *ngIf="selectedProposal()">
+      <!-- Proposal Banner Card -->
+      <div class="bs-card banner-card">
+        <div class="banner-top">
+          <div>
+            <span class="banner-pretitle font-mono">{{ selectedProposal()?.proposalNumber }}</span>
+            <h2 class="banner-title">{{ selectedProposal()?.projectName }}</h2>
+          </div>
+          <div class="banner-actions">
+            <a [routerLink]="['/agency/projects', selectedProposal()?.projectId]" class="bs-btn bs-btn-sm bs-btn-primary">
+              Open Corridor Workspace ➔
+            </a>
+          </div>
+        </div>
+
+        <div class="banner-status-box">
+          <span class="status-lbl">Current Statutory Milestone:</span>
+          <span class="status-val">{{ selectedProposal()?.currentStage }}</span>
+        </div>
+
+        <!-- Return Warning Alert Banner -->
+        <div class="return-alert-banner" *ngIf="selectedProposal()?.returnRemarks">
+          <div class="alert-icon">⚠️</div>
+          <div class="alert-content">
+            <span class="alert-title">Proposal Returned for Correction</span>
+            <p class="alert-text">{{ selectedProposal()?.returnRemarks }}</p>
+            <a [routerLink]="['/agency/proposals/create']" [queryParams]="{ draftId: selectedProposal()?.proposalId }" class="bs-btn bs-btn-xs bs-btn-warning mt-1">
+              ✏️ Edit & Resubmit Proposal
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statutory 8-Stage Visual Workflow Tracker -->
+      <div class="bs-card workflow-card">
+        <div class="bs-card-header">
+          <div>
+            <h3 class="bs-card-title">Statutory Acquisition Lifecycle Milestones</h3>
+            <p class="bs-card-subtitle">Formal stage gate progression under RFCTLARR Act 2013</p>
+          </div>
+        </div>
+
+        <div class="workflow-stepper">
+          <div class="workflow-node" *ngFor="let stage of selectedProposal()?.workflowStages; let i = index" [ngClass]="getStageBadgeClass(stage.status)">
+            <div class="node-icon-circle">
+              <span *ngIf="stage.status === 'Completed'">✓</span>
+              <span *ngIf="stage.status === 'Current'">⏳</span>
+              <span *ngIf="stage.status === 'Returned'">⚠️</span>
+              <span *ngIf="stage.status === 'Pending'">{{ i + 1 }}</span>
+            </div>
+
+            <div class="node-content">
+              <div class="node-header">
+                <span class="node-title font-bold">{{ stage.label }}</span>
+                <span class="node-status-pill">{{ stage.status }}</span>
+              </div>
+              <p class="node-remarks text-xs">{{ stage.remarks }}</p>
+              <div class="node-meta text-xs font-mono" *ngIf="stage.completedDate || stage.actor">
+                <span *ngIf="stage.actor" class="text-primary">Actor: {{ stage.actor }}</span>
+                <span *ngIf="stage.completedDate" class="text-muted ml-2">• {{ stage.completedDate | date:'mediumDate' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Timeline History -->
+      <div class="bs-card history-card" *ngIf="selectedProposal()?.activityHistory?.length">
+        <div class="bs-card-header">
+          <div>
+            <h3 class="bs-card-title">Official Scrutiny Log & Audit History</h3>
+            <p class="bs-card-subtitle">Timestamped review actions by District and State authorities</p>
+          </div>
+        </div>
+
+        <div class="activity-timeline">
+          <div class="act-node" *ngFor="let act of selectedProposal()?.activityHistory">
+            <div class="act-dot"></div>
+            <div class="act-card">
+              <div class="act-top">
+                <span class="act-name font-bold">{{ act.title }}</span>
+                <span class="act-time font-mono text-xs">{{ act.timestamp | date:'medium' }}</span>
+              </div>
+              <p class="act-desc">{{ act.description }}</p>
+              <span class="act-by text-xs text-primary">By: {{ act.actionBy }} ({{ act.role }})</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

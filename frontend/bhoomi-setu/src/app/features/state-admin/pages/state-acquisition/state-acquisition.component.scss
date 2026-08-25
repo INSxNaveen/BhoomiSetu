@@ -1,0 +1,159 @@
+@use '../../../../../styles/tokens' as *;
+
+.state-acquisition-container {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-1);
+}
+
+.section-card {
+  .comp-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+
+    .comp-stat-box {
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .stat-label {
+        font-size: 11px;
+        color: var(--color-gray-500);
+        font-weight: 600;
+      }
+
+      .stat-val {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--color-navy);
+      }
+
+      .stat-sub {
+        font-size: 11px;
+        color: var(--color-gray-400);
+      }
+
+      &.highlight-box {
+        background-color: #ecfdf5;
+        border-color: #10b981;
+      }
+    }
+  }
+
+  .monthly-trend-section {
+    border-top: 1px solid var(--border-color);
+    padding-top: var(--space-4);
+
+    .sub-section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-navy);
+      margin: 0 0 var(--space-3) 0;
+    }
+
+    .trend-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-3);
+
+      .trend-card {
+        background-color: var(--surface-subtle);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: var(--space-3);
+
+        .trend-month {
+          font-size: 11px;
+          color: var(--color-gray-500);
+          font-weight: 600;
+          margin-bottom: 2px;
+        }
+
+        .trend-comp {
+          font-size: 14px;
+          font-weight: 700;
+          color: var(--color-navy);
+          margin-bottom: 4px;
+        }
+
+        .trend-area {
+          font-size: 11px;
+          color: var(--color-gray-600);
+        }
+      }
+    }
+  }
+}
+
+.possession-stages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+
+  .stage-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .stage-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--color-gray-700);
+    }
+  }
+}
+
+.rr-entitlements-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+
+  .rr-item {
+    background-color: var(--surface-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .rr-icon {
+      font-size: 24px;
+      margin-right: var(--space-3);
+    }
+
+    .rr-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .rr-title {
+        font-size: 13px;
+        color: var(--color-gray-900);
+      }
+
+      .rr-count {
+        font-size: 12px;
+        color: var(--color-navy);
+      }
+    }
+  }
+}

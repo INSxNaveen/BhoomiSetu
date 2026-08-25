@@ -1,0 +1,93 @@
+/* ==========================================================================
+   BHOOMISETU TYPOGRAPHY SYSTEM
+   ========================================================================== */
+
+:root {
+  --font-family-base: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-hindi: 'Noto Sans Devanagari', sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace;
+
+  /* Font Sizes */
+  --font-size-2xs: 0.6875rem; /* 11px */
+  --font-size-xs:  0.75rem;   /* 12px */
+  --font-size-sm:  0.875rem;  /* 14px */
+  --font-size-base: 0.9375rem; /* 15px */
+  --font-size-md:  1rem;      /* 16px */
+  --font-size-lg:  1.125rem;  /* 18px */
+  --font-size-xl:  1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  --font-size-5xl: 3rem;      /* 48px */
+
+  /* Font Weights */
+  --font-weight-regular:  400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+  --font-weight-extrabold: 800;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-snug:  1.35;
+  --line-height-base:  1.55;
+  --line-height-loose: 1.7;
+}
+
+/* Typography Utility Classes */
+.bs-heading-1 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--bs-navy-900);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.025em;
+}
+
+.bs-heading-2 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--bs-navy-900);
+  line-height: var(--line-height-snug);
+  letter-spacing: -0.02em;
+}
+
+.bs-heading-3 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--bs-navy-900);
+  line-height: var(--line-height-snug);
+}
+
+.bs-heading-4 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--bs-navy-900);
+  line-height: var(--line-height-snug);
+}
+
+.bs-body {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  color: var(--bs-text-secondary);
+  line-height: var(--line-height-base);
+}
+
+.bs-body-sm {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  color: var(--bs-text-muted);
+  line-height: var(--line-height-base);
+}
+
+.bs-caption {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--bs-text-muted);
+  line-height: var(--line-height-tight);
+}
+
+.bs-hindi-tag {
+  font-family: var(--font-family-hindi);
+  font-size: var(--font-size-sm);
+  color: var(--bs-text-muted);
+}

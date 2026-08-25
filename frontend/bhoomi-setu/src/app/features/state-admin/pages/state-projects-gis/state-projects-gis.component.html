@@ -1,0 +1,128 @@
+<div class="state-gis-layout">
+  <!-- Left Project Filter & Listing Sidebar -->
+  <aside class="gis-sidebar">
+    <div class="sidebar-header">
+      <div class="header-titles">
+        <h2 class="sidebar-title">State Projects & GIS</h2>
+        <span class="badge-tag">PostGIS Cadastral Layer</span>
+      </div>
+      <p class="sidebar-sub">Spatial infrastructure monitoring, alignment overlays, and cadastral survey status.</p>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="sidebar-controls">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="bs-input"
+          placeholder="Search projects by name, code..."
+          [(ngModel)]="searchQuery"
+          (input)="renderProjectMarkers()"
+        />
+      </div>
+
+      <div class="filter-row">
+        <select class="bs-select" [(ngModel)]="filterDistrict" (change)="renderProjectMarkers()">
+          <option value="">All Districts</option>
+          <option value="Meerut">Meerut</option>
+          <option value="Gautam Buddha Nagar">Gautam Buddha Nagar</option>
+        </select>
+
+        <select class="bs-select" [(ngModel)]="filterType" (change)="renderProjectMarkers()">
+          <option value="">All Types</option>
+          <option value="NationalHighway">Highways</option>
+          <option value="IndustrialCorridor">Logistics / Agro</option>
+        </select>
+      </div>
+
+      <!-- Layer Toggles -->
+      <div class="layer-toggles">
+        <button
+          class="layer-toggle-btn"
+          [class.active]="showProjectsLayer"
+          (click)="toggleProjectsLayer()"
+        >
+          📍 Projects ({{ projects.length }})
+        </button>
+
+        <button
+          class="layer-toggle-btn"
+          [class.active]="showParcelsLayer"
+          (click)="toggleParcelsLayer()"
+        >
+          📐 Parcels ({{ parcels.length }})
+        </button>
+
+        <button class="layer-toggle-btn fit-btn" (click)="fitStateBounds()">
+          🎯 Fit State Bounds
+        </button>
+      </div>
+    </div>
+
+    <!-- Project Cards List -->
+    <div class="project-cards-list">
+      <div
+        *ngFor="let p of getFilteredProjects()"
+        class="gis-project-card"
+        [class.selected]="selectedProject?.id === p.id"
+        (click)="selectProject(p)"
+      >
+        <div class="card-top">
+          <span class="project-code"><code>{{ p.projectCode }}</code></span>
+          <span class="bs-badge" [ngClass]="{
+            'bs-badge-success': p.status === 'Approved' || p.status === 'Completed',
+            'bs-badge-warning': p.status === 'Planning' || p.status === 'UnderVerification' || p.status === 'ProposalSubmitted',
+            'bs-badge-info': p.status === 'AcquisitionInProgress'
+          }">
+            {{ p.status }}
+          </span>
+        </div>
+
+        <h4 class="card-name">{{ p.name }}</h4>
+
+        <div class="card-meta">
+          <span>📍 {{ p.districtName }}</span> • <span>🏷️ {{ p.projectType }}</span>
+        </div>
+
+        <div class="card-progress">
+          <div class="progress-labels">
+            <span class="label">Land Acquired</span>
+            <span class="pct">{{ p.acquiredAreaHectares }} / {{ p.requiredAreaHectares }} Ha ({{ p.progressPercentage }}%)</span>
+          </div>
+          <div class="bs-progress-bar">
+            <div class="bar-fill" [style.width.%]="p.progressPercentage"></div>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <span class="comp-val">Assessed: <strong>{{ formatCurrency(p.totalCompensation) }}</strong></span>
+          <a routerLink="/state/proposals" class="bs-btn bs-btn-sm bs-btn-outline" (click)="$event.stopPropagation()">
+            Review 📋
+          </a>
+        </div>
+      </div>
+
+      <div *ngIf="!getFilteredProjects().length" class="empty-projects">
+        <p>No infrastructure projects match the selected filters.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Interactive Leaflet Map Area -->
+  <main class="gis-map-container">
+    <div id="stateGisMap" class="leaflet-map-canvas"></div>
+
+    <!-- Map Floating Stats Overlay -->
+    <div class="floating-map-overlay">
+      <div class="overlay-stat">
+        <span class="stat-dot green"></span>
+        <span class="stat-text"><strong>{{ parcels.length }}</strong> PostGIS Parcels Mapped</span>
+      </div>
+      <div class="overlay-stat">
+        <span class="stat-dot blue"></span>
+        <span class="stat-text"><strong>{{ projects.length }}</strong> Priority State Corridors</span>
+      </div>
+    </div>
+  </main>
+</div>

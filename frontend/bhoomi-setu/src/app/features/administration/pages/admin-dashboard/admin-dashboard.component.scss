@@ -1,0 +1,63 @@
+.admin-dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.kpi-row {
+  margin-bottom: var(--space-2);
+}
+
+.text-blue { color: var(--bs-blue-600); }
+.text-green { color: var(--bs-green-600); }
+.text-amber { color: var(--bs-amber-600); }
+.text-saffron { color: var(--bs-saffron-600); }
+
+.role-dist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.5rem 0;
+}
+
+.role-dist-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  .role-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+    color: var(--bs-text-secondary);
+
+    .role-name {
+      font-weight: 700;
+      color: var(--bs-navy-900);
+    }
+  }
+
+  .role-bar-bg {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+
+    .role-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1d4ed8, #3b82f6);
+      border-radius: 9999px;
+      transition: width 0.4s ease;
+    }
+  }
+}
+
+.entity-code {
+  font-family: var(--font-family-mono);
+  font-size: 0.78rem;
+  background: var(--bs-surface-muted);
+  border: 1px solid var(--bs-border);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  color: var(--bs-blue-700);
+}

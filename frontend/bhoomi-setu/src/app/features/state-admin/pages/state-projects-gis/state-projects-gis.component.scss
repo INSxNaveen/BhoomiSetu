@@ -1,0 +1,350 @@
+@use '../../../../../styles/tokens' as *;
+
+.state-gis-layout {
+  display: flex;
+  height: calc(100vh - 64px);
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.gis-sidebar {
+  width: 400px;
+  background-color: var(--surface-card);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  z-index: 10;
+  box-shadow: var(--shadow-md);
+
+  .sidebar-header {
+    padding: var(--space-4) var(--space-5);
+    background-color: var(--color-navy-dark);
+    color: var(--color-white);
+
+    .header-titles {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .sidebar-title {
+        font-size: 16px;
+        font-weight: 800;
+        margin: 0;
+      }
+
+      .badge-tag {
+        font-size: 10px;
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        padding: 2px 6px;
+        border-radius: var(--radius-xs);
+      }
+    }
+
+    .sidebar-sub {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.75);
+      margin: 4px 0 0 0;
+    }
+  }
+
+  .sidebar-controls {
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    background-color: var(--surface-subtle);
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+
+      .search-icon {
+        font-size: 14px;
+        color: var(--color-gray-400);
+      }
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2);
+    }
+
+    .layer-toggles {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+
+      .layer-toggle-btn {
+        background-color: var(--surface-card);
+        border: 1px solid var(--border-color);
+        padding: 4px 10px;
+        border-radius: var(--radius-full);
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        color: var(--color-gray-600);
+        transition: all var(--transition-fast);
+
+        &:hover {
+          background-color: var(--surface-subtle);
+        }
+
+        &.active {
+          background-color: var(--color-navy);
+          color: var(--color-white);
+          border-color: var(--color-navy);
+        }
+
+        &.fit-btn {
+          background-color: var(--surface-subtle);
+          border-style: dashed;
+        }
+      }
+    }
+  }
+
+  .project-cards-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-4) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+
+    .gis-project-card {
+      background-color: var(--surface-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--space-3) var(--space-4);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-xs);
+
+      &:hover {
+        border-color: var(--color-navy);
+        box-shadow: var(--shadow-sm);
+      }
+
+      &.selected {
+        border: 2px solid var(--color-navy);
+        background-color: #f8fafc;
+      }
+
+      .card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+      }
+
+      .card-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-navy);
+        margin: 0 0 4px 0;
+      }
+
+      .card-meta {
+        font-size: 11px;
+        color: var(--color-gray-500);
+        margin-bottom: var(--space-2);
+      }
+
+      .card-progress {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        margin-bottom: var(--space-3);
+
+        .progress-labels {
+          display: flex;
+          justify-content: space-between;
+          font-size: 11px;
+          color: var(--color-gray-600);
+        }
+
+        .bs-progress-bar {
+          height: 6px;
+          background-color: var(--surface-subtle);
+          border-radius: var(--radius-full);
+          overflow: hidden;
+
+          .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-navy) 0%, var(--color-saffron) 100%);
+          }
+        }
+      }
+
+      .card-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--border-color);
+        padding-top: var(--space-2);
+
+        .comp-val {
+          font-size: 11px;
+          color: var(--color-gray-600);
+        }
+      }
+    }
+
+    .empty-projects {
+      text-align: center;
+      padding: var(--space-8) var(--space-4);
+      color: var(--color-gray-500);
+      font-size: 13px;
+    }
+  }
+}
+
+.gis-map-container {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  width: 100%;
+
+  .leaflet-map-canvas {
+    height: 100%;
+    width: 100%;
+  }
+
+  .floating-map-overlay {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    z-index: 1000;
+    display: flex;
+    gap: var(--space-3);
+
+    .overlay-stat {
+      background-color: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: var(--radius-full);
+      padding: 6px 14px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow-md);
+
+      .stat-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+
+        &.green { background-color: #10b981; }
+        &.blue { background-color: #2563eb; }
+      }
+    }
+  }
+}
+
+/* Custom Marker & Popups */
+::ng-deep {
+  .gis-project-marker {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--color-navy);
+    border: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+
+    &:hover {
+      transform: scale(1.15);
+    }
+
+    .marker-icon {
+      font-size: 16px;
+    }
+  }
+
+  .gis-popup {
+    padding: 4px;
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+
+      .popup-code {
+        font-size: 11px;
+        font-weight: 700;
+        font-family: var(--font-mono);
+        color: var(--color-navy);
+      }
+
+      .popup-badge {
+        font-size: 10px;
+        background: #e2e8f0;
+        padding: 1px 6px;
+        border-radius: 4px;
+      }
+    }
+
+    .popup-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      color: #0f172a;
+    }
+
+    .popup-meta {
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+
+    .popup-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: #f8fafc;
+      padding: 6px;
+      border-radius: 4px;
+
+      .stat-box {
+        .label { display: block; font-size: 10px; color: #94a3b8; }
+        .val { font-size: 12px; font-weight: 700; color: #0f172a; }
+      }
+    }
+
+    .popup-btn {
+      display: block;
+      text-align: center;
+      background: #0f172a;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-top: 6px;
+
+      &:hover {
+        background: #1e293b;
+      }
+    }
+  }
+
+  .parcel-popup {
+    .popup-owners, .popup-comp {
+      font-size: 11px;
+      color: #334155;
+    }
+  }
+}

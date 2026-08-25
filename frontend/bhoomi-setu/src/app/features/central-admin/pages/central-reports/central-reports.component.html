@@ -1,0 +1,292 @@
+<div class="central-reports-container">
+  <!-- Header & Export Actions -->
+  <div class="reports-header">
+    <div class="header-titles">
+      <h1 class="page-title">National Reports & Analytics</h1>
+      <p class="page-subtitle">Decision support system for national corridor monitoring, compensation flows & R&R tracking</p>
+    </div>
+    <div class="export-actions">
+      <button class="btn btn-outline-primary btn-sm" (click)="exportReport('PDF')">📄 Export PDF</button>
+      <button class="btn btn-outline-success btn-sm" (click)="exportReport('Excel')">📊 Export Excel</button>
+    </div>
+  </div>
+
+  <div *ngIf="exportNotice()" class="alert-banner">
+    {{ exportNotice() }}
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="report-filters-card">
+    <div class="filter-group">
+      <label for="repState">State / UT</label>
+      <select id="repState" [(ngModel)]="selectedStateId" class="filter-control">
+        <option value="">All States & UTs</option>
+        <option *ngFor="let s of data?.stateComparisons" [value]="s.stateCode">{{ s.stateName }}</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="repType">Infrastructure Type</label>
+      <select id="repType" [(ngModel)]="selectedProjectType" class="filter-control">
+        <option value="">All Project Types</option>
+        <option value="0">National Highways</option>
+        <option value="1">Freight & Rail Lines</option>
+        <option value="6">Green Energy Corridors</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="repYear">Reporting Year</label>
+      <select id="repYear" [(ngModel)]="selectedYear" class="filter-control">
+        <option [value]="2026">FY 2025-2026</option>
+        <option [value]="2025">FY 2024-2025</option>
+        <option [value]="2024">FY 2023-2024</option>
+      </select>
+    </div>
+
+    <button class="btn btn-primary btn-generate" (click)="loadReports()">
+      📈 Generate Report
+    </button>
+  </div>
+
+  <!-- Loading & Error States -->
+  <div *ngIf="loading()" class="loading-state">
+    <div class="spinner"></div>
+    <p>Generating National Report & Compiling Aggregations...</p>
+  </div>
+
+  <div *ngIf="errorMessage()" class="error-state">
+    <div class="error-box">
+      <span class="error-icon">⚠️</span>
+      <p>{{ errorMessage() }}</p>
+      <button class="btn btn-primary" (click)="loadReports()">Retry</button>
+    </div>
+  </div>
+
+  <!-- Report Content -->
+  <div *ngIf="!loading() && data" class="reports-content">
+    <!-- 1. National Acquisition Summary KPI Matrix (9 Metrics) -->
+    <div class="summary-matrix-grid">
+      <div class="summary-item">
+        <span class="sum-label">TOTAL CORRIDORS</span>
+        <span class="sum-val">{{ data.summary.totalProjects }}</span>
+        <span class="sum-sub">Active in {{ data.summary.activeStatesCount }} States</span>
+      </div>
+
+      <div class="summary-item">
+        <span class="sum-label">LAND PROPOSED</span>
+        <span class="sum-val">{{ formatSqKm(data.summary.totalLandProposedHectares) }} <small>km²</small></span>
+        <span class="sum-sub">{{ data.summary.totalLandProposedHectares | number:'1.1-1' }} Ha</span>
+      </div>
+
+      <div class="summary-item">
+        <span class="sum-label">LAND ACQUIRED</span>
+        <span class="sum-val highlight-green">{{ formatSqKm(data.summary.totalLandAcquiredHectares) }} <small>km²</small></span>
+        <span class="sum-sub">{{ data.summary.landAcquisitionPercentage }}% of Proposed</span>
+      </div>
+
+      <div class="summary-item">
+        <span class="sum-label">COMPENSATION ASSESSED</span>
+        <span class="sum-val">₹{{ formatCrores(data.summary.totalCompensationAssessed) }} <small>Cr</small></span>
+        <span class="sum-sub">Under RFCTLARR 2013</span>
+      </div>
+
+      <div class="summary-item">
+        <span class="sum-label">COMPENSATION PAID</span>
+        <span class="sum-val highlight-blue">₹{{ formatCrores(data.summary.totalCompensationDisbursed) }} <small>Cr</small></span>
+        <span class="sum-sub">{{ data.summary.compensationDisbursementPercentage }}% Disbursed</span>
+      </div>
+
+      <div class="summary-item">
+        <span class="sum-label">PENDING DBT</span>
+        <span class="sum-val highlight-amber">₹{{ formatCrores(data.compensationAnalytics.pendingDisbursement) }} <small>Cr</small></span>
+        <span class="sum-sub">Awaiting Sanction</span>
+      </div>
+
+      <div class="summary-item">
+        <span class="sum-label">AFFECTED FAMILIES</span>
+        <span class="sum-val">{{ data.summary.totalAffectedFamilies }}</span>
+        <span class="sum-sub">Surveyed & Verified</span>
+      </div>
+
+      <div class="summary-item">
+        <span class="sum-label">DISPLACED FAMILIES</span>
+        <span class="sum-val highlight-amber">{{ data.summary.totalDisplacedFamilies }}</span>
+        <span class="sum-sub">Eligible for Housing</span>
+      </div>
+
+      <div class="summary-item">
+        <span class="sum-label">R&R COMPLETED</span>
+        <span class="sum-val highlight-green">{{ data.summary.rrProgressPercentage }}%</span>
+        <span class="sum-sub">{{ data.summary.rrFamiliesCovered }} Cases Settled</span>
+      </div>
+    </div>
+
+    <!-- 2. Land Acquisition Progress Monthly Time-Series Trend -->
+    <div class="report-card">
+      <div class="card-header-row">
+        <div>
+          <h2 class="card-title">Land Acquisition & Compensation Progress Trend</h2>
+          <p class="card-subtitle">Monthly time-series performance for year {{ selectedYear }}</p>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-color-box bg-blue"></span> Land Acquired (Ha)</span>
+          <span class="legend-item"><span class="legend-color-box bg-green"></span> Compensation Disbursed (₹ Cr)</span>
+        </div>
+      </div>
+
+      <!-- SVG / CSS Data-Driven Time-Series Trend -->
+      <div class="trend-chart-container">
+        <div *ngFor="let m of data.monthlyTrends" class="trend-bar-col">
+          <div class="trend-bars-wrapper">
+            <!-- Land Acquired Bar -->
+            <div
+              class="trend-bar bar-land"
+              [style.height.px]="m.landAcquiredHectares * 1.5"
+              [title]="m.month + ': ' + m.landAcquiredHectares + ' Ha Acquired'"
+            ></div>
+            <!-- Compensation Bar -->
+            <div
+              class="trend-bar bar-comp"
+              [style.height.px]="(m.compensationPaid / 10000000) * 12"
+              [title]="m.month + ': ₹' + formatCrores(m.compensationPaid) + ' Cr Disbursed'"
+            ></div>
+          </div>
+          <span class="trend-month-label">{{ m.month }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. State Comparison Matrix & Timeline Performance -->
+    <div class="two-col-grid">
+      <!-- Left: State Comparison Matrix -->
+      <div class="report-card">
+        <div class="card-header-row">
+          <div>
+            <h2 class="card-title">State-Wise Performance Comparison</h2>
+            <p class="card-subtitle">Click column headers to sort states by operational metrics</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th (click)="setSort('stateName')">State ↕</th>
+                <th (click)="setSort('acquisitionPercentage')">Acquisition % ↕</th>
+                <th (click)="setSort('compensationPercentage')">Compensation % ↕</th>
+                <th (click)="setSort('rrPercentage')">R&R % ↕</th>
+                <th (click)="setSort('timelineCompliancePercentage')">Timeline % ↕</th>
+                <th>Performance Tier</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let st of data.stateComparisons">
+                <td><strong>{{ st.stateName }}</strong> ({{ st.stateCode }})</td>
+                <td><strong style="color: #059669;">{{ st.acquisitionPercentage }}%</strong></td>
+                <td>{{ st.compensationPercentage }}%</td>
+                <td>{{ st.rrPercentage }}%</td>
+                <td>{{ st.timelineCompliancePercentage }}%</td>
+                <td>
+                  <span class="tier-badge" [ngClass]="{
+                    'tier-1': st.performanceTier.includes('Tier 1'),
+                    'tier-2': st.performanceTier.includes('Tier 2'),
+                    'tier-3': st.performanceTier.includes('Tier 3')
+                  }">{{ st.performanceTier }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right: Timeline Performance & Compensation Flow -->
+      <div class="right-stack">
+        <!-- Timeline Performance -->
+        <div class="report-card">
+          <h2 class="card-title">Project Timeline Compliance</h2>
+          <p class="card-subtitle">National milestone tracking and delay distribution</p>
+
+          <div class="timeline-metrics">
+            <div class="timeline-bar-wrap">
+              <div class="t-fill on-schedule" [style.width.%]="data.timelinePerformance.onSchedulePercentage"></div>
+            </div>
+            <div class="t-legend-row">
+              <div class="t-item">
+                <span class="t-val text-green">{{ data.timelinePerformance.onScheduleCount }}</span>
+                <span class="t-lbl">On Schedule ({{ data.timelinePerformance.onSchedulePercentage }}%)</span>
+              </div>
+              <div class="t-item">
+                <span class="t-val text-amber">{{ data.timelinePerformance.delayedUnder30Count }}</span>
+                <span class="t-lbl">Delayed &lt;30 days</span>
+              </div>
+              <div class="t-item">
+                <span class="t-val text-red">{{ data.timelinePerformance.delayedOver30Count }}</span>
+                <span class="t-lbl">Delayed &gt;30 days</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compensation Flow Breakdown -->
+        <div class="report-card">
+          <h2 class="card-title">Compensation Disbursement Flow</h2>
+          <p class="card-subtitle">Assessed awards vs DBT disbursements</p>
+
+          <div class="comp-flow-list">
+            <div class="flow-row">
+              <span>1. Total Assessed Compensation</span>
+              <strong>₹{{ formatCrores(data.compensationAnalytics.totalAssessed) }} Cr</strong>
+            </div>
+            <div class="flow-row">
+              <span>2. Administrative Sanctions Approved</span>
+              <strong>₹{{ formatCrores(data.compensationAnalytics.totalApproved) }} Cr</strong>
+            </div>
+            <div class="flow-row highlight-row-green">
+              <span>3. Disbursed to Bank Accounts (DBT)</span>
+              <strong>₹{{ formatCrores(data.compensationAnalytics.totalDisbursed) }} Cr</strong>
+            </div>
+            <div class="flow-row highlight-row-amber">
+              <span>4. Pending Bank Credit</span>
+              <strong>₹{{ formatCrores(data.compensationAnalytics.pendingDisbursement) }} Cr</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Rehabilitation & Resettlement (R&R) Analytics -->
+    <div class="report-card">
+      <div class="card-header-row">
+        <div>
+          <h2 class="card-title">Rehabilitation & Resettlement (R&R) National Progress</h2>
+          <p class="card-subtitle">RFCTLARR Second Schedule compliance & livelihood assistance allocations</p>
+        </div>
+        <span class="badge badge-success">{{ data.rehabilitationAnalytics.completionPercentage }}% Complete</span>
+      </div>
+
+      <div class="rr-grid">
+        <div class="rr-box">
+          <span class="rr-label">TOTAL FAMILIES</span>
+          <span class="rr-val">{{ data.rehabilitationAnalytics.totalAffectedFamilies }}</span>
+          <span class="rr-sub">In Corridor Path</span>
+        </div>
+        <div class="rr-box">
+          <span class="rr-label">DISPLACED</span>
+          <span class="rr-val highlight-amber">{{ data.rehabilitationAnalytics.displacedFamilies }}</span>
+          <span class="rr-sub">Housing Beneficiaries</span>
+        </div>
+        <div class="rr-box">
+          <span class="rr-label">ASSISTANCE PROVIDED</span>
+          <span class="rr-val">{{ data.rehabilitationAnalytics.rrAssistanceProvidedCount }}</span>
+          <span class="rr-sub">Tranches Cleared</span>
+        </div>
+        <div class="rr-box">
+          <span class="rr-label">TOTAL R&R AMOUNT</span>
+          <span class="rr-val highlight-green">₹{{ formatCrores(data.rehabilitationAnalytics.totalProvidedAmount) }} Cr</span>
+          <span class="rr-sub">Disbursed to Families</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

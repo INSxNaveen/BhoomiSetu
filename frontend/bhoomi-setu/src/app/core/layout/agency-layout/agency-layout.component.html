@@ -1,0 +1,114 @@
+<div class="agency-shell">
+  <!-- Top Navigation Header -->
+  <header class="agency-topbar">
+    <div class="topbar-left">
+      <button class="menu-toggle-btn" (click)="toggleSidebar()" title="Toggle Navigation Menu">
+        <span class="toggle-icon">☰</span>
+      </button>
+      <div class="branding">
+        <span class="emblem">🏛️</span>
+        <div class="brand-text">
+          <span class="brand-title">BHOOMISETU</span>
+          <span class="brand-subtitle">National Land Acquisition & Management System</span>
+        </div>
+      </div>
+      <div class="header-divider"></div>
+      <div class="agency-badge-container">
+        <span class="agency-role-badge">PROJECT AGENCY</span>
+        <span class="agency-org-name">{{ getUserOrgName() }}</span>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="live-pulse" title="Connected to Central Gateway">
+        <span class="pulse-dot"></span>
+        <span class="pulse-text">Live Agency Gateway</span>
+      </div>
+
+      <a routerLink="/agency/proposals/create" class="bs-btn bs-btn-primary quick-action-btn">
+        <span>➕</span> New Proposal
+      </a>
+
+      <a routerLink="/agency/notifications" class="icon-btn" title="Notification Center">
+        <span>🔔</span>
+      </a>
+
+      <div class="user-profile-menu">
+        <div class="avatar-circle">
+          {{ getUserDisplayName().charAt(0).toUpperCase() }}
+        </div>
+        <div class="user-info-text">
+          <span class="user-name">{{ getUserDisplayName() }}</span>
+          <span class="user-role">{{ authService.currentUser()?.role }}</span>
+        </div>
+        <button class="logout-btn" (click)="logout()" title="Secure Logout">
+          <span>🚪</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="agency-main-wrapper">
+    <!-- Left Navigation Sidebar -->
+    <aside class="agency-sidebar" [class.collapsed]="!sidebarOpen">
+      <div class="sidebar-header">
+        <span class="sidebar-pretitle">OPERATIONAL CONSOLE</span>
+        <h4 class="sidebar-title">{{ getUserOrgName() }}</h4>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">PROJECT MANAGEMENT</div>
+        
+        <a routerLink="/agency/dashboard" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Agency Dashboard</span>
+        </a>
+
+        <a routerLink="/agency/proposals/create" routerLinkActive="active" class="nav-item highlight-item">
+          <span class="nav-icon">➕</span>
+          <span class="nav-label">Create Proposal</span>
+        </a>
+
+        <a routerLink="/agency/projects" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📁</span>
+          <span class="nav-label">My Projects</span>
+        </a>
+
+        <a routerLink="/agency/tracking" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🧭</span>
+          <span class="nav-label">Proposal Tracking</span>
+        </a>
+
+        <div class="nav-section-title">ADMINISTRATION</div>
+
+        <a routerLink="/agency/notifications" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🔔</span>
+          <span class="nav-label">Notifications</span>
+        </a>
+
+        <a routerLink="/agency/audit" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📜</span>
+          <span class="nav-label">Activity Audit</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="compliance-badge">
+          <span class="comp-icon">🛡️</span>
+          <div class="comp-text">
+            <span class="comp-title">RFCTLARR 2013 Compliant</span>
+            <span class="comp-sub">Central Digital Land Registry</span>
+          </div>
+        </div>
+        <button class="bs-btn bs-btn-outline bs-btn-sm full-width mt-2" (click)="logout()">
+          <span>🚪</span> Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="agency-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

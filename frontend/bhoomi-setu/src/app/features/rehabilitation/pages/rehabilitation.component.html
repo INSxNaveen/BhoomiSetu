@@ -1,0 +1,41 @@
+<div class="rehabilitation-page">
+  <div class="page-header">
+    <div>
+      <h1 class="title">Resettlement & Rehabilitation (R&R) Monitoring</h1>
+      <p class="subtitle">Tracking Affected Families & Resettlement Benefits</p>
+    </div>
+  </div>
+
+  <div class="card table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Family Ref #</th>
+          <th>Head of Family</th>
+          <th>Family Size</th>
+          <th>Displaced?</th>
+          <th>Rehabilitation Site</th>
+          <th>Eligible Grant</th>
+          <th>Provided Grant</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let f of families">
+          <td><strong>{{ f.familyReference }}</strong></td>
+          <td>{{ f.headOfFamilyName }}</td>
+          <td>{{ f.familySize }} Members</td>
+          <td>
+            <span class="badge" [ngClass]="f.isDisplaced ? 'badge-warning' : 'badge-info'">
+              {{ f.isDisplaced ? 'Yes - Displaced' : 'No' }}
+            </span>
+          </td>
+          <td>{{ f.rehabilitationCase?.rehabilitationSite || 'N/A' }}</td>
+          <td>₹ {{ (f.rehabilitationCase?.eligibleAmount || 0).toLocaleString() }}</td>
+          <td>₹ {{ (f.rehabilitationCase?.providedAmount || 0).toLocaleString() }}</td>
+          <td><span class="badge badge-success">{{ f.rehabilitationCase?.status || 'Completed' }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+/* ==========================================================================
+   BHOOMISETU BADGE SYSTEM
+   ========================================================================== */
+
+.bs-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--bs-radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.2;
+  white-space: nowrap;
+
+  &.bs-badge-success {
+    background-color: var(--bs-green-50);
+    color: var(--bs-green-700);
+    border: 1px solid var(--bs-green-100);
+  }
+
+  &.bs-badge-warning {
+    background-color: var(--bs-amber-50);
+    color: var(--bs-amber-700);
+    border: 1px solid var(--bs-amber-100);
+  }
+
+  &.bs-badge-danger {
+    background-color: var(--bs-red-50);
+    color: var(--bs-red-700);
+    border: 1px solid var(--bs-red-100);
+  }
+
+  &.bs-badge-info,
+  &.bs-badge-blue {
+    background-color: var(--bs-blue-50);
+    color: var(--bs-blue-700);
+    border: 1px solid var(--bs-blue-100);
+  }
+
+  &.bs-badge-saffron {
+    background-color: var(--bs-saffron-50);
+    color: var(--bs-saffron-700);
+    border: 1px solid var(--bs-saffron-100);
+  }
+
+  &.bs-badge-neutral {
+    background-color: var(--bs-surface-muted);
+    color: var(--bs-text-secondary);
+    border: 1px solid var(--bs-border);
+  }
+}

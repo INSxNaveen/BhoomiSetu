@@ -1,0 +1,55 @@
+@import 'leaflet/dist/leaflet.css';
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
+@import './styles/index';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-family-base);
+  background-color: var(--bs-bg-app);
+  color: var(--bs-text-primary);
+  font-size: 15px;
+  line-height: var(--line-height-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--bs-blue-600);
+  text-decoration: none;
+  transition: color var(--bs-transition-fast);
+
+  &:hover {
+    color: var(--bs-blue-700);
+  }
+}
+
+/* Backward-compatible classes mapped to new tokens */
+.badge {
+  @extend .bs-badge;
+  &.badge-success { @extend .bs-badge-success; }
+  &.badge-warning { @extend .bs-badge-warning; }
+  &.badge-danger { @extend .bs-badge-danger; }
+  &.badge-info { @extend .bs-badge-info; }
+}
+
+.btn {
+  @extend .bs-btn;
+  &.btn-primary { @extend .bs-btn-primary; }
+  &.btn-navy { @extend .bs-btn-navy; }
+  &.btn-emerald { @extend .bs-btn-emerald; }
+  &.btn-outline, &.btn-outline-light { @extend .bs-btn-outline; }
+}
+
+.card {
+  @extend .bs-card;
+}
+
+.card-title {
+  @extend .bs-card-title;
+}

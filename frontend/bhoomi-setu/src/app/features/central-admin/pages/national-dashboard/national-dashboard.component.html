@@ -1,0 +1,265 @@
+<div class="national-dashboard-container">
+  <!-- 1. Header with Live Refresh -->
+  <div class="dashboard-header">
+    <div class="header-titles">
+      <h1 class="page-title">National Land Acquisition Dashboard</h1>
+      <p class="page-subtitle">Monitor multi-state infrastructure corridor acquisition progress across India</p>
+    </div>
+    <div class="header-actions">
+      <div class="last-updated-badge" *ngIf="data">
+        <span class="pulse-icon">●</span> Last Updated: <strong>{{ data.lastUpdated | date:'medium' }}</strong>
+      </div>
+      <button class="btn btn-primary btn-refresh" (click)="onRefresh()" [disabled]="refreshing() || loading()">
+        <span *ngIf="!refreshing()">🔄 Refresh Operations Data</span>
+        <span *ngIf="refreshing()">Syncing Data...</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading & Error States -->
+  <div *ngIf="loading()" class="loading-state">
+    <div class="spinner"></div>
+    <p>Connecting to BhoomiSetu National Database...</p>
+  </div>
+
+  <div *ngIf="errorMessage()" class="error-state">
+    <div class="error-box">
+      <span class="error-icon">⚠️</span>
+      <div class="error-content">
+        <h4>Unable to load national acquisition data</h4>
+        <p>{{ errorMessage() }}</p>
+      </div>
+      <button class="btn btn-primary" (click)="loadDashboardData()">Retry Connection</button>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Content -->
+  <div *ngIf="!loading() && data" class="dashboard-content">
+    <!-- 2. Six Operational KPI Cards -->
+    <div class="kpi-grid">
+      <!-- Card 1: Total Projects -->
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">TOTAL PROJECTS</span>
+          <span class="kpi-icon-bubble">📁</span>
+        </div>
+        <div class="kpi-value">{{ data.kpis.totalProjects }}</div>
+        <div class="kpi-subtext highlight-green">
+          ↑ {{ data.kpis.projectsThisMonth }} active this month
+        </div>
+      </div>
+
+      <!-- Card 2: Land Proposed -->
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">LAND PROPOSED</span>
+          <span class="kpi-icon-bubble">📐</span>
+        </div>
+        <div class="kpi-value">{{ formatSqKm(data.kpis.totalLandProposedHectares) }} <span class="unit">km²</span></div>
+        <div class="kpi-subtext">
+          {{ data.kpis.totalLandProposedHectares | number:'1.1-1' }} Ha across {{ data.kpis.activeStatesCount }} States
+        </div>
+      </div>
+
+      <!-- Card 3: Land Acquired -->
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">LAND ACQUIRED</span>
+          <span class="kpi-icon-bubble">🌾</span>
+        </div>
+        <div class="kpi-value">{{ formatSqKm(data.kpis.totalLandAcquiredHectares) }} <span class="unit">km²</span></div>
+        <div class="kpi-subtext highlight-green">
+          <strong>{{ data.kpis.landAcquisitionPercentage }}%</strong> of proposed ({{ data.kpis.totalLandAcquiredHectares | number:'1.1-1' }} Ha)
+        </div>
+      </div>
+
+      <!-- Card 4: Compensation Paid -->
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">COMPENSATION PAID</span>
+          <span class="kpi-icon-bubble">💳</span>
+        </div>
+        <div class="kpi-value">₹{{ formatCrores(data.kpis.totalCompensationDisbursed) }} <span class="unit">Cr</span></div>
+        <div class="kpi-subtext highlight-blue">
+          <strong>{{ data.kpis.compensationDisbursementPercentage }}%</strong> of ₹{{ formatCrores(data.kpis.totalCompensationAssessed) }} Cr assessed
+        </div>
+      </div>
+
+      <!-- Card 5: Affected Families -->
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">AFFECTED FAMILIES</span>
+          <span class="kpi-icon-bubble">👨‍👩‍👦</span>
+        </div>
+        <div class="kpi-value">{{ data.kpis.totalAffectedFamilies }}</div>
+        <div class="kpi-subtext highlight-amber">
+          {{ data.kpis.totalDisplacedFamilies }} displaced / eligible for housing
+        </div>
+      </div>
+
+      <!-- Card 6: R&R Progress -->
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-label">R&R PROGRESS</span>
+          <span class="kpi-icon-bubble">🏘️</span>
+        </div>
+        <div class="kpi-value">{{ data.kpis.rrProgressPercentage }}<span class="unit">%</span></div>
+        <div class="kpi-subtext highlight-emerald">
+          {{ data.kpis.rrFamiliesCovered }} family cases completed
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. National Project Distribution Map -->
+    <div class="content-card map-section-card">
+      <div class="card-header-row">
+        <div>
+          <h2 class="card-title">National Project Distribution Map</h2>
+          <p class="card-subtitle">Geographic visualization of land acquisition corridors and project health</p>
+        </div>
+        <!-- Map Controls & Filters -->
+        <div class="map-filter-bar">
+          <select [(ngModel)]="selectedStateFilter" (change)="applyMapFilters()" class="filter-select">
+            <option value="">All States</option>
+            <option *ngFor="let s of data.stateProgress" [value]="s.stateName">{{ s.stateName }}</option>
+          </select>
+
+          <select [(ngModel)]="selectedTypeFilter" (change)="applyMapFilters()" class="filter-select">
+            <option value="">All Types</option>
+            <option value="0">National Highway</option>
+            <option value="1">Railway Line</option>
+            <option value="6">Power & Energy</option>
+          </select>
+
+          <button class="btn btn-outline-primary btn-sm" (click)="fitIndiaBounds()">Fit to India 🇮🇳</button>
+        </div>
+      </div>
+
+      <!-- Map Legend -->
+      <div class="map-legend-bar">
+        <span class="legend-title">Legend:</span>
+        <span class="legend-item"><span class="legend-dot dot-active"></span> Active / Possession (🟢)</span>
+        <span class="legend-item"><span class="legend-dot dot-delayed"></span> Delayed / Milestone Bottleneck (🟡)</span>
+        <span class="legend-item"><span class="legend-dot dot-proposed"></span> Proposed / Verification (🔵)</span>
+        <span class="legend-item"><span class="legend-dot dot-completed"></span> Completed (⚪)</span>
+      </div>
+
+      <!-- Leaflet Map Container -->
+      <div id="national-dashboard-map" class="map-canvas"></div>
+    </div>
+
+    <!-- 4. Land Acquisition Pipeline Funnel -->
+    <div class="content-card pipeline-card">
+      <div class="card-header-row">
+        <div>
+          <h2 class="card-title">Land Acquisition Pipeline Lifecycle</h2>
+          <p class="card-subtitle">Stage-wise progression from initial project proposal to final R&R handover</p>
+        </div>
+      </div>
+
+      <div class="pipeline-grid">
+        <div *ngFor="let stage of data.pipeline; let i = index" class="pipeline-step">
+          <div class="step-badge">Stage {{ i + 1 }}</div>
+          <div class="step-count">{{ stage.count }}</div>
+          <div class="step-name">{{ stage.stageName }}</div>
+          <div class="step-desc">{{ stage.description }}</div>
+          <div class="step-progress-bar">
+            <div class="progress-fill" [style.width.%]="stage.percentage"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Two-Column Row: State-Wise Table & Delayed Projects Feed -->
+    <div class="dashboard-columns-grid">
+      <!-- Left Column: State-Wise Progress Table -->
+      <div class="content-card">
+        <div class="card-header-row">
+          <div>
+            <h2 class="card-title">State-Wise Acquisition Progress</h2>
+            <p class="card-subtitle">Comparative state land, compensation & R&R performance</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>State</th>
+                <th>Projects</th>
+                <th>Proposed (Ha)</th>
+                <th>Acquired %</th>
+                <th>Compensation Paid</th>
+                <th>R&R %</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of data.stateProgress">
+                <td><strong>{{ s.stateName }}</strong></td>
+                <td>{{ s.projectCount }}</td>
+                <td>{{ s.landProposedHectares | number:'1.1-1' }}</td>
+                <td>
+                  <div class="table-progress-cell">
+                    <span>{{ s.acquisitionPercentage }}%</span>
+                    <div class="mini-bar">
+                      <div class="bar-fill" [style.width.%]="s.acquisitionPercentage"></div>
+                    </div>
+                  </div>
+                </td>
+                <td>₹{{ formatCrores(s.compensationDisbursed) }} Cr</td>
+                <td>{{ s.rrPercentage }}%</td>
+                <td>
+                  <span class="badge" [ngClass]="{
+                    'badge-success': s.status === 'Active' || s.status === 'Completed',
+                    'badge-warning': s.status === 'Delayed'
+                  }">{{ s.status }}</span>
+                </td>
+                <td>
+                  <button class="btn btn-outline-primary btn-xs" (click)="navigateToGisWithState(s.stateName)">
+                    Map 🗺️
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right Column: Delayed Projects Critical Alert Feed -->
+      <div class="content-card">
+        <div class="card-header-row">
+          <div>
+            <h2 class="card-title">Delayed Projects & Bottlenecks</h2>
+            <p class="card-subtitle">Corridors behind statutory milestone deadlines</p>
+          </div>
+          <span class="badge badge-danger">{{ data.delayedProjects.length }} Flagged</span>
+        </div>
+
+        <div *ngIf="data.delayedProjects.length === 0" class="empty-state-box">
+          ✅ All national corridors are operating on schedule!
+        </div>
+
+        <div class="delayed-feed-list" *ngIf="data.delayedProjects.length > 0">
+          <div *ngFor="let dp of data.delayedProjects" class="delayed-item">
+            <div class="delayed-top">
+              <span class="dp-name">{{ dp.projectName }}</span>
+              <span class="delay-badge" [ngClass]="dp.delayDays > 30 ? 'badge-danger' : 'badge-warning'">
+                ⚠️ {{ dp.delayDays }} Days Delay
+              </span>
+            </div>
+            <div class="delayed-meta">
+              <span><strong>State:</strong> {{ dp.stateName }} ({{ dp.districtName }})</span>
+              <span><strong>Code:</strong> {{ dp.projectCode }}</span>
+            </div>
+            <div class="delayed-stage">
+              <span class="stage-label">Bottleneck Stage:</span>
+              <span class="stage-value">{{ dp.currentStage }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

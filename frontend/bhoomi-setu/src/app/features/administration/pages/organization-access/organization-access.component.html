@@ -1,0 +1,205 @@
+<div class="org-access-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Organization & Access Management</h1>
+      <p class="page-subtitle">Platform multi-tenancy hierarchy, roles & fine-grained permission matrix</p>
+    </div>
+    <button *ngIf="activeTab === 'orgs'" class="btn btn-primary" (click)="openAddOrgDrawer()">
+      + Add Organization
+    </button>
+  </div>
+
+  <!-- Tabs Bar -->
+  <div class="tabs-bar">
+    <button
+      class="tab-btn"
+      [class.active]="activeTab === 'orgs'"
+      (click)="setActiveTab('orgs')"
+    >
+      🏛️ Organizations ({{ organizations.length }})
+    </button>
+    <button
+      class="tab-btn"
+      [class.active]="activeTab === 'roles'"
+      (click)="setActiveTab('roles')"
+    >
+      🛡️ Roles & Permissions Matrix
+    </button>
+  </div>
+
+  <!-- TAB 1: ORGANIZATIONS -->
+  <div *ngIf="activeTab === 'orgs'" class="tab-content">
+    <div class="card table-card">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Organization Name</th>
+            <th>Type</th>
+            <th>Contact Email</th>
+            <th>Users</th>
+            <th>Projects</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let org of organizations">
+            <td>
+              <strong class="org-name">{{ org.name }}</strong>
+              <div class="org-code font-mono">CODE: {{ org.code }}</div>
+            </td>
+            <td>
+              <span class="type-badge">{{ getOrgTypeLabel(org.organizationType) }}</span>
+            </td>
+            <td class="text-sub">{{ org.contactEmail }}</td>
+            <td><strong>{{ org.userCount }}</strong> users</td>
+            <td><strong>{{ org.projectCount }}</strong> projects</td>
+            <td>
+              <span class="status-badge" [ngClass]="org.isActive ? 'active' : 'inactive'">
+                ● {{ org.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-icon" title="Organization Details">👁️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 2: ROLES & PERMISSIONS MATRIX -->
+  <div *ngIf="activeTab === 'roles'" class="tab-content roles-matrix-tab">
+    <div class="roles-sidebar">
+      <h3>Select Role</h3>
+      <div class="role-selector-list">
+        <button
+          *ngFor="let r of roles"
+          class="role-select-item"
+          [class.active]="selectedRole?.id === r.id"
+          (click)="selectRole(r)"
+        >
+          <div class="role-title">{{ r.name }}</div>
+          <div class="role-meta">{{ r.userCount }} Users • {{ r.permissionCount }} Permissions</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="matrix-content card">
+      <div class="matrix-header" *ngIf="selectedRole">
+        <div>
+          <h2>{{ selectedRole.name }} — Permission Matrix</h2>
+          <p class="role-desc">{{ selectedRole.description }}</p>
+        </div>
+        <button class="btn btn-primary" (click)="savePermissions()" [disabled]="savingPermissions">
+          {{ savingPermissions ? 'Saving...' : '💾 Save Permission Matrix' }}
+        </button>
+      </div>
+
+      <div *ngIf="saveSuccessMessage" class="success-banner">{{ saveSuccessMessage }}</div>
+
+      <table class="matrix-table" *ngIf="permissionMatrix">
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Permission Description</th>
+            <th class="text-center">View</th>
+            <th class="text-center">Create</th>
+            <th class="text-center">Edit</th>
+            <th class="text-center">Approve</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of permissionRows">
+            <td><strong>{{ row.module }}</strong></td>
+            <td class="text-sub">{{ row.module }} module access controls</td>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                *ngIf="row.viewPerm"
+                [checked]="row.viewPerm.isGranted"
+                (change)="togglePermission(row.viewPerm)"
+              />
+            </td>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                *ngIf="row.createPerm"
+                [checked]="row.createPerm.isGranted"
+                (change)="togglePermission(row.createPerm)"
+              />
+            </td>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                *ngIf="row.editPerm"
+                [checked]="row.editPerm.isGranted"
+                (change)="togglePermission(row.editPerm)"
+              />
+            </td>
+            <td class="text-center">
+              <input
+                type="checkbox"
+                *ngIf="row.approvePerm"
+                [checked]="row.approvePerm.isGranted"
+                (change)="togglePermission(row.approvePerm)"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Side Drawer: Add Organization -->
+  <div class="drawer-overlay" *ngIf="isOrgDrawerOpen" (click)="closeOrgDrawer()"></div>
+  <div class="side-drawer" [class.open]="isOrgDrawerOpen">
+    <div class="drawer-header">
+      <h2>Add Organization</h2>
+      <button class="close-btn" (click)="closeOrgDrawer()">✕</button>
+    </div>
+
+    <form [formGroup]="orgForm" (ngSubmit)="createOrganization()" class="drawer-body">
+      <div class="form-group">
+        <label>Organization Name *</label>
+        <input type="text" formControlName="name" placeholder="e.g. Ministry of Road Transport & Highways" />
+      </div>
+
+      <div class="form-group">
+        <label>Organization Code *</label>
+        <input type="text" formControlName="code" placeholder="e.g. MORTH" />
+      </div>
+
+      <div class="form-group">
+        <label>Organization Type *</label>
+        <select formControlName="organizationType">
+          <option [ngValue]="0">Central Ministry</option>
+          <option [ngValue]="1">State Government</option>
+          <option [ngValue]="2">District Collectorate</option>
+          <option [ngValue]="3">Project Agency</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Contact Email *</label>
+        <input type="email" formControlName="contactEmail" placeholder="contact@org.gov.in" />
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select formControlName="isActive">
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+      </div>
+
+      <div class="drawer-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeOrgDrawer()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="orgForm.invalid || submittingOrg">
+          {{ submittingOrg ? 'Creating...' : 'Create Organization' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

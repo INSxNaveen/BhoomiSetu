@@ -1,0 +1,128 @@
+/* ==========================================================================
+   BHOOMISETU BUTTON SYSTEM
+   ========================================================================== */
+
+.bs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.55rem 1.15rem;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.4;
+  border-radius: var(--bs-radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--bs-transition-base);
+  white-space: nowrap;
+
+  &:focus-visible {
+    outline: 2px solid var(--bs-blue-500);
+    outline-offset: 2px;
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Primary Action */
+  &.bs-btn-primary {
+    background: var(--bs-blue-600);
+    color: #ffffff;
+    border-color: var(--bs-blue-700);
+    box-shadow: 0 1px 2px rgba(29, 78, 216, 0.2);
+
+    &:hover {
+      background: var(--bs-blue-700);
+      box-shadow: 0 4px 10px rgba(29, 78, 216, 0.3);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  /* Bharat Navy Action */
+  &.bs-btn-navy {
+    background: var(--bs-navy-900);
+    color: #ffffff;
+    border-color: var(--bs-navy-950);
+
+    &:hover {
+      background: var(--bs-navy-800);
+      transform: translateY(-1px);
+      box-shadow: var(--bs-shadow-md);
+    }
+  }
+
+  /* Emerald Success Action */
+  &.bs-btn-emerald {
+    background: var(--bs-green-600);
+    color: #ffffff;
+    border-color: var(--bs-green-700);
+
+    &:hover {
+      background: var(--bs-green-700);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
+    }
+  }
+
+  /* Secondary / Outline */
+  &.bs-btn-secondary,
+  &.bs-btn-outline {
+    background: var(--bs-surface);
+    color: var(--bs-text-secondary);
+    border-color: var(--bs-border-strong);
+
+    &:hover {
+      background: var(--bs-surface-hover);
+      color: var(--bs-text-primary);
+      border-color: var(--bs-text-muted);
+    }
+  }
+
+  /* Ghost */
+  &.bs-btn-ghost {
+    background: transparent;
+    color: var(--bs-text-secondary);
+    border-color: transparent;
+
+    &:hover {
+      background: var(--bs-surface-hover);
+      color: var(--bs-text-primary);
+    }
+  }
+
+  /* Danger */
+  &.bs-btn-danger {
+    background: var(--bs-red-600);
+    color: #ffffff;
+    border-color: var(--bs-red-700);
+
+    &:hover {
+      background: var(--bs-red-700);
+      transform: translateY(-1px);
+    }
+  }
+
+  /* Sizes */
+  &.bs-btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: var(--font-size-xs);
+    border-radius: var(--bs-radius-sm);
+  }
+
+  &.bs-btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: var(--font-size-base);
+    border-radius: var(--bs-radius-lg);
+  }
+}

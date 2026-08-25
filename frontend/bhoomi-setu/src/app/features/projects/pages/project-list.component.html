@@ -1,0 +1,38 @@
+<div class="projects-page">
+  <div class="page-header">
+    <div>
+      <h1 class="title">Land Acquisition Infrastructure Projects</h1>
+      <p class="subtitle">Central Source of Truth for Approved & Active Projects</p>
+    </div>
+  </div>
+
+  <div class="card table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Project Code</th>
+          <th>Project Name</th>
+          <th>Type</th>
+          <th>State & District</th>
+          <th>Est. Cost</th>
+          <th>Required Area</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let proj of projects">
+          <td><strong>{{ proj.projectCode }}</strong></td>
+          <td>
+            <div style="font-weight: 600;">{{ proj.name }}</div>
+            <div style="font-size: 0.75rem; color: var(--color-text-muted);">{{ proj.description }}</div>
+          </td>
+          <td><span class="badge badge-info">{{ proj.projectType }}</span></td>
+          <td>{{ proj.stateName }} / {{ proj.districtName }}</td>
+          <td>₹ {{ (proj.estimatedCost / 10000000).toFixed(2) }} Cr</td>
+          <td>{{ proj.requiredAreaHectares }} Ha</td>
+          <td><span class="badge badge-success">{{ proj.status }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

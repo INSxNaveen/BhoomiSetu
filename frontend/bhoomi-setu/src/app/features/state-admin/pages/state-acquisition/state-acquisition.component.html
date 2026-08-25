@@ -1,0 +1,229 @@
+<div class="bs-page state-acquisition-container">
+  <!-- Page Header -->
+  <div class="bs-page-header">
+    <div class="header-left">
+      <div class="title-row">
+        <h1 class="bs-page-title">{{ data()?.stateName || 'State' }} Acquisition Progress Monitoring</h1>
+        <span class="bs-badge bs-badge-primary">Compensation, Possession & R&R</span>
+      </div>
+      <p class="bs-page-subtitle">Statutory disbursement telemetry, physical land mutation & handover records, and rehabilitation package fulfillment under RFCTLARR Act 2013.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-outline bs-btn-sm" (click)="loadAcquisitionData()" [disabled]="loading()">
+        🔄 Refresh Analytics
+      </button>
+      <a routerLink="/state/dashboard" class="bs-btn bs-btn-outline bs-btn-sm">
+        ← Back to Dashboard
+      </a>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading() && !data()" class="bs-loading-state">
+    <div class="bs-spinner"></div>
+    <p>Compiling state compensation and rehabilitation metrics...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error()" class="bs-error-banner">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadAcquisitionData()">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <ng-container *ngIf="data()">
+    <!-- 6 KPI Matrix -->
+    <div class="bs-grid-6 kpi-grid">
+      <app-stat-card
+        title="Land Notified"
+        [value]="data()?.kpis?.landNotifiedHectares || 0"
+        unit="Ha"
+        subtext="Sec 11/19 Notified"
+        icon="📜"
+        variant="blue"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Land in Possession"
+        [value]="data()?.kpis?.landAcquiredHectares || 0"
+        unit="Ha"
+        subtext="Physical Handover"
+        icon="📐"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Compensation Assessed"
+        [value]="formatCurrency(data()?.kpis?.compensationAssessed || 0)"
+        unit=""
+        subtext="CALA Awards"
+        icon="⚖️"
+        variant="navy"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Compensation Disbursed"
+        [value]="formatCurrency(data()?.kpis?.compensationPaid || 0)"
+        unit=""
+        subtext="Direct Benefit DBT"
+        icon="💸"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Affected Families"
+        [value]="data()?.kpis?.affectedFamilies || 0"
+        unit="Identified"
+        [subtext]="(data()?.kpis?.displacedFamilies || 0) + ' Displaced'"
+        icon="👨‍👩‍👦"
+        variant="amber"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="R&R Packages Settled"
+        [value]="data()?.kpis?.rrCompleted || 0"
+        unit="Families"
+        subtext="2nd Schedule"
+        icon="🏡"
+        variant="saffron"
+      ></app-stat-card>
+    </div>
+
+    <!-- Section 1: Compensation Direct Benefit Transfer (DBT) Breakdown -->
+    <div class="bs-card section-card">
+      <div class="bs-card-header">
+        <div class="header-titles">
+          <h3 class="bs-card-title">Compensation Disbursement Architecture (DBT)</h3>
+          <p class="bs-card-subtitle">Transparent breakdown of assessed awards, solatium, interest, and bank credits</p>
+        </div>
+        <span class="bs-badge bs-badge-success">PFMS / Bank Integrated</span>
+      </div>
+
+      <div class="comp-summary-grid">
+        <div class="comp-stat-box">
+          <span class="stat-label">Total Assessed Value</span>
+          <span class="stat-val">{{ formatCurrency(data()?.compensation?.totalAssessed || 0) }}</span>
+          <span class="stat-sub">100% Market Value + Solatium</span>
+        </div>
+
+        <div class="comp-stat-box">
+          <span class="stat-label">Sanctioned & Approved</span>
+          <span class="stat-val text-info">{{ formatCurrency(data()?.compensation?.totalApproved || 0) }}</span>
+          <span class="stat-sub">Approved by CALA Authority</span>
+        </div>
+
+        <div class="comp-stat-box highlight-box">
+          <span class="stat-label">Total Disbursed (Direct Benefit)</span>
+          <span class="stat-val text-success">{{ formatCurrency(data()?.compensation?.totalPaid || 0) }}</span>
+          <span class="stat-sub">Credited directly to Landowner accounts</span>
+        </div>
+
+        <div class="comp-stat-box">
+          <span class="stat-label">Pending / In-Process Payouts</span>
+          <span class="stat-val text-warning">{{ formatCurrency(data()?.compensation?.totalPending || 0) }}</span>
+          <span class="stat-sub">Awaiting bank account Aadhaar validation</span>
+        </div>
+      </div>
+
+      <!-- Monthly Trend Cards -->
+      <div class="monthly-trend-section">
+        <h4 class="sub-section-title">Monthly Payout Progression</h4>
+        <div class="trend-cards-grid">
+          <div *ngFor="let trend of data()?.compensation?.monthlyTrends" class="trend-card">
+            <div class="trend-month">{{ trend.month }} {{ trend.year }}</div>
+            <div class="trend-comp">{{ formatCurrency(trend.compensationPaid) }}</div>
+            <div class="trend-area">📐 {{ trend.landAcquiredHectares }} Ha Acquired</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Possession Handover & R&R Second Schedule Grid -->
+    <div class="bs-grid-2">
+      <!-- Left: Physical Land Possession Tracking -->
+      <div class="bs-card">
+        <div class="bs-card-header">
+          <div class="header-titles">
+            <h3 class="bs-card-title">Physical Land Handover & Mutation</h3>
+            <p class="bs-card-subtitle">Possession stages under Section 38 of RFCTLARR Act</p>
+          </div>
+          <span class="bs-badge bs-badge-info">{{ data()?.possession?.completionPercentage || 0 }}% Transferred</span>
+        </div>
+
+        <div class="possession-stages">
+          <div class="stage-item">
+            <div class="stage-label">
+              <span>Section 11 / Notice Issued</span>
+              <strong>{{ data()?.possession?.scheduledCount || 0 }} Parcels</strong>
+            </div>
+            <div class="bs-progress-bar">
+              <div class="bar-fill" style="width: 100%"></div>
+            </div>
+          </div>
+
+          <div class="stage-item">
+            <div class="stage-label">
+              <span>Physical Possession Taken by CALA</span>
+              <strong>{{ data()?.possession?.possessionTakenCount || 0 }} Parcels</strong>
+            </div>
+            <div class="bs-progress-bar">
+              <div class="bar-fill bg-success" [style.width.%]="data()?.possession?.completionPercentage"></div>
+            </div>
+          </div>
+
+          <div class="stage-item">
+            <div class="stage-label">
+              <span>Revenue Mutation & Handover to Agency</span>
+              <strong>{{ data()?.possession?.handedOverCount || 0 }} Parcels</strong>
+            </div>
+            <div class="bs-progress-bar">
+              <div class="bar-fill bg-primary" [style.width.%]="data()?.possession?.completionPercentage"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Rehabilitation & Resettlement (RFCTLARR 2013) -->
+      <div class="bs-card">
+        <div class="bs-card-header">
+          <div class="header-titles">
+            <h3 class="bs-card-title">Rehabilitation & Resettlement (R&R)</h3>
+            <p class="bs-card-subtitle">Mandatory Second Schedule statutory entitlements for displaced families</p>
+          </div>
+          <span class="bs-badge bs-badge-success">{{ data()?.rehabilitation?.completionPercentage || 0 }}% Fulfilled</span>
+        </div>
+
+        <div class="rr-entitlements-list">
+          <div class="rr-item">
+            <span class="rr-icon">🏡</span>
+            <div class="rr-info">
+              <span class="rr-title">Constructed Housing / Plot Allotments</span>
+              <span class="rr-count"><strong>{{ data()?.rehabilitation?.housingPlotsAllotted || 0 }}</strong> Allotted</span>
+            </div>
+            <span class="bs-badge bs-badge-success">Delivered</span>
+          </div>
+
+          <div class="rr-item">
+            <span class="rr-icon">💰</span>
+            <div class="rr-info">
+              <span class="rr-title">One-time Resettlement & Subsistence Allowance</span>
+              <span class="rr-count"><strong>{{ data()?.rehabilitation?.subsistenceGrantsDisbursed || 0 }}</strong> Disbursed</span>
+            </div>
+            <span class="bs-badge bs-badge-success">Paid via DBT</span>
+          </div>
+
+          <div class="rr-item">
+            <span class="rr-icon">🎓</span>
+            <div class="rr-info">
+              <span class="rr-title">Vocational Skill Training & Livelihood Grant</span>
+              <span class="rr-count"><strong>{{ data()?.rehabilitation?.rrCompletedCases || 0 }}</strong> Beneficiaries</span>
+            </div>
+            <span class="bs-badge bs-badge-info">Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

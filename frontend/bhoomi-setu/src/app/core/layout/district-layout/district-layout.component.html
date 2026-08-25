@@ -1,0 +1,102 @@
+<div class="district-shell">
+  <!-- Top Navigation Header -->
+  <header class="district-topbar">
+    <div class="topbar-left">
+      <span class="emblem" (click)="goToHome()" title="Return to Portal Home">🏛️</span>
+      <div class="brand">
+        <div class="brand-row">
+          <span class="brand-name">BHOOMISETU</span>
+          <span class="district-tag">DISTRICT ADMINISTRATION</span>
+        </div>
+        <span class="console-tag">{{ user()?.districtName || 'Meerut' }} District • CALA Land Acquisition Office</span>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <div class="jurisdiction-badge">
+        <span class="badge-icon">📍</span>
+        <span class="jurisdiction-label">District: <strong>{{ user()?.districtName || 'Meerut' }} ({{ user()?.stateName || 'Uttar Pradesh' }})</strong></span>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="system-status-indicator">
+        <span class="bs-pulse-dot"></span> CALA Field Gateway Live
+      </div>
+      <div class="notification-bell" title="Notifications" routerLink="/district/notifications">🔔</div>
+      <div class="user-profile">
+        <div class="avatar">DA</div>
+        <div class="user-details">
+          <span class="user-name">{{ user()?.firstName }} {{ user()?.lastName }}</span>
+          <span class="user-role">District Admin ({{ user()?.organizationName || 'Collectorate / CALA' }})</span>
+        </div>
+      </div>
+      <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="logout()">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- Sidebar & Main Content Workspace -->
+  <div class="district-workspace">
+    <aside class="district-sidebar">
+      <div class="sidebar-section-title">FIELD OPERATIONS</div>
+      <nav class="sidebar-nav">
+        <a routerLink="/district/dashboard" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">District Dashboard</span>
+        </a>
+        <a routerLink="/district/projects" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📁</span>
+          <span class="nav-label">District Projects</span>
+        </a>
+        <a routerLink="/district/verification" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">Field Verification</span>
+        </a>
+        <a routerLink="/district/surveys" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📐</span>
+          <span class="nav-label">Joint Survey (JMS)</span>
+        </a>
+        <a routerLink="/district/gis" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🗺️</span>
+          <span class="nav-label">District GIS</span>
+        </a>
+        <a routerLink="/district/compensation" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">💰</span>
+          <span class="nav-label">Compensation (DBT)</span>
+        </a>
+        <a routerLink="/district/possession" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Land Possession</span>
+        </a>
+        <a routerLink="/district/rehabilitation" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">👨‍👩‍👧</span>
+          <span class="nav-label">R&R Packages</span>
+        </a>
+        <a routerLink="/district/reports" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">District Reports</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-section-title">MONITORING & LOGS</div>
+      <nav class="sidebar-nav">
+        <a routerLink="/district/notifications" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🔔</span>
+          <span class="nav-label">District Alerts</span>
+        </a>
+        <a routerLink="/district/audit" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🛡️</span>
+          <span class="nav-label">Field Activity Log</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="bs-btn bs-btn-sm bs-btn-outline w-100" (click)="goToHome()">← Public Portal Home</button>
+      </div>
+    </aside>
+
+    <main class="district-main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

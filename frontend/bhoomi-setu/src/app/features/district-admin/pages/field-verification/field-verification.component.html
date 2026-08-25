@@ -1,0 +1,288 @@
+<div class="field-verification-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>District Administration</span>
+        <span class="divider">/</span>
+        <span class="active">Field Verification</span>
+      </div>
+      <h1 class="page-title">CALA Field Verification Workbench</h1>
+      <p class="page-subtitle">
+        Ground revenue survey verification, landowner identity scrutiny, and boundary validation under RFCTLARR Act 2013
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-primary" (click)="loadVerifications()" [disabled]="loading()">
+        <span class="btn-icon">🔄</span> {{ loading() ? 'Loading...' : 'Refresh Records' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Toast -->
+  <div class="bs-success-banner" *ngIf="successMessage()">
+    <span class="banner-icon">✅</span>
+    <span>{{ successMessage() }}</span>
+  </div>
+
+  <!-- Filters Row -->
+  <div class="bs-card filter-card">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="bs-input search-input"
+        placeholder="Search Survey No., Khasra, Village, or Project..."
+        [(ngModel)]="searchQuery"
+        (input)="onFilterChange()"
+      />
+    </div>
+
+    <div class="filters-group">
+      <select class="bs-select" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+        <option value="">All Verification States</option>
+        <option value="Pending">Pending Verification</option>
+        <option value="Verified">Verified & Surveyed</option>
+        <option value="Returned">Returned for Correction</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && !verifications().length">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading revenue survey records...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadVerifications()">Retry</button>
+  </div>
+
+  <!-- Verifications Table -->
+  <div class="bs-card table-card" *ngIf="!loading() || verifications().length">
+    <div class="table-responsive">
+      <table class="bs-table">
+        <thead>
+          <tr>
+            <th>Survey No.</th>
+            <th>Parcel Number</th>
+            <th>Village & Tehsil</th>
+            <th>Corridor / Project</th>
+            <th>Area (Ha)</th>
+            <th>Land Type</th>
+            <th>Landowners</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of verifications()">
+            <td class="survey-cell font-mono">{{ item.surveyNumber }}</td>
+            <td class="font-mono text-muted">{{ item.parcelNumber }}</td>
+            <td>
+              <div class="village-title">{{ item.villageName }}</div>
+              <div class="tehsil-sub">{{ item.tehsilName }} Tehsil</div>
+            </td>
+            <td>
+              <div class="project-title">{{ item.projectName }}</div>
+              <div class="project-code font-mono">{{ item.projectCode }}</div>
+            </td>
+            <td class="font-mono">{{ item.areaHectares }} Ha</td>
+            <td>
+              <span class="landtype-tag">{{ item.landType }}</span>
+            </td>
+            <td>
+              <span class="owners-preview">{{ item.ownerNames.join(', ') || 'Registered Landholder' }}</span>
+            </td>
+            <td>
+              <span class="bs-badge" [ngClass]="{
+                'bs-badge-warning': item.verificationStatus === 'Pending',
+                'bs-badge-success': item.verificationStatus === 'Verified',
+                'bs-badge-danger': item.verificationStatus === 'Returned'
+              }">
+                {{ item.verificationStatus }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <div class="btn-group">
+                <button class="bs-btn bs-btn-xs bs-btn-outline" (click)="openInspect(item)" title="Inspect Parcel Details">
+                  Inspect
+                </button>
+                <button
+                  class="bs-btn bs-btn-xs bs-btn-success"
+                  *ngIf="item.verificationStatus === 'Pending'"
+                  (click)="openVerifyDialog(item)"
+                  title="Verify Ground Survey"
+                >
+                  Verify ✅
+                </button>
+                <button
+                  class="bs-btn bs-btn-xs bs-btn-danger"
+                  *ngIf="item.verificationStatus === 'Pending'"
+                  (click)="openReturnDialog(item)"
+                  title="Return with Discrepancy"
+                >
+                  Return ↩️
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="verifications().length === 0 && !loading()">
+            <td colspan="9" class="text-center py-4 text-muted">
+              No field verification records found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detailed Inspection Modal -->
+  <div class="bs-modal-backdrop" *ngIf="showDetailModal" (click)="closeModal()">
+    <div class="bs-modal-card inspect-modal" (click)="$event.stopPropagation()">
+      <div class="bs-modal-header">
+        <div>
+          <span class="modal-pretitle font-mono">Survey No: {{ selectedItem?.surveyNumber }} • {{ selectedItem?.parcelNumber }}</span>
+          <h2 class="bs-modal-title">{{ selectedItem?.villageName }} Village ({{ selectedItem?.tehsilName }})</h2>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="bs-modal-body">
+        <div class="modal-grid-2">
+          <div class="info-group">
+            <label>Infrastructure Project</label>
+            <div class="val">{{ selectedItem?.projectName }} ({{ selectedItem?.projectCode }})</div>
+          </div>
+          <div class="info-group">
+            <label>Associated Statutory Proposal</label>
+            <div class="val font-mono">{{ selectedItem?.proposalNumber }}</div>
+          </div>
+          <div class="info-group">
+            <label>Land Area</label>
+            <div class="val font-mono">{{ selectedItem?.areaHectares }} Hectares</div>
+          </div>
+          <div class="info-group">
+            <label>Land Classification</label>
+            <div class="val">{{ selectedItem?.landType }}</div>
+          </div>
+          <div class="info-group">
+            <label>Registered Landowner(s)</label>
+            <div class="val">{{ selectedItem?.ownerNames?.join(', ') || 'Registered Landholder' }}</div>
+          </div>
+          <div class="info-group">
+            <label>Field Verification State</label>
+            <div class="val">
+              <span class="bs-badge" [ngClass]="selectedItem?.verificationStatus === 'Verified' ? 'bs-badge-success' : 'bs-badge-warning'">
+                {{ selectedItem?.verificationStatus }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="desc-box">
+          <label>Field Survey Notes & Boundary Remarks</label>
+          <p>{{ selectedItem?.comments }}</p>
+        </div>
+
+        <div class="modal-actions-bar" *ngIf="selectedItem?.verificationStatus === 'Pending'">
+          <button class="bs-btn bs-btn-success" (click)="openVerifyDialog(selectedItem!)">
+            Verify Ground Survey ✅
+          </button>
+          <button class="bs-btn bs-btn-danger" (click)="openReturnDialog(selectedItem!)">
+            Return with Corrections ↩️
+          </button>
+          <button class="bs-btn bs-btn-outline" (click)="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verify Action Modal -->
+  <div class="bs-modal-backdrop" *ngIf="showVerifyModal" (click)="closeModal()">
+    <div class="bs-modal-card action-modal" (click)="$event.stopPropagation()">
+      <div class="bs-modal-header">
+        <div>
+          <span class="modal-pretitle">CALA Verification Sanction</span>
+          <h2 class="bs-modal-title">Verify Survey No. {{ selectedItem?.surveyNumber }}</h2>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="bs-modal-body">
+        <p class="modal-instruction">
+          You are confirming that the revenue boundary, Khasra measurement, and landowner details for
+          <strong>{{ selectedItem?.villageName }} ({{ selectedItem?.areaHectares }} Ha)</strong> have been verified on ground.
+        </p>
+
+        <div class="bs-error-banner" *ngIf="actionError">
+          <span>⚠️ {{ actionError }}</span>
+        </div>
+
+        <div class="form-group">
+          <label>Field Inspection Comments (Recorded in Audit Trail):</label>
+          <textarea
+            class="bs-textarea"
+            rows="3"
+            [(ngModel)]="verifyComments"
+            placeholder="Enter field notes..."
+          ></textarea>
+        </div>
+
+        <div class="modal-actions-bar">
+          <button class="bs-btn bs-btn-success" (click)="confirmVerify()" [disabled]="actionLoading">
+            {{ actionLoading ? 'Recording...' : 'Confirm Field Verification' }}
+          </button>
+          <button class="bs-btn bs-btn-outline" (click)="closeModal()" [disabled]="actionLoading">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Return Action Modal -->
+  <div class="bs-modal-backdrop" *ngIf="showReturnModal" (click)="closeModal()">
+    <div class="bs-modal-card action-modal" (click)="$event.stopPropagation()">
+      <div class="bs-modal-header">
+        <div>
+          <span class="modal-pretitle text-danger">Return for Correction</span>
+          <h2 class="bs-modal-title">Return Survey No. {{ selectedItem?.surveyNumber }}</h2>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="bs-modal-body">
+        <p class="modal-instruction">
+          Please specify the boundary discrepancies, revenue record mismatch, or missing documents.
+          This record will be returned to the Project Agency for joint re-survey.
+        </p>
+
+        <div class="bs-error-banner" *ngIf="actionError">
+          <span>⚠️ {{ actionError }}</span>
+        </div>
+
+        <div class="form-group">
+          <label>Mandatory Correction / Discrepancy Reason: <span class="text-danger">*</span></label>
+          <textarea
+            class="bs-textarea"
+            rows="3"
+            [(ngModel)]="returnReason"
+            placeholder="e.g. Khasra boundary overlaps with Village Gram Sabha land; cadastral map schedule re-verification required."
+          ></textarea>
+        </div>
+
+        <div class="modal-actions-bar">
+          <button class="bs-btn bs-btn-danger" (click)="confirmReturn()" [disabled]="actionLoading">
+            {{ actionLoading ? 'Returning...' : 'Confirm Return for Correction' }}
+          </button>
+          <button class="bs-btn bs-btn-outline" (click)="closeModal()" [disabled]="actionLoading">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

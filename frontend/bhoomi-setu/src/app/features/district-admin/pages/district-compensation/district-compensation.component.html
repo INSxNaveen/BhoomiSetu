@@ -1,0 +1,149 @@
+<div class="district-compensation-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>District Administration</span>
+        <span class="divider">/</span>
+        <span class="active">Compensation (DBT)</span>
+      </div>
+      <h1 class="page-title">Direct Benefit Transfer (DBT) Compensation</h1>
+      <p class="page-subtitle">
+        CALA award calculation under RFCTLARR Act 2013 (Market Value + 100% Solatium + 12% Interest) and PFMS bank transfers
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-primary" (click)="loadCompensation()" [disabled]="loading()">
+        <span class="btn-icon">🔄</span> {{ loading() ? 'Loading...' : 'Refresh Payouts' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && !summary()">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading CALA compensation ledger...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadCompensation()">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <ng-container *ngIf="summary()">
+    <!-- 4 Compensation Overview Cards -->
+    <div class="bs-grid-4 stats-grid">
+      <app-stat-card
+        title="Total Assessed Awards"
+        [value]="formatCurrency(summary()?.totalAssessed || 0)"
+        unit=""
+        subtext="Market + Solatium + Interest"
+        icon="⚖️"
+        variant="navy"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Approved by CALA"
+        [value]="formatCurrency(summary()?.totalApproved || 0)"
+        unit=""
+        subtext="Sanctioned for Disbursement"
+        icon="📜"
+        variant="blue"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Disbursed via DBT"
+        [value]="formatCurrency(summary()?.totalDisbursed || 0)"
+        unit=""
+        [subtext]="(summary()?.paidAssessments || 0) + ' Accounts Credited'"
+        icon="💸"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Pending Disbursement"
+        [value]="formatCurrency(summary()?.totalPending || 0)"
+        unit=""
+        subtext="Bank Validation in Progress"
+        icon="⏳"
+        variant="amber"
+      ></app-stat-card>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="bs-card filter-card">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="bs-input search-input"
+          placeholder="Search Survey No., Landowner, Village..."
+          [(ngModel)]="searchQuery"
+        />
+      </div>
+
+      <div class="filters-group">
+        <select class="bs-select" [(ngModel)]="selectedStatus">
+          <option value="">All Payment States</option>
+          <option value="Disbursed">Disbursed (DBT Completed)</option>
+          <option value="Approved">Approved (Awaiting Credit)</option>
+          <option value="Assessed">Assessed (Preliminary)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Ledger Table -->
+    <div class="bs-card table-card">
+      <div class="table-responsive">
+        <table class="bs-table">
+          <thead>
+            <tr>
+              <th>Survey No.</th>
+              <th>Registered Landowner</th>
+              <th>Village & Tehsil</th>
+              <th>Base Valuation</th>
+              <th>100% Solatium</th>
+              <th>Total Award (₹)</th>
+              <th>DBT Status</th>
+              <th>Payment Ref / Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of getFilteredAssessments()">
+              <td class="survey-cell font-mono">{{ item.surveyNumber }}</td>
+              <td class="font-bold">{{ item.ownerName }}</td>
+              <td>
+                <div class="village-title">{{ item.villageName }}</div>
+                <div class="tehsil-sub text-xs text-muted">{{ item.tehsilName }}</div>
+              </td>
+              <td class="font-mono">{{ formatCurrency(item.assessedAmount) }}</td>
+              <td class="font-mono text-muted">{{ formatCurrency(item.solatiumAmount) }}</td>
+              <td class="font-mono font-bold text-success">{{ formatCurrency(item.totalAmount) }}</td>
+              <td>
+                <span class="bs-badge" [ngClass]="item.status === 'Disbursed' ? 'bs-badge-success' : 'bs-badge-warning'">
+                  {{ item.status }}
+                </span>
+              </td>
+              <td class="font-mono text-xs">
+                <div *ngIf="item.paymentReference" class="ref-code">{{ item.paymentReference }}</div>
+                <div *ngIf="item.paymentDate" class="text-muted">{{ item.paymentDate | date:'shortDate' }}</div>
+                <span *ngIf="!item.paymentReference" class="text-muted">Awaiting PFMS Release</span>
+              </td>
+            </tr>
+            <tr *ngIf="getFilteredAssessments().length === 0">
+              <td colspan="8" class="text-center py-4 text-muted">
+                No compensation awards match the filter.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

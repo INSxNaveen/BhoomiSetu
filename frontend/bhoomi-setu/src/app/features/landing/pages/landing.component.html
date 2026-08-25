@@ -1,0 +1,472 @@
+<div class="landing-page">
+  <!-- Top Tricolor Band -->
+  <div class="tricolor-topbar"></div>
+
+  <!-- Government Portal Header -->
+  <header class="national-nav">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <div class="emblem-container">🏛️</div>
+        <div class="brand-text-stack">
+          <span class="gov-text">भारत सरकार • GOVERNMENT OF INDIA</span>
+          <span class="portal-text">BHOOMISETU</span>
+          <span class="sub-text">National Land Acquisition & Management System</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a (click)="scrollToSection('telemetry')">National Impact</a>
+        <a (click)="scrollToSection('search-tracker')">Citizen Land Tracker</a>
+        <a (click)="scrollToSection('corridors')">Corridors</a>
+        <a (click)="scrollToSection('capabilities')">Capabilities</a>
+        <a (click)="scrollToSection('faqs')">FAQ</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="goToLogin()">
+          🔐 Portal Sign In
+        </button>
+        <button class="bs-btn bs-btn-sm bs-btn-primary" (click)="goToRegister()">
+          📝 Register Role →
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-bg-overlay"></div>
+    <div class="hero-content-wrapper">
+      <div class="hero-text-block">
+        <div class="hero-badge">
+          <span class="bs-pulse-dot"></span>
+          <span>Unified Digital Public Infrastructure • RFCTLARR Act 2013</span>
+        </div>
+
+        <h1 class="hero-title">
+          Fair, Transparent & Digitally Managed National Land Acquisition
+        </h1>
+
+        <p class="hero-description">
+          A unified, high-precision geospatial platform connecting Central Ministries, State Revenue Authorities, District Collectors, Project Implementing Agencies, and Landowners for transparent corridor development across India.
+        </p>
+
+        <div class="hero-cta-group">
+          <button class="bs-btn bs-btn-lg bs-btn-primary" (click)="goToLogin()">
+            🏛️ Access Officer Console →
+          </button>
+          <button class="bs-btn bs-btn-lg bs-btn-emerald" (click)="scrollToSection('search-tracker')">
+            🔍 Track Your Land Parcel
+          </button>
+        </div>
+
+        <!-- Trust Indicators -->
+        <div class="trust-indicators">
+          <div class="trust-item">
+            <span class="t-icon">💳</span>
+            <span>100% PFMS DBT Disbursal</span>
+          </div>
+          <div class="trust-item">
+            <span class="t-icon">🗺️</span>
+            <span>PostGIS Cadastral Mapping</span>
+          </div>
+          <div class="trust-item">
+            <span class="t-icon">🛡️</span>
+            <span>Immutable Audit Logs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- National Impact Telemetry Matrix -->
+  <section id="telemetry" class="telemetry-section">
+    <div class="section-container">
+      <div class="section-header-centered">
+        <span class="section-category">LIVE NATIONAL OPERATIONS DATA</span>
+        <h2 class="section-title">Pan-India Infrastructure Acquisition Overview</h2>
+        <p class="section-subtitle">Real-time dynamic data aggregation from state collectorates & central corridor authorities</p>
+      </div>
+
+      <div class="telemetry-grid">
+        <div class="telemetry-card card-blue">
+          <div class="t-header">
+            <span class="t-label">NATIONAL CORRIDORS</span>
+            <span class="t-icon">🛣️</span>
+          </div>
+          <div class="t-value">6</div>
+          <div class="t-sub">Expressways, DFCs & Solar Grids</div>
+        </div>
+
+        <div class="telemetry-card card-green">
+          <div class="t-header">
+            <span class="t-label">LAND PROPOSED</span>
+            <span class="t-icon">📐</span>
+          </div>
+          <div class="t-value">13.10 <span class="unit">km²</span></div>
+          <div class="t-sub">1,309.5 Hectares under acquisition</div>
+        </div>
+
+        <div class="telemetry-card card-emerald">
+          <div class="t-header">
+            <span class="t-label">COMPENSATION DISBURSED</span>
+            <span class="t-icon">💳</span>
+          </div>
+          <div class="t-value">₹ 23.10 <span class="unit">Cr</span></div>
+          <div class="t-sub">70.0% Direct Benefit Transfer rate</div>
+        </div>
+
+        <div class="telemetry-card card-amber">
+          <div class="t-header">
+            <span class="t-label">SURVEYED FAMILIES</span>
+            <span class="t-icon">👨‍👩‍👧</span>
+          </div>
+          <div class="t-value">100%</div>
+          <div class="t-sub">R&R Housing & Subsistence packages</div>
+        </div>
+
+        <div class="telemetry-card card-saffron">
+          <div class="t-header">
+            <span class="t-label">ACTIVE STATES</span>
+            <span class="t-icon">🏛️</span>
+          </div>
+          <div class="t-value">6 <span class="unit">States</span></div>
+          <div class="t-sub">UP, MH, GJ, RJ, BR, KA Online</div>
+        </div>
+
+        <div class="telemetry-card card-navy">
+          <div class="t-header">
+            <span class="t-label">SYSTEM HEALTH</span>
+            <span class="t-icon">⚡</span>
+          </div>
+          <div class="t-value">99.98%</div>
+          <div class="t-sub">PostgreSQL / PostGIS Active</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Citizen Land Status Search & Khasra Tracker -->
+  <section id="search-tracker" class="search-section">
+    <div class="section-container">
+      <div class="search-box-card">
+        <div class="search-card-header">
+          <div class="search-title-stack">
+            <span class="search-badge">CITIZEN PORTAL</span>
+            <h3>Track Land Parcel Acquisition & Compensation Status</h3>
+            <p>Enter your Cadastral Survey / Khasra Number to view valuation awards and DBT credit updates</p>
+          </div>
+        </div>
+
+        <div class="search-form-row">
+          <div class="search-input-group">
+            <span class="input-icon">🔍</span>
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              placeholder="e.g. 245/1A, 112/3B, 502/1"
+              class="bs-input"
+            />
+          </div>
+
+          <div class="district-select-group">
+            <select [(ngModel)]="searchDistrict" class="bs-select">
+              <option value="Meerut">Meerut (Uttar Pradesh)</option>
+              <option value="Pune">Pune (Maharashtra)</option>
+              <option value="Ahmedabad">Ahmedabad (Gujarat)</option>
+              <option value="Jaipur">Jaipur (Rajasthan)</option>
+              <option value="Patna">Patna (Bihar)</option>
+              <option value="Bengaluru">Bengaluru Urban (Karnataka)</option>
+            </select>
+          </div>
+
+          <button class="bs-btn bs-btn-primary search-btn" (click)="performSearch()">
+            🔍 Search Land Record
+          </button>
+        </div>
+
+        <!-- Sample Quick Click Suggestions -->
+        <div class="sample-chips-row">
+          <span class="chip-hint">Try Demo Survey Numbers:</span>
+          <button type="button" class="sample-chip" (click)="searchQuery='245/1A'; performSearch()">
+            Survey 245/1A (UP)
+          </button>
+          <button type="button" class="sample-chip" (click)="searchQuery='112/3B'; performSearch()">
+            Survey 112/3B (UP)
+          </button>
+          <button type="button" class="sample-chip" (click)="searchQuery='502/1'; performSearch()">
+            Survey 502/1 (Gujarat)
+          </button>
+        </div>
+
+        <!-- Search Result Card -->
+        <div *ngIf="searched && searchResult" class="search-result-display">
+          <div class="result-card-header">
+            <div class="result-survey-info">
+              <span class="khasra-pill">Cadastral Survey #{{ searchResult.surveyNumber }}</span>
+              <h4>{{ searchResult.projectName }}</h4>
+              <span class="location-text">📍 {{ searchResult.district }}, {{ searchResult.state }} • {{ searchResult.areaHectares }} Hectares</span>
+            </div>
+            <div class="result-status-badge">
+              <span class="bs-badge" [ngClass]="searchResult.statusType === 'success' ? 'bs-badge-success' : 'bs-badge-warning'">
+                ● {{ searchResult.status }}
+              </span>
+            </div>
+          </div>
+
+          <div class="result-details-grid">
+            <div class="detail-box">
+              <span class="d-label">COMPENSATION AWARD</span>
+              <strong class="d-val text-green">{{ searchResult.totalCompensation }}</strong>
+              <span class="d-sub">Calculated with 100% Solatium + Interest</span>
+            </div>
+            <div class="detail-box">
+              <span class="d-label">DBT PAYMENT STATUS</span>
+              <strong class="d-val">{{ searchResult.compensationStatus }}</strong>
+              <span class="d-sub text-muted">{{ searchResult.dbtStatus }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Multi-State Infrastructure Corridors Showcase -->
+  <section id="corridors" class="corridors-section">
+    <div class="section-container">
+      <div class="section-header-centered">
+        <span class="section-category">ACTIVE INFRASTRUCTURE PIPELINE</span>
+        <h2 class="section-title">Priority National Corridors Monitored on BhoomiSetu</h2>
+        <p class="section-subtitle">Cross-state expressways, dedicated freight lines and green energy transmission alignments</p>
+      </div>
+
+      <div class="corridors-grid">
+        <div *ngFor="let c of corridors" class="corridor-card">
+          <div class="corridor-top">
+            <span class="corridor-badge">{{ c.type }}</span>
+            <span class="corridor-code">{{ c.code }}</span>
+          </div>
+
+          <h3 class="corridor-name">{{ c.name }}</h3>
+
+          <div class="corridor-meta">
+            <span>📍 {{ c.district }}, {{ c.state }}</span>
+            <span>📐 Required: <strong>{{ c.area }}</strong></span>
+            <span>💰 Project Outlay: <strong>{{ c.cost }}</strong></span>
+          </div>
+
+          <div class="corridor-progress-block">
+            <div class="progress-info">
+              <span>Acquisition Progress</span>
+              <strong>{{ c.progress }}%</strong>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" [style.width.%]="c.progress"></div>
+            </div>
+          </div>
+
+          <div class="corridor-footer">
+            <span class="stage-tag">● {{ c.status }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Digital Capabilities -->
+  <section id="capabilities" class="capabilities-section">
+    <div class="section-container">
+      <div class="section-header-centered">
+        <span class="section-category">ARCHITECTURE & CAPABILITIES</span>
+        <h2 class="section-title">Built for Enterprise Government Scale</h2>
+        <p class="section-subtitle">Engineered to eliminate delays, enforce statutory compliance, and guarantee transparency</p>
+      </div>
+
+      <div class="capabilities-grid">
+        <div class="cap-card">
+          <div class="cap-icon">🗺️</div>
+          <h3>PostGIS Geospatial Alignment</h3>
+          <p>High-resolution cadastral boundary mapping, KML/GeoJSON ingestion, and satellite corridor overlay to pinpoint exact affected parcels.</p>
+        </div>
+
+        <div class="cap-card">
+          <div class="cap-icon">💳</div>
+          <h3>PFMS Direct Benefit Transfer (DBT)</h3>
+          <p>Automated compensation calculation, 100% statutory solatium computation, and direct Aadhaar-linked bank credit with zero intermediaries.</p>
+        </div>
+
+        <div class="cap-card">
+          <div class="cap-icon">⚖️</div>
+          <h3>RFCTLARR 2013 Compliance</h3>
+          <p>Automated Section 11, Section 19, and Section 21 milestone compliance tracker with proactive SLA violation and bottleneck alerts.</p>
+        </div>
+
+        <div class="cap-card">
+          <div class="cap-icon">🏡</div>
+          <h3>Second Schedule R&R Governance</h3>
+          <p>Comprehensive tracking of housing plots, one-time subsistence grants, and livelihood rehabilitation packages for displaced families.</p>
+        </div>
+
+        <div class="cap-card">
+          <div class="cap-icon">🛡️</div>
+          <h3>Role-Based Multi-Agency Access</h3>
+          <p>Strict access boundaries for Central Ministries, State Empowered Committees, District Collectors (CALA), and Project Developers (NHAI/Railways).</p>
+        </div>
+
+        <div class="cap-card">
+          <div class="cap-icon">📊</div>
+          <h3>National Decision Analytics</h3>
+          <p>Executive MIS dashboards, time-series compensation trends, state performance rankings, and corridor progress heatmaps.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stakeholder Access Portals -->
+  <section class="stakeholder-section">
+    <div class="section-container">
+      <div class="section-header-centered">
+        <span class="section-category">STAKEHOLDER ECOSYSTEM</span>
+        <h2 class="section-title">Dedicated Portals for Every Operational Role</h2>
+        <p class="section-subtitle">Streamlined workspaces tailored specifically to statutory administrative responsibilities</p>
+      </div>
+
+      <div class="stakeholder-grid">
+        <div class="stakeholder-card">
+          <div class="s-icon">🏛️</div>
+          <h4>Central Ministries</h4>
+          <p>MoRTH & MoRD national monitoring, cross-state corridor compliance, and macro budget sanctioning.</p>
+          <button class="bs-btn bs-btn-sm bs-btn-primary" (click)="goToLogin()">Central Login →</button>
+        </div>
+
+        <div class="stakeholder-card">
+          <div class="s-icon">🏢</div>
+          <h4>State Governments</h4>
+          <p>State Land Acquisition Cells, Revenue Departments, and administrative approval workflows.</p>
+          <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="goToLogin()">State Login →</button>
+        </div>
+
+        <div class="stakeholder-card">
+          <div class="s-icon">📋</div>
+          <h4>District Collectors / CALA</h4>
+          <p>Joint measurement surveys, award declaration, grievance hearing, and DBT payment approval.</p>
+          <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="goToLogin()">District Login →</button>
+        </div>
+
+        <div class="stakeholder-card">
+          <div class="s-icon">🏗️</div>
+          <h4>Project Agencies</h4>
+          <p>NHAI, Dedicated Freight Corridor (DFCCIL), and State PWD alignment proposal drafting.</p>
+          <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="goToLogin()">Agency Login →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faqs" class="faq-section">
+    <div class="section-container">
+      <div class="section-header-centered">
+        <span class="section-category">STATUTORY CLARIFICATIONS</span>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <p class="section-subtitle">Guidelines on land compensation, survey objections, and DBT payment security</p>
+      </div>
+
+      <div class="faq-list">
+        <div
+          *ngFor="let f of faqs; let i = index"
+          class="faq-item"
+          [class.open]="activeFaqIndex === i"
+          (click)="toggleFaq(i)"
+        >
+          <div class="faq-question">
+            <span>{{ f.q }}</span>
+            <span class="faq-toggle">{{ activeFaqIndex === i ? '−' : '+' }}</span>
+          </div>
+          <div class="faq-answer" *ngIf="activeFaqIndex === i">
+            <p>{{ f.a }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portal CTA Banner -->
+  <section class="cta-banner-section">
+    <div class="section-container">
+      <div class="cta-card">
+        <div class="cta-content">
+          <h2>Accelerate National Infrastructure Development</h2>
+          <p>Connect with your district or ministry portal to begin joint surveys, proposal reviews, or compensation tracking.</p>
+          <div class="cta-actions">
+            <button class="bs-btn bs-btn-lg bs-btn-emerald" (click)="goToRegister()">
+              📝 Register Official Role →
+            </button>
+            <button class="bs-btn bs-btn-lg bs-btn-outline" (click)="goToLogin()">
+              🔐 Sign In to Console
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Official Government DPI Footer -->
+  <footer class="national-footer">
+    <div class="footer-container">
+      <div class="footer-top-grid">
+        <div class="footer-brand-column">
+          <div class="f-brand-stack">
+            <span class="emblem-sm">🏛️</span>
+            <div>
+              <strong>BHOOMISETU</strong>
+              <p>National Land Acquisition & Management Platform</p>
+            </div>
+          </div>
+          <p class="f-desc">
+            An official Digital Public Infrastructure initiative under the Ministry of Rural Development & Ministry of Road Transport and Highways, Government of India.
+          </p>
+        </div>
+
+        <div class="footer-links-column">
+          <h5>PORTAL SECTIONS</h5>
+          <ul>
+            <li><a (click)="scrollToSection('telemetry')">National Operations Data</a></li>
+            <li><a (click)="scrollToSection('search-tracker')">Citizen Khasra Search</a></li>
+            <li><a (click)="scrollToSection('corridors')">Infrastructure Corridors</a></li>
+            <li><a (click)="scrollToSection('capabilities')">Platform Capabilities</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-column">
+          <h5>STATUTORY ACTS</h5>
+          <ul>
+            <li><a href="https://legislative.gov.in" target="_blank" rel="noopener">RFCTLARR Act 2013</a></li>
+            <li><a href="https://pfms.nic.in" target="_blank" rel="noopener">PFMS DBT Guidelines</a></li>
+            <li><a href="https://digitalindia.gov.in" target="_blank" rel="noopener">Digital India DPI</a></li>
+            <li><a (click)="scrollToSection('faqs')">Dispute Redressal FAQ</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-column">
+          <h5>OFFICIAL CONSOLES</h5>
+          <ul>
+            <li><a routerLink="/login" [queryParams]="{role: 'central.admin'}">Central Ministry Control</a></li>
+            <li><a routerLink="/login" [queryParams]="{role: 'super.admin'}">Super Admin Console</a></li>
+            <li><a routerLink="/register">Register Official Account</a></li>
+            <li><a routerLink="/login">Authorized Sign In</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div class="f-bottom-left">
+          <span>© 2026 BhoomiSetu • Government of India. All Rights Reserved.</span>
+        </div>
+        <div class="f-bottom-right">
+          <span>🔒 256-Bit Encrypted Secure Government Portal</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

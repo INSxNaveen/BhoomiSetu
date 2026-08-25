@@ -1,0 +1,406 @@
+<div class="create-proposal-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>Project Agency</span>
+        <span class="divider">/</span>
+        <span class="active">Create Proposal</span>
+      </div>
+      <h1 class="page-title">
+        Statutory Land Acquisition Proposal Wizard
+        <span class="draft-badge" *ngIf="proposalId">Editing Draft</span>
+      </h1>
+      <p class="page-subtitle">
+        5-step official submission workflow under RFCTLARR Act 2013: Project Details, Cadastral Requirements, Social Impact, and Clearances
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-outline" (click)="saveDraft()" [disabled]="actionSubmitting">
+        <span>💾</span> {{ actionSubmitting ? 'Saving...' : 'Save Draft' }}
+      </button>
+      <button class="bs-btn bs-btn-primary" (click)="openSubmitConfirmation()" [disabled]="actionSubmitting">
+        <span>🚀</span> Submit Proposal
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Toast -->
+  <div class="bs-success-banner" *ngIf="successMessage()">
+    <span class="banner-icon">✅</span>
+    <span>{{ successMessage() }}</span>
+  </div>
+
+  <!-- Error Banner -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+  </div>
+
+  <!-- 5-Step Wizard Indicator -->
+  <div class="wizard-stepper bs-card">
+    <div class="step-node" [class.active]="currentStep === 1" [class.completed]="currentStep > 1" (click)="goToStep(1)">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <span class="s-title">Project Details</span>
+        <span class="s-sub">Corridor & Cost</span>
+      </div>
+    </div>
+    <div class="step-line" [class.completed]="currentStep > 1"></div>
+
+    <div class="step-node" [class.active]="currentStep === 2" [class.completed]="currentStep > 2" (click)="goToStep(2)">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <span class="s-title">Land Requirement</span>
+        <span class="s-sub">Khasra & Area</span>
+      </div>
+    </div>
+    <div class="step-line" [class.completed]="currentStep > 2"></div>
+
+    <div class="step-node" [class.active]="currentStep === 3" [class.completed]="currentStep > 3" (click)="goToStep(3)">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <span class="s-title">Affected Families</span>
+        <span class="s-sub">SIA & Estimates</span>
+      </div>
+    </div>
+    <div class="step-line" [class.completed]="currentStep > 3"></div>
+
+    <div class="step-node" [class.active]="currentStep === 4" [class.completed]="currentStep > 4" (click)="goToStep(4)">
+      <div class="step-num">4</div>
+      <div class="step-text">
+        <span class="s-title">Documents</span>
+        <span class="s-sub">DPR & Clearances</span>
+      </div>
+    </div>
+    <div class="step-line" [class.completed]="currentStep > 4"></div>
+
+    <div class="step-node" [class.active]="currentStep === 5" (click)="goToStep(5)">
+      <div class="step-num">5</div>
+      <div class="step-text">
+        <span class="s-title">Review & Submit</span>
+        <span class="s-sub">Final Verification</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wizard Content Card -->
+  <div class="wizard-content bs-card">
+    <!-- STEP 1: PROJECT DETAILS -->
+    <div class="step-pane" *ngIf="currentStep === 1">
+      <h3 class="pane-title">Step 1: Project Alignment & Jurisdiction</h3>
+      <p class="pane-desc">Specify infrastructure project identity, administrative location, and capital cost projection.</p>
+
+      <div class="form-grid">
+        <div class="form-group col-span-2">
+          <label>Infrastructure Project Name <span class="required">*</span></label>
+          <input type="text" class="bs-input" [(ngModel)]="projectName" placeholder="e.g., NH-58 Access-Controlled Expressway Bypass" />
+        </div>
+
+        <div class="form-group">
+          <label>Project Code (Optional)</label>
+          <input type="text" class="bs-input font-mono" [(ngModel)]="projectCode" placeholder="Auto-generated if empty" />
+        </div>
+
+        <div class="form-group">
+          <label>Infrastructure Sector</label>
+          <select class="bs-select" [(ngModel)]="projectType">
+            <option [value]="0">National Highway (MoRTH/NHAI)</option>
+            <option [value]="1">Railway Line (DFCCIL/IR)</option>
+            <option [value]="2">Airport (AAI/State)</option>
+            <option [value]="3">Industrial Corridor (NICDIT)</option>
+            <option [value]="4">Urban Infrastructure (Metro/Smart City)</option>
+            <option [value]="5">Irrigation Canal</option>
+            <option [value]="6">Power & Energy Grid</option>
+            <option [value]="7">Other Public Purpose</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>State Jurisdiction <span class="required">*</span></label>
+          <select class="bs-select" [(ngModel)]="selectedStateId" (change)="onStateChange()">
+            <option value="">Select State</option>
+            <option *ngFor="let s of states" [value]="s.id">{{ s.name }} ({{ s.code }})</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>District Collectorate <span class="required">*</span></label>
+          <select class="bs-select" [(ngModel)]="selectedDistrictId">
+            <option value="">Select District</option>
+            <option *ngFor="let d of filteredDistricts" [value]="d.id">{{ d.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Estimated Project Cost (INR) <span class="required">*</span></label>
+          <input type="number" class="bs-input font-mono" [(ngModel)]="estimatedCost" placeholder="250000000" />
+          <span class="field-hint text-xs font-mono">{{ formatCurrency(estimatedCost) }}</span>
+        </div>
+
+        <div class="form-group">
+          <label>Planned Construction Start</label>
+          <input type="date" class="bs-input" [(ngModel)]="startDate" />
+        </div>
+
+        <div class="form-group">
+          <label>Target Completion Date</label>
+          <input type="date" class="bs-input" [(ngModel)]="targetCompletionDate" />
+        </div>
+
+        <div class="form-group col-span-2">
+          <label>Project Objective & Right of Way (RoW) Justification</label>
+          <textarea class="bs-textarea" rows="3" [(ngModel)]="description" placeholder="Provide strategic public purpose rationale under Section 2(1) of RFCTLARR Act 2013..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: LAND REQUIREMENT -->
+    <div class="step-pane" *ngIf="currentStep === 2">
+      <h3 class="pane-title">Step 2: Cadastral Land Scope & Khasra Survey</h3>
+      <p class="pane-desc">Specify total land requirement, revenue sub-divisions (Tehsils & Villages), and Khasra survey demarcations.</p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Total Land Required (Hectares) <span class="required">*</span></label>
+          <input type="number" step="0.1" class="bs-input font-mono" [(ngModel)]="landAreaProposed" />
+          <span class="field-hint text-xs font-mono">≈ {{ (landAreaProposed * 2.471).toFixed(2) }} Acres / {{ (landAreaProposed * 10000).toFixed(0) }} Sq.M</span>
+        </div>
+
+        <div class="form-group">
+          <label>Primary Land Category</label>
+          <select class="bs-select" [(ngModel)]="landCategory">
+            <option value="Agricultural (Single/Double Crop)">Agricultural (Single/Double Crop)</option>
+            <option value="Commercial / Peri-Urban">Commercial / Peri-Urban</option>
+            <option value="Residential Abadi">Residential Abadi</option>
+            <option value="Forest / Wasteland">Forest / Wasteland</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Tehsil / Sub-Division Jurisdiction</label>
+          <input type="text" class="bs-input" [(ngModel)]="tehsilName" placeholder="e.g. Meerut Sadar" />
+        </div>
+
+        <div class="form-group">
+          <label>Revenue Village Jurisdiction</label>
+          <input type="text" class="bs-input" [(ngModel)]="villageName" placeholder="e.g. Dabathwa" />
+        </div>
+
+        <div class="form-group col-span-2">
+          <label>Identified Survey / Khasra Numbers <span class="required">*</span></label>
+          <input type="text" class="bs-input font-mono" [(ngModel)]="surveyNumbers" placeholder="245/1A, 245/1B, 246/2, 248/4..." />
+          <span class="field-hint text-xs">Separate Khasra numbers with commas as per revenue village record (Khatauni).</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: AFFECTED FAMILIES & SIA -->
+    <div class="step-pane" *ngIf="currentStep === 3">
+      <h3 class="pane-title">Step 3: Social Impact & Compensation Estimates</h3>
+      <p class="pane-desc">Provide estimated affected families, physical displacements, and statutory compensation provisioning.</p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Total Affected Landowners & Families</label>
+          <input type="number" class="bs-input font-mono" [(ngModel)]="affectedFamilyCount" />
+        </div>
+
+        <div class="form-group">
+          <label>Physically Displaced Families (Requiring Resettlement)</label>
+          <input type="number" class="bs-input font-mono" [(ngModel)]="displacedFamilyCount" />
+        </div>
+
+        <div class="form-group">
+          <label>R&R Second Schedule Eligible Families</label>
+          <input type="number" class="bs-input font-mono" [(ngModel)]="rehabEligibleCount" />
+        </div>
+
+        <div class="form-group">
+          <label>Estimated Statutory Compensation Budget (INR)</label>
+          <input type="number" class="bs-input font-mono" [(ngModel)]="estimatedCompensation" />
+          <span class="field-hint text-xs font-mono">{{ formatCurrency(estimatedCompensation) }} (Includes Base + 100% Solatium)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: DOCUMENTS -->
+    <div class="step-pane" *ngIf="currentStep === 4">
+      <h3 class="pane-title">Step 4: Statutory Clearances & Documents</h3>
+      <p class="pane-desc">Attach Detailed Project Report (DPR), Cadastral Land Schedules, SIA Drafts, and Environment Clearances.</p>
+
+      <!-- Attached Documents Table -->
+      <div class="table-responsive mb-3">
+        <table class="bs-table">
+          <thead>
+            <tr>
+              <th>Document Name</th>
+              <th>Type</th>
+              <th>Size</th>
+              <th>Remarks</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let doc of documents; let i = index">
+              <td class="font-bold">📄 {{ doc.fileName }}</td>
+              <td><span class="bs-badge bs-badge-info">Document</span></td>
+              <td class="font-mono text-xs">{{ (doc.fileSize / 1024 / 1024).toFixed(2) }} MB</td>
+              <td class="text-xs text-muted">{{ doc.remarks }}</td>
+              <td>
+                <button class="bs-btn bs-btn-xs bs-btn-danger" (click)="removeDocument(i)">Remove</button>
+              </td>
+            </tr>
+            <tr *ngIf="documents.length === 0">
+              <td colspan="5" class="text-center text-muted py-3">No documents attached yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Add Document Form -->
+      <div class="add-doc-card">
+        <h4 class="text-sm font-bold mb-2">Attach Supporting Clearance File:</h4>
+        <div class="add-doc-grid">
+          <div class="form-group">
+            <label>Document Category</label>
+            <select class="bs-select" [(ngModel)]="newDocType">
+              <option [value]="0">Detailed Project Report (DPR)</option>
+              <option [value]="1">Cadastral Khasra Map</option>
+              <option [value]="2">Revenue Record (Khatauni)</option>
+              <option [value]="9">SIA / Environment Clearance</option>
+              <option [value]="10">Other Authority Letter</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>File Name (PDF)</label>
+            <input type="text" class="bs-input" [(ngModel)]="newDocFileName" placeholder="e.g. Forest_Clearance_Stage1.pdf" />
+          </div>
+          <div class="form-group">
+            <label>Remarks</label>
+            <input type="text" class="bs-input" [(ngModel)]="newDocRemarks" placeholder="Optional notes" />
+          </div>
+          <div class="add-btn-col">
+            <button class="bs-btn bs-btn-outline" (click)="addDocument()" [disabled]="!newDocFileName.trim()">
+              ➕ Attach
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5: REVIEW & SUBMIT -->
+    <div class="step-pane" *ngIf="currentStep === 5">
+      <h3 class="pane-title">Step 5: Review & Final Verification</h3>
+      <p class="pane-desc">Please verify all proposal parameters before submitting to District & State Competent Authorities.</p>
+
+      <div class="review-grid">
+        <!-- Section 1: Project Identity -->
+        <div class="review-card">
+          <div class="r-head">
+            <span class="r-title">1. Project & Jurisdiction</span>
+            <button class="edit-link" (click)="goToStep(1)">Edit ✏️</button>
+          </div>
+          <div class="r-body">
+            <div class="r-row"><span class="lbl">Project Name:</span> <span class="val font-bold">{{ projectName }}</span></div>
+            <div class="r-row"><span class="lbl">Sector:</span> <span class="val">{{ getProjectTypeName() }}</span></div>
+            <div class="r-row"><span class="lbl">State / District:</span> <span class="val">{{ getStateName() }} • {{ getDistrictName() }}</span></div>
+            <div class="r-row"><span class="lbl">Estimated Cost:</span> <span class="val font-mono font-bold">{{ formatCurrency(estimatedCost) }}</span></div>
+          </div>
+        </div>
+
+        <!-- Section 2: Land Scope -->
+        <div class="review-card">
+          <div class="r-head">
+            <span class="r-title">2. Land Requirement</span>
+            <button class="edit-link" (click)="goToStep(2)">Edit ✏️</button>
+          </div>
+          <div class="r-body">
+            <div class="r-row"><span class="lbl">Area Proposed:</span> <span class="val font-mono font-bold text-success">{{ landAreaProposed }} Hectares</span></div>
+            <div class="r-row"><span class="lbl">Category:</span> <span class="val">{{ landCategory }}</span></div>
+            <div class="r-row"><span class="lbl">Tehsil & Village:</span> <span class="val">{{ tehsilName }} ({{ villageName }})</span></div>
+            <div class="r-row"><span class="lbl">Khasra Demarcation:</span> <span class="val font-mono text-xs">{{ surveyNumbers }}</span></div>
+          </div>
+        </div>
+
+        <!-- Section 3: Affected Families -->
+        <div class="review-card">
+          <div class="r-head">
+            <span class="r-title">3. Social Impact & Budget</span>
+            <button class="edit-link" (click)="goToStep(3)">Edit ✏️</button>
+          </div>
+          <div class="r-body">
+            <div class="r-row"><span class="lbl">Affected Families:</span> <span class="val font-bold">{{ affectedFamilyCount }} Families</span></div>
+            <div class="r-row"><span class="lbl">Displaced Families:</span> <span class="val font-bold text-amber">{{ displacedFamilyCount }} Families</span></div>
+            <div class="r-row"><span class="lbl">R&R Eligible:</span> <span class="val">{{ rehabEligibleCount }} Families</span></div>
+            <div class="r-row"><span class="lbl">Compensation Fund:</span> <span class="val font-mono font-bold">{{ formatCurrency(estimatedCompensation) }}</span></div>
+          </div>
+        </div>
+
+        <!-- Section 4: Attached Files -->
+        <div class="review-card">
+          <div class="r-head">
+            <span class="r-title">4. Attached Documentation</span>
+            <button class="edit-link" (click)="goToStep(4)">Edit ✏️</button>
+          </div>
+          <div class="r-body">
+            <div class="r-row" *ngFor="let d of documents">
+              <span class="lbl">📄 {{ d.fileName }}</span>
+              <span class="val text-xs text-muted">{{ d.remarks }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wizard Navigation Footer -->
+    <div class="wizard-footer">
+      <button class="bs-btn bs-btn-outline" (click)="prevStep()" [disabled]="currentStep === 1">
+        ◀ Previous
+      </button>
+
+      <div class="footer-right">
+        <button class="bs-btn bs-btn-outline" (click)="saveDraft()" [disabled]="actionSubmitting">
+          💾 Save as Draft
+        </button>
+        <button class="bs-btn bs-btn-primary" *ngIf="currentStep < 5" (click)="nextStep()">
+          Next Step ▶
+        </button>
+        <button class="bs-btn bs-btn-success" *ngIf="currentStep === 5" (click)="openSubmitConfirmation()" [disabled]="actionSubmitting">
+          🚀 Confirm & Submit Proposal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submission Confirmation Modal -->
+  <div class="bs-modal-backdrop" *ngIf="showConfirmSubmitModal" (click)="closeModal()">
+    <div class="bs-modal-card confirm-modal" (click)="$event.stopPropagation()">
+      <div class="bs-modal-header">
+        <h2 class="bs-modal-title">Submit Statutory Proposal?</h2>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="bs-modal-body">
+        <div class="confirm-icon-box">📜</div>
+        <p class="confirm-text">
+          You are submitting land acquisition proposal for <strong>{{ projectName }} ({{ landAreaProposed }} Ha)</strong> to
+          <strong>{{ getDistrictName() }} Collectorate / CALA</strong> and <strong>{{ getStateName() }} Land Acquisition Authority</strong>.
+        </p>
+        <p class="confirm-sub">
+          After submission, the proposal enters official scrutiny and cannot be edited unless returned by the reviewing authority for correction.
+        </p>
+
+        <div class="modal-actions-bar">
+          <button class="bs-btn bs-btn-success" (click)="confirmSubmitProposal()" [disabled]="actionSubmitting">
+            {{ actionSubmitting ? 'Submitting to Central Registry...' : 'Yes, Submit Proposal' }}
+          </button>
+          <button class="bs-btn bs-btn-outline" (click)="closeModal()" [disabled]="actionSubmitting">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

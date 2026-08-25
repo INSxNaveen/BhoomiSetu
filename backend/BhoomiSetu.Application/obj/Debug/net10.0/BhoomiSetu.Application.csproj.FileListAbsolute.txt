@@ -1,0 +1,15 @@
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSetu.Application.csproj.AssemblyReference.cache
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSetu.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSetu.Application.AssemblyInfoInputs.cache
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSetu.Application.AssemblyInfo.cs
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSetu.Application.csproj.CoreCompileInputs.cache
+C:\BhoomiSetu\backend\BhoomiSetu.Application\bin\Debug\net10.0\BhoomiSetu.Application.deps.json
+C:\BhoomiSetu\backend\BhoomiSetu.Application\bin\Debug\net10.0\BhoomiSetu.Application.dll
+C:\BhoomiSetu\backend\BhoomiSetu.Application\bin\Debug\net10.0\BhoomiSetu.Application.pdb
+C:\BhoomiSetu\backend\BhoomiSetu.Application\bin\Debug\net10.0\BhoomiSetu.Domain.dll
+C:\BhoomiSetu\backend\BhoomiSetu.Application\bin\Debug\net10.0\BhoomiSetu.Domain.pdb
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSe.CC3125B2.Up2Date
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSetu.Application.dll
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\refint\BhoomiSetu.Application.dll
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSetu.Application.pdb
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\ref\BhoomiSetu.Application.dll

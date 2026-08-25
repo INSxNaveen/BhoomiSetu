@@ -1,0 +1,147 @@
+<div class="gis-command-center">
+  <!-- Left Filter & Layer Drawer -->
+  <aside class="gis-filter-drawer">
+    <div class="drawer-header">
+      <div class="drawer-title-row">
+        <span class="drawer-icon">🗺️</span>
+        <h2 class="drawer-title">National GIS Filters</h2>
+      </div>
+      <p class="drawer-sub">Spatial queries across national infrastructure corridors</p>
+    </div>
+
+    <div class="drawer-form">
+      <!-- State Filter -->
+      <div class="filter-field">
+        <label for="gisState">State / UT</label>
+        <select id="gisState" [(ngModel)]="filterState" (change)="applyFilters()" class="gis-control">
+          <option value="">All States / UTs</option>
+          <option value="Uttar Pradesh">Uttar Pradesh</option>
+          <option value="Maharashtra">Maharashtra</option>
+          <option value="Gujarat">Gujarat</option>
+          <option value="Rajasthan">Rajasthan</option>
+          <option value="Bihar">Bihar</option>
+          <option value="Karnataka">Karnataka</option>
+        </select>
+      </div>
+
+      <!-- District Filter -->
+      <div class="filter-field">
+        <label for="gisDistrict">District</label>
+        <input
+          type="text"
+          id="gisDistrict"
+          [(ngModel)]="filterDistrict"
+          (input)="applyFilters()"
+          placeholder="e.g. Meerut, Pune, Sanand"
+          class="gis-control"
+        />
+      </div>
+
+      <!-- Project Type -->
+      <div class="filter-field">
+        <label for="gisType">Project Type</label>
+        <select id="gisType" [(ngModel)]="filterType" (change)="applyFilters()" class="gis-control">
+          <option value="">All Infrastructure Types</option>
+          <option value="0">National Highway</option>
+          <option value="1">Railway Line (DFCCIL)</option>
+          <option value="6">Power & Green Energy</option>
+        </select>
+      </div>
+
+      <!-- Acquisition Status -->
+      <div class="filter-field">
+        <label for="gisStatus">Acquisition Status</label>
+        <select id="gisStatus" [(ngModel)]="filterStatus" (change)="applyFilters()" class="gis-control">
+          <option value="">All Stages</option>
+          <option value="4">Acquisition in Progress</option>
+          <option value="5">Compensation Phase</option>
+          <option value="6">Possession Phase</option>
+          <option value="8">Completed</option>
+          <option value="2">Under Verification</option>
+        </select>
+      </div>
+
+      <!-- Search Keyword -->
+      <div class="filter-field">
+        <label for="gisSearch">Search Corridor / Project Code</label>
+        <input
+          type="text"
+          id="gisSearch"
+          [(ngModel)]="filterSearch"
+          (input)="applyFilters()"
+          placeholder="e.g. NH-48 or WDFC"
+          class="gis-control"
+        />
+      </div>
+
+      <!-- GIS Map Layers -->
+      <div class="layers-section">
+        <span class="layers-title">Map Layers</span>
+        <div class="layer-checklist">
+          <label class="layer-item">
+            <input type="checkbox" [checked]="showProjectsLayer" (change)="toggleLayer('projects')" />
+            <span>☑ Projects (Markers)</span>
+          </label>
+          <label class="layer-item">
+            <input type="checkbox" [checked]="showParcelsLayer" (change)="toggleLayer('parcels')" />
+            <span>☑ Land Parcels (GeoJSON)</span>
+          </label>
+          <label class="layer-item">
+            <input type="checkbox" [checked]="showDistrictsLayer" (change)="toggleLayer('districts')" />
+            <span>☑ District Boundaries</span>
+          </label>
+          <label class="layer-item disabled" title="Coming in Phase 1">
+            <input type="checkbox" disabled />
+            <span>☐ State Boundaries <small>(Phase 1)</small></span>
+          </label>
+          <label class="layer-item disabled" title="Coming in Phase 1">
+            <input type="checkbox" disabled />
+            <span>☐ Cadastral Survey <small>(Phase 1)</small></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="drawer-actions">
+        <button class="btn btn-outline-primary btn-sm w-100" (click)="resetFilters()">
+          Reset All Filters 🔄
+        </button>
+      </div>
+
+      <!-- Summary Card -->
+      <div class="gis-stat-box">
+        <div class="stat-row">
+          <span>Corridors in View:</span>
+          <strong>{{ projects.length }}</strong>
+        </div>
+        <div class="stat-row">
+          <span>Parcels Loaded:</span>
+          <strong>{{ parcels.length }}</strong>
+        </div>
+        <div class="stat-row">
+          <span>Spatial Backend:</span>
+          <strong style="color: #059669;">PostGIS Active</strong>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Map Viewport -->
+  <main class="gis-map-viewport">
+    <!-- Floating Quick Bar -->
+    <div class="map-floating-bar">
+      <button class="btn btn-primary btn-sm" (click)="fitIndia()">
+        🇮🇳 Fit National View
+      </button>
+
+      <div class="floating-legend">
+        <span class="dot-item"><span class="dot" style="background:#10B981;"></span> Active</span>
+        <span class="dot-item"><span class="dot" style="background:#EAB308;"></span> Delayed</span>
+        <span class="dot-item"><span class="dot" style="background:#3B82F6;"></span> Proposed</span>
+        <span class="dot-item"><span class="dot" style="background:#64748B;"></span> Completed</span>
+      </div>
+    </div>
+
+    <!-- Leaflet Map Canvas -->
+    <div id="national-gis-map-canvas" class="full-map-canvas"></div>
+  </main>
+</div>

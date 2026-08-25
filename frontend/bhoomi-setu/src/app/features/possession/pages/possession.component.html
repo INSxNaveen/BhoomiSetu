@@ -1,0 +1,35 @@
+<div class="possession-page">
+  <div class="page-header">
+    <div>
+      <h1 class="title">Land Possession & Handover Tracking</h1>
+      <p class="subtitle">Verification Records & Official Certificate Records</p>
+    </div>
+  </div>
+
+  <div class="card table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Survey #</th>
+          <th>Project Name</th>
+          <th>Area (Ha)</th>
+          <th>Possession Date</th>
+          <th>Verified By</th>
+          <th>Remarks</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of records">
+          <td><strong>{{ item.surveyNumber }}</strong></td>
+          <td>{{ item.projectName }}</td>
+          <td>{{ item.areaHectares }} Ha</td>
+          <td>{{ item.possessionDate | date:'mediumDate' }}</td>
+          <td>{{ item.verifiedByName }}</td>
+          <td>{{ item.remarks }}</td>
+          <td><span class="badge badge-success">{{ item.status }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

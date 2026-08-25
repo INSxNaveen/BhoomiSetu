@@ -1,0 +1,179 @@
+<div class="district-projects-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>District Administration</span>
+        <span class="divider">/</span>
+        <span class="active">Projects</span>
+      </div>
+      <h1 class="page-title">District Infrastructure Projects</h1>
+      <p class="page-subtitle">Field-level monitoring of corridor alignment, land requisition, and acquisition progress</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-primary" (click)="loadProjects()" [disabled]="loading()">
+        <span class="btn-icon">🔄</span> {{ loading() ? 'Loading...' : 'Refresh Projects' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters Row -->
+  <div class="bs-card filter-card">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="bs-input search-input"
+        placeholder="Search project name, code, or corridor..."
+        [(ngModel)]="searchQuery"
+        (input)="onFilterChange()"
+      />
+    </div>
+
+    <div class="filters-group">
+      <select class="bs-select" [(ngModel)]="selectedProjectType" (change)="onFilterChange()">
+        <option value="">All Sectors</option>
+        <option value="NationalHighway">National Highways</option>
+        <option value="RailwayLine">Railways & DFC</option>
+        <option value="Airport">Airports & Logistics</option>
+        <option value="IndustrialCorridor">Industrial Corridors</option>
+        <option value="UrbanInfrastructure">Urban Infrastructure</option>
+      </select>
+
+      <select class="bs-select" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+        <option value="">All Statuses</option>
+        <option value="Planning">Planning</option>
+        <option value="Approved">Approved</option>
+        <option value="InProgress">In Progress</option>
+        <option value="Completed">Completed</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && !projects().length">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading district project repository...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadProjects()">Retry</button>
+  </div>
+
+  <!-- Projects Table -->
+  <div class="bs-card table-card" *ngIf="!loading() || projects().length">
+    <div class="table-responsive">
+      <table class="bs-table">
+        <thead>
+          <tr>
+            <th>Project Code</th>
+            <th>Project Name</th>
+            <th>Agency / Ministry</th>
+            <th>Sector</th>
+            <th>Required Area</th>
+            <th>Est. Compensation</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of projects()" (click)="openProjectDetail(p)" class="clickable-row">
+            <td class="code-cell font-mono">{{ p.projectCode }}</td>
+            <td class="name-cell">
+              <div class="project-title">{{ p.name }}</div>
+              <div class="project-desc">{{ p.description }}</div>
+            </td>
+            <td>{{ p.organizationName }}</td>
+            <td>
+              <span class="type-tag">{{ p.projectType }}</span>
+            </td>
+            <td class="font-mono">{{ p.requiredAreaHectares }} Ha</td>
+            <td class="font-mono">{{ formatCurrency(p.estimatedCost * 0.15) }}</td>
+            <td>
+              <span class="bs-badge" [ngClass]="p.status === 'Approved' ? 'bs-badge-success' : 'bs-badge-info'">
+                {{ p.status }}
+              </span>
+            </td>
+            <td>
+              <button class="bs-btn bs-btn-xs bs-btn-outline" (click)="$event.stopPropagation(); openProjectDetail(p)">
+                Inspect Details ➔
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="projects().length === 0 && !loading()">
+            <td colspan="8" class="text-center py-4 text-muted">
+              No projects found matching the specified filters.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Project Inspection Modal -->
+  <div class="bs-modal-backdrop" *ngIf="showDetailModal" (click)="closeModal()">
+    <div class="bs-modal-card project-modal" (click)="$event.stopPropagation()">
+      <div class="bs-modal-header">
+        <div>
+          <span class="modal-pretitle font-mono">{{ selectedProject?.projectCode }}</span>
+          <h2 class="bs-modal-title">{{ selectedProject?.name }}</h2>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="bs-modal-body">
+        <div class="modal-grid-2">
+          <div class="info-group">
+            <label>Executing Agency</label>
+            <div class="val">{{ selectedProject?.organizationName }}</div>
+          </div>
+          <div class="info-group">
+            <label>Infrastructure Sector</label>
+            <div class="val">{{ selectedProject?.projectType }}</div>
+          </div>
+          <div class="info-group">
+            <label>District Jurisdiction</label>
+            <div class="val">{{ selectedProject?.districtName }} ({{ selectedProject?.stateName }})</div>
+          </div>
+          <div class="info-group">
+            <label>Total Land Required</label>
+            <div class="val font-mono">{{ selectedProject?.requiredAreaHectares }} Hectares</div>
+          </div>
+          <div class="info-group">
+            <label>Total Project Budget</label>
+            <div class="val font-mono">{{ formatCurrency(selectedProject?.estimatedCost) }}</div>
+          </div>
+          <div class="info-group">
+            <label>Acquisition Status</label>
+            <div class="val">
+              <span class="bs-badge bs-badge-success">{{ selectedProject?.status }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="desc-box">
+          <label>Project Scope & Alignment Overview</label>
+          <p>{{ selectedProject?.description }}</p>
+        </div>
+
+        <div class="modal-actions-bar">
+          <a routerLink="/district/verification" (click)="closeModal()" class="bs-btn bs-btn-primary">
+            📋 Field Verifications for this Project
+          </a>
+          <a routerLink="/district/gis" (click)="closeModal()" class="bs-btn bs-btn-outline">
+            🗺️ View on District GIS Map
+          </a>
+          <a routerLink="/district/compensation" (click)="closeModal()" class="bs-btn bs-btn-outline">
+            💰 Compensation DBT
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

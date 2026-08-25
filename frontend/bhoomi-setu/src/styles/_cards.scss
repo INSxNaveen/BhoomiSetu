@@ -1,0 +1,119 @@
+/* ==========================================================================
+   BHOOMISETU CARD SYSTEM
+   ========================================================================== */
+
+.bs-card {
+  background: var(--bs-surface);
+  border: 1px solid var(--bs-border);
+  border-radius: var(--bs-radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--bs-shadow-card);
+  transition: box-shadow var(--bs-transition-base), border-color var(--bs-transition-base);
+
+  &.bs-card-hover:hover {
+    box-shadow: var(--bs-shadow-md);
+    border-color: var(--bs-border-strong);
+  }
+
+  @media (max-width: 768px) {
+    padding: var(--space-4);
+  }
+}
+
+.bs-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--bs-border-subtle);
+}
+
+.bs-card-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--bs-navy-900);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.bs-card-body {
+  position: relative;
+}
+
+/* Stat & KPI Cards */
+.bs-stat-card {
+  background: var(--bs-surface);
+  border: 1px solid var(--bs-border);
+  border-radius: var(--bs-radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--bs-shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+  }
+
+  &.bs-stat-blue::before { background: var(--bs-blue-600); }
+  &.bs-stat-green::before { background: var(--bs-green-600); }
+  &.bs-stat-amber::before { background: var(--bs-amber-600); }
+  &.bs-stat-saffron::before { background: var(--bs-saffron-600); }
+  &.bs-stat-red::before { background: var(--bs-red-600); }
+
+  .bs-stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .bs-stat-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--bs-text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .bs-stat-icon {
+    font-size: 1.25rem;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bs-surface-muted);
+    border-radius: var(--bs-radius-md);
+  }
+
+  .bs-stat-value {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-extrabold);
+    color: var(--bs-navy-900);
+    line-height: var(--line-height-tight);
+
+    .unit {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--bs-text-muted);
+      margin-left: 2px;
+    }
+  }
+
+  .bs-stat-subtext {
+    font-size: var(--font-size-xs);
+    color: var(--bs-text-muted);
+    line-height: var(--line-height-snug);
+  }
+}

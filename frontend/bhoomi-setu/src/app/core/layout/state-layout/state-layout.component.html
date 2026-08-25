@@ -1,0 +1,82 @@
+<div class="state-shell">
+  <!-- Top Navigation Header -->
+  <header class="state-topbar">
+    <div class="topbar-left">
+      <span class="emblem" (click)="goToHome()" title="Return to Portal Home">🏛️</span>
+      <div class="brand">
+        <div class="brand-row">
+          <span class="brand-name">BHOOMISETU</span>
+          <span class="state-tag">STATE ADMINISTRATION</span>
+        </div>
+        <span class="console-tag">{{ user()?.stateName || 'State Government' }} • Land Acquisition Authority</span>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <div class="jurisdiction-badge">
+        <span class="badge-icon">📍</span>
+        <span class="jurisdiction-label">Jurisdiction: <strong>{{ user()?.stateName || 'Uttar Pradesh' }}</strong></span>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="system-status-indicator">
+        <span class="bs-pulse-dot"></span> State Gateway Live
+      </div>
+      <div class="notification-bell" title="Notifications" routerLink="/notifications">🔔</div>
+      <div class="user-profile">
+        <div class="avatar">SA</div>
+        <div class="user-details">
+          <span class="user-name">{{ user()?.firstName }} {{ user()?.lastName }}</span>
+          <span class="user-role">State Admin ({{ user()?.organizationName || 'Revenue Department' }})</span>
+        </div>
+      </div>
+      <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="logout()">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- Sidebar & Main Content Workspace -->
+  <div class="state-workspace">
+    <aside class="state-sidebar">
+      <div class="sidebar-section-title">STATE OPERATIONS</div>
+      <nav class="sidebar-nav">
+        <a routerLink="/state/dashboard" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">State Dashboard</span>
+        </a>
+        <a routerLink="/state/proposals" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">Proposal Review</span>
+        </a>
+        <a routerLink="/state/projects" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🗺️</span>
+          <span class="nav-label">Projects & GIS</span>
+        </a>
+        <a routerLink="/state/acquisition" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">Acquisition Progress</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-section-title">GOVERNANCE & AUDIT</div>
+      <nav class="sidebar-nav">
+        <a routerLink="/notifications" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🔔</span>
+          <span class="nav-label">State Alerts</span>
+        </a>
+        <a routerLink="/audit" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🛡️</span>
+          <span class="nav-label">Activity Stream</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="bs-btn bs-btn-sm bs-btn-outline w-100" (click)="goToHome()">← Public Portal Home</button>
+      </div>
+    </aside>
+
+    <main class="state-content-area">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

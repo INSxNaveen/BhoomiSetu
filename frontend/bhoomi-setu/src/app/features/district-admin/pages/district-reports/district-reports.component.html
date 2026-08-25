@@ -1,0 +1,179 @@
+<div class="district-reports-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>District Administration</span>
+        <span class="divider">/</span>
+        <span class="active">Reports & Analytics</span>
+      </div>
+      <h1 class="page-title">
+        District Executive Acquisition Report
+        <span class="district-badge" *ngIf="report()">{{ report()?.districtName }} • {{ report()?.stateName }}</span>
+      </h1>
+      <p class="page-subtitle">
+        Consolidated administrative dossier for District Collectorate, Land Acquisition Officer (CALA), and State Review Authority
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-outline" (click)="exportCsv()" [disabled]="!report()">
+        📥 Export District Dossier (CSV)
+      </button>
+      <button class="bs-btn bs-btn-primary" (click)="loadReport()" [disabled]="loading()">
+        🔄 {{ loading() ? 'Generating...' : 'Refresh Dossier' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Export Toast -->
+  <div class="bs-success-banner" *ngIf="exportMessage()">
+    <span class="banner-icon">✅</span>
+    <span>{{ exportMessage() }}</span>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && !report()">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Generating official district acquisition report...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadReport()">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <ng-container *ngIf="report()">
+    <!-- 6 Executive KPIs -->
+    <div class="bs-grid-6 stats-grid">
+      <app-stat-card
+        title="Active Corridors"
+        [value]="report()?.metrics?.activeProjects || 0"
+        unit="Projects"
+        subtext="Under CALA jurisdiction"
+        icon="🏗️"
+        variant="blue"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Total Land in Scope"
+        [value]="(report()?.metrics?.totalLandRequiredHectares || 0) + ' Ha'"
+        unit=""
+        [subtext]="(report()?.metrics?.totalLandParcels || 0) + ' Survey Khasras'"
+        icon="📐"
+        variant="navy"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Land in Possession"
+        [value]="(report()?.metrics?.totalLandAcquiredHectares || 0) + ' Ha'"
+        unit=""
+        [subtext]="(report()?.metrics?.landAcquisitionPercentage || 0) + '% Acquired'"
+        icon="✅"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Total Assessed"
+        [value]="formatCurrency(report()?.compensationSummary?.totalAssessed || 0)"
+        unit=""
+        subtext="CALA Statutory Awards"
+        icon="⚖️"
+        variant="navy"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="DBT Disbursed"
+        [value]="formatCurrency(report()?.compensationSummary?.totalDisbursed || 0)"
+        unit=""
+        [subtext]="(report()?.metrics?.compensationDisbursementPercentage || 0) + '% Disbursed'"
+        icon="💸"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="R&R Rehabilitation"
+        [value]="(report()?.rehabilitationSummary?.completionPercentage || 0) + '%'"
+        unit="Settled"
+        [subtext]="(report()?.rehabilitationSummary?.completedCases || 0) + ' Families'"
+        icon="🏡"
+        variant="saffron"
+      ></app-stat-card>
+    </div>
+
+    <!-- Section 1: Tehsil-wise Operational Progress -->
+    <div class="bs-card section-card">
+      <div class="bs-card-header">
+        <div class="header-titles">
+          <h3 class="bs-card-title">Tehsil Field Administration Matrix</h3>
+          <p class="bs-card-subtitle">Sub-division revenue survey and compensation breakdown</p>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="bs-table">
+          <thead>
+            <tr>
+              <th>Tehsil Jurisdiction</th>
+              <th>Total Parcels</th>
+              <th>Land Required (Ha)</th>
+              <th>Survey & Verified</th>
+              <th>Compensation Disbursed</th>
+              <th>CALA Health Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let t of report()?.tehsilProgress">
+              <td class="font-bold">{{ t.tehsilName }}</td>
+              <td>{{ t.parcelsCount }}</td>
+              <td>{{ t.landAreaHectares }} Ha</td>
+              <td>
+                <span class="verified-pill">{{ t.verifiedCount }} / {{ t.parcelsCount }}</span>
+              </td>
+              <td class="font-mono">{{ formatCurrency(t.compensationDisbursed) }}</td>
+              <td>
+                <span class="bs-badge" [ngClass]="t.status === 'OnTrack' ? 'bs-badge-success' : 'bs-badge-warning'">
+                  {{ t.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Section 2: Monthly Disbursement Progression -->
+    <div class="bs-card section-card">
+      <div class="bs-card-header">
+        <div class="header-titles">
+          <h3 class="bs-card-title">Direct Benefit Transfer (DBT) Monthly Progression</h3>
+          <p class="bs-card-subtitle">Land acquisition volume and PFMS bank credits</p>
+        </div>
+      </div>
+
+      <div class="monthly-grid">
+        <div class="month-card" *ngFor="let m of report()?.monthlyTrends">
+          <div class="m-header">
+            <span class="m-name">{{ m.monthName }} {{ m.year }}</span>
+            <span class="m-projects bs-badge bs-badge-info">{{ m.activeProjectsCount }} Corridors</span>
+          </div>
+          <div class="m-metrics">
+            <div class="m-val">
+              <span class="lbl">Area Acquired</span>
+              <span class="val font-mono text-success">{{ m.landAcquiredHectares }} Ha</span>
+            </div>
+            <div class="m-val">
+              <span class="lbl">DBT Disbursed</span>
+              <span class="val font-mono">{{ formatCurrency(m.compensationDisbursed) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,34 @@
+<header class="app-header">
+  <div class="header-left">
+    <a routerLink="/" class="brand-link" title="Return to Portal Home">
+      <span class="emblem">🏛️</span>
+      <div class="brand-stack">
+        <div class="brand-title-row">
+          <span class="brand-title">BHOOMISETU</span>
+          <span class="gov-badge">GOVT OF INDIA</span>
+        </div>
+        <span class="brand-subtitle">National Land Acquisition & Management Platform</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="header-right" *ngIf="user()">
+    <div class="system-status-indicator">
+      <span class="bs-pulse-dot"></span> Online
+    </div>
+
+    <div class="user-profile-chip">
+      <div class="avatar-circle">
+        {{ (user()?.firstName?.charAt(0) || 'U') + (user()?.lastName?.charAt(0) || '') }}
+      </div>
+      <div class="user-text">
+        <span class="user-name">{{ user()?.firstName }} {{ user()?.lastName }}</span>
+        <span class="user-role-tag">{{ user()?.role }}</span>
+      </div>
+    </div>
+
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="logout()">
+      Sign Out
+    </button>
+  </div>
+</header>

@@ -1,0 +1,283 @@
+@use '../../../../../styles/tokens' as *;
+
+.state-dashboard-container {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.state-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-1);
+}
+
+.refresh-icon {
+  display: inline-block;
+  transition: transform var(--transition-fast);
+
+  &.spinning {
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.filters-card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+
+  .filters-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+
+    .filter-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-gray-700);
+    }
+  }
+
+  .last-sync-tag {
+    font-size: 12px;
+    color: var(--color-gray-500);
+    font-family: var(--font-mono);
+  }
+}
+
+.proposal-status-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+
+  .status-box {
+    background-color: var(--surface-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .status-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+
+      .status-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--color-gray-700);
+      }
+    }
+
+    .status-count {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: var(--space-1);
+    }
+
+    .status-desc {
+      font-size: 11px;
+      color: var(--color-gray-500);
+      line-height: 1.4;
+    }
+
+    &.status-pending {
+      border-left: 4px solid var(--color-warning);
+      .status-count { color: var(--color-warning); }
+    }
+
+    &.status-approved {
+      border-left: 4px solid var(--color-success);
+      .status-count { color: var(--color-success); }
+    }
+
+    &.status-returned {
+      border-left: 4px solid var(--color-saffron);
+      .status-count { color: var(--color-saffron); }
+    }
+
+    &.status-rejected {
+      border-left: 4px solid var(--color-danger);
+      .status-count { color: var(--color-danger); }
+    }
+  }
+}
+
+.main-dashboard-grid {
+  align-items: stretch;
+}
+
+.pipeline-card {
+  .stage-count-badge {
+    font-size: 12px;
+    background: var(--surface-subtle);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--color-gray-600);
+  }
+
+  .pipeline-funnel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+
+    .pipeline-step {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .step-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+
+        .step-name {
+          font-weight: 600;
+          color: var(--color-navy);
+        }
+
+        .step-count {
+          color: var(--color-gray-600);
+        }
+      }
+
+      .progress-bar-container {
+        height: 8px;
+        background-color: var(--surface-subtle);
+        border-radius: var(--radius-full);
+        overflow: hidden;
+
+        .progress-bar {
+          height: 100%;
+          background: linear-gradient(90deg, var(--color-navy) 0%, var(--color-saffron) 100%);
+          border-radius: var(--radius-full);
+          transition: width 0.6s ease;
+        }
+      }
+
+      .step-desc {
+        font-size: 11px;
+        color: var(--color-gray-400);
+      }
+    }
+  }
+}
+
+.alerts-card {
+  .delayed-projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+
+    .delayed-item {
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .delayed-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .project-title {
+          font-weight: 700;
+          font-size: 13px;
+          color: var(--color-navy);
+        }
+
+        .days-badge {
+          background-color: #fee2e2;
+          color: #dc2626;
+          font-size: 11px;
+          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: var(--radius-xs);
+        }
+      }
+
+      .delayed-details {
+        display: flex;
+        gap: var(--space-3);
+        font-size: 11px;
+        color: var(--color-gray-600);
+      }
+
+      .milestone-name {
+        font-size: 12px;
+        color: var(--color-gray-700);
+      }
+
+      .delayed-actions {
+        display: flex;
+        gap: var(--space-2);
+        margin-top: 4px;
+      }
+    }
+
+    .empty-delayed {
+      padding: var(--space-8);
+      text-align: center;
+      color: var(--color-gray-500);
+
+      .check-icon {
+        font-size: 28px;
+        display: block;
+        margin-bottom: var(--space-2);
+      }
+    }
+  }
+}
+
+.district-table-card {
+  .table-progress {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+
+    .mini-progress-bar {
+      width: 60px;
+      height: 6px;
+      background-color: var(--surface-subtle);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+
+      .bar-fill {
+        height: 100%;
+        background-color: var(--color-success);
+      }
+    }
+
+    .progress-num {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-gray-700);
+    }
+  }
+}

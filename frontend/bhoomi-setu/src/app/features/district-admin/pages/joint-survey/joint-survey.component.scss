@@ -1,0 +1,202 @@
+@use '../../../../../styles/tokens' as *;
+
+.joint-survey-page {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  .header-left {
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--bs-text-muted, #94a3b8);
+      margin-bottom: 0.25rem;
+      .divider { opacity: 0.5; }
+      .active { color: var(--bs-primary, #3b82f6); font-weight: 600; }
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--bs-text-main, #f8fafc);
+      margin: 0 0 0.25rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.85rem;
+      color: var(--bs-text-muted, #94a3b8);
+      margin: 0;
+    }
+  }
+}
+
+.bs-success-banner {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.filter-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--bs-border-subtle, rgba(255, 255, 255, 0.1));
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+    width: 380px;
+
+    .search-icon { font-size: 0.9rem; opacity: 0.7; }
+    .search-input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.85rem;
+      width: 100%;
+      outline: none;
+    }
+  }
+
+  .filters-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+.table-card {
+  padding: 0;
+  overflow: hidden;
+
+  .survey-cell {
+    font-weight: 700;
+    color: #60a5fa;
+    font-size: 0.85rem;
+  }
+
+  .village-text {
+    font-weight: 600;
+    color: var(--bs-text-main, #f8fafc);
+  }
+  .tehsil-text {
+    font-size: 0.7rem;
+    color: var(--bs-text-muted, #94a3b8);
+  }
+}
+
+.bs-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1.5rem;
+}
+
+.bs-modal-card.survey-modal {
+  background: var(--bs-surface-card, #1e293b);
+  border: 1px solid var(--bs-border-subtle, rgba(255, 255, 255, 0.12));
+  border-radius: 12px;
+  width: 580px;
+  max-width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+
+  .bs-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--bs-border-subtle, rgba(255, 255, 255, 0.08));
+
+    .modal-pretitle {
+      font-size: 0.75rem;
+      color: #60a5fa;
+      font-weight: 700;
+    }
+
+    .bs-modal-title {
+      font-size: 1.25rem;
+      margin: 0.2rem 0 0;
+      color: #fff;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--bs-text-muted, #94a3b8);
+      font-size: 1.25rem;
+      cursor: pointer;
+      &:hover { color: #fff; }
+    }
+  }
+
+  .bs-modal-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    .modal-instruction {
+      font-size: 0.85rem;
+      color: var(--bs-text-subtle, #cbd5e1);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+
+      label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--bs-text-muted, #94a3b8);
+      }
+
+      .bs-textarea {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--bs-border-subtle, rgba(255, 255, 255, 0.12));
+        border-radius: 6px;
+        padding: 0.75rem;
+        color: #fff;
+        font-size: 0.85rem;
+        resize: vertical;
+        outline: none;
+        &:focus { border-color: #3b82f6; }
+      }
+    }
+
+    .modal-actions-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-top: 0.5rem;
+    }
+  }
+}

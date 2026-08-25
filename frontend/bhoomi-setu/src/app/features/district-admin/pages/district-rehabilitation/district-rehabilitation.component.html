@@ -1,0 +1,152 @@
+<div class="district-rehabilitation-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>District Administration</span>
+        <span class="divider">/</span>
+        <span class="active">R&R Packages</span>
+      </div>
+      <h1 class="page-title">Rehabilitation & Resettlement (R&R)</h1>
+      <p class="page-subtitle">
+        Statutory family entitlements under Second Schedule of RFCTLARR Act 2013: housing plot allotments, subsistence grants, and livelihood packages
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-primary" (click)="loadRehabilitation()" [disabled]="loading()">
+        <span class="btn-icon">🔄</span> {{ loading() ? 'Loading...' : 'Refresh R&R Records' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && !summary()">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading R&R family ledger...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadRehabilitation()">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <ng-container *ngIf="summary()">
+    <!-- 4 Stats Cards -->
+    <div class="bs-grid-4 stats-grid">
+      <app-stat-card
+        title="Total Affected Families"
+        [value]="(summary()?.totalAffectedFamilies || 0) + ' Families'"
+        unit=""
+        subtext="Identified in SIA Survey"
+        icon="👨‍👩‍👧‍👦"
+        variant="navy"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Displaced Families"
+        [value]="(summary()?.displacedFamilies || 0) + ' Families'"
+        unit=""
+        subtext="Physical Relocation Eligible"
+        icon="🏠"
+        variant="amber"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="R&R Packages Delivered"
+        [value]="(summary()?.completedCases || 0) + ' Settled'"
+        unit=""
+        [subtext]="(summary()?.completionPercentage || 0) + '% Completion'"
+        icon="🏡"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Grants Disbursed"
+        [value]="formatCurrency(summary()?.totalProvidedAmount || 0)"
+        unit=""
+        subtext="Subsistence + Housing Grants"
+        icon="💰"
+        variant="blue"
+      ></app-stat-card>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="bs-card filter-card">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="bs-input search-input"
+          placeholder="Search Head of Family, Family Ref, or Resettlement Site..."
+          [(ngModel)]="searchQuery"
+        />
+      </div>
+
+      <div class="filters-group">
+        <select class="bs-select" [(ngModel)]="selectedStatus">
+          <option value="">All R&R Statuses</option>
+          <option value="Completed">Completed (Plot & Grant Delivered)</option>
+          <option value="PackageApproved">Package Approved (Pending Handover)</option>
+          <option value="Verified">Verified</option>
+          <option value="Identified">Identified</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bs-card table-card">
+      <div class="table-responsive">
+        <table class="bs-table">
+          <thead>
+            <tr>
+              <th>Family Ref</th>
+              <th>Head of Family</th>
+              <th>Village</th>
+              <th>Family Members</th>
+              <th>Displaced?</th>
+              <th>Resettlement Location</th>
+              <th>Grant Amount</th>
+              <th>Status</th>
+              <th>Completion Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of getFilteredCases()">
+              <td class="ref-cell font-mono">{{ item.familyReference }}</td>
+              <td class="font-bold">{{ item.headOfFamilyName }}</td>
+              <td>{{ item.villageName }}</td>
+              <td>{{ item.familySize }} Persons</td>
+              <td>
+                <span class="bs-badge" [ngClass]="item.isDisplaced ? 'bs-badge-warning' : 'bs-badge-info'">
+                  {{ item.isDisplaced ? 'Displaced' : 'Affected' }}
+                </span>
+              </td>
+              <td>{{ item.rehabilitationSite }}</td>
+              <td class="font-mono font-bold">{{ formatCurrency(item.providedAmount) }}</td>
+              <td>
+                <span class="bs-badge" [ngClass]="item.status === 'Completed' ? 'bs-badge-success' : 'bs-badge-warning'">
+                  {{ item.status }}
+                </span>
+              </td>
+              <td class="font-mono text-xs">
+                <span *ngIf="item.completionDate">{{ item.completionDate | date:'mediumDate' }}</span>
+                <span *ngIf="!item.completionDate" class="text-muted">In Progress</span>
+              </td>
+            </tr>
+            <tr *ngIf="getFilteredCases().length === 0">
+              <td colspan="9" class="text-center py-4 text-muted">
+                No R&R cases matching the filter.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

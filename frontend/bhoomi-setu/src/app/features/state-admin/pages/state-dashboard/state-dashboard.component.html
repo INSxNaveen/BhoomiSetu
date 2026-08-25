@@ -1,0 +1,284 @@
+<div class="bs-page state-dashboard-container">
+  <!-- Page Header -->
+  <div class="bs-page-header">
+    <div class="header-left">
+      <div class="state-title-row">
+        <h1 class="bs-page-title">{{ data()?.stateName || 'State' }} Land Acquisition Operations</h1>
+        <span class="bs-badge bs-badge-primary">State Level Authority</span>
+      </div>
+      <p class="bs-page-subtitle">Statutory scrutiny, proposal sanctioning, corridor progress tracking, and Direct Benefit Transfer (DBT) monitoring.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-outline bs-btn-sm" (click)="loadDashboard()" [disabled]="loading()">
+        <span class="refresh-icon" [class.spinning]="loading()">🔄</span> Refresh Live Feed
+      </button>
+      <a routerLink="/state/proposals" class="bs-btn bs-btn-primary bs-btn-sm">
+        📋 Review Proposals ({{ data()?.proposalSummary?.pendingReview || 0 }})
+      </a>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading() && !data()" class="bs-loading-state">
+    <div class="bs-spinner"></div>
+    <p>Synchronizing State Land Acquisition telemetry...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error()" class="bs-error-banner">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadDashboard()">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <ng-container *ngIf="data()">
+    <!-- 6 KPI Matrix -->
+    <div class="bs-grid-6 kpi-grid">
+      <app-stat-card
+        title="Total State Projects"
+        [value]="data()?.kpis?.totalProjects || 0"
+        unit="Active"
+        [subtext]="'+' + (data()?.kpis?.projectsThisMonth || 0) + ' this month'"
+        icon="🏗️"
+        variant="blue"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Land Acquired"
+        [value]="data()?.kpis?.totalLandAcquiredHectares || 0"
+        unit="Ha"
+        [subtext]="(data()?.kpis?.landAcquisitionPercentage || 0) + '% Acquired'"
+        icon="📐"
+        variant="navy"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Compensation Disbursed"
+        [value]="formatCurrency(data()?.kpis?.totalCompensationDisbursed || 0)"
+        unit=""
+        [subtext]="(data()?.kpis?.compensationDisbursementPercentage || 0) + '% Payout'"
+        icon="💰"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Affected Families"
+        [value]="data()?.kpis?.totalAffectedFamilies || 0"
+        unit="Identified"
+        [subtext]="(data()?.kpis?.totalDisplacedFamilies || 0) + ' Displaced'"
+        icon="👨‍👩‍👧‍👦"
+        variant="amber"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="R&R Rehabilitation"
+        [value]="(data()?.kpis?.rrProgressPercentage || 0) + '%'"
+        unit="Progress"
+        [subtext]="(data()?.kpis?.rrFamiliesCovered || 0) + ' Settled'"
+        icon="🏡"
+        variant="saffron"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Pending Scrutiny"
+        [value]="data()?.proposalSummary?.pendingReview || 0"
+        unit="Proposals"
+        subtext="Action Required"
+        icon="⚖️"
+        variant="red"
+      ></app-stat-card>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="filters-card">
+      <div class="filters-left">
+        <span class="filter-label">Filter Operations:</span>
+        <select class="bs-select" [(ngModel)]="selectedDistrict" (change)="onFilterChange()">
+          <option value="">All Districts in State</option>
+          <option *ngFor="let d of data()?.districtProgress" [value]="d.districtId">{{ d.districtName }} ({{ d.districtCode }})</option>
+        </select>
+
+        <select class="bs-select" [(ngModel)]="selectedProjectType" (change)="onFilterChange()">
+          <option value="">All Project Categories</option>
+          <option value="NationalHighway">National Highways</option>
+          <option value="IndustrialCorridor">Industrial Corridors</option>
+          <option value="RailwayLine">Dedicated Rail Links</option>
+          <option value="PowerAndEnergy">Power & Green Energy</option>
+        </select>
+      </div>
+
+      <div class="filters-right">
+        <span class="last-sync-tag">⚡ Live Telemetry Synchronized: {{ data()?.lastUpdated | date:'mediumTime' }}</span>
+      </div>
+    </div>
+
+    <!-- Proposal Scrutiny Status Summary -->
+    <div class="proposal-status-row">
+      <div class="status-box status-pending" routerLink="/state/proposals">
+        <div class="status-header">
+          <span class="status-icon">⏳</span>
+          <span class="status-title">Pending State Review</span>
+        </div>
+        <div class="status-count">{{ data()?.proposalSummary?.pendingReview || 0 }}</div>
+        <div class="status-desc">Awaiting State Land Acquisition Authority approval</div>
+      </div>
+
+      <div class="status-box status-approved" routerLink="/state/proposals">
+        <div class="status-header">
+          <span class="status-icon">✅</span>
+          <span class="status-title">State Approved & Sanctioned</span>
+        </div>
+        <div class="status-count">{{ data()?.proposalSummary?.approved || 0 }}</div>
+        <div class="status-desc">Approved and moved to Section 11 gazette notification</div>
+      </div>
+
+      <div class="status-box status-returned" routerLink="/state/proposals">
+        <div class="status-header">
+          <span class="status-icon">↩️</span>
+          <span class="status-title">Returned for Correction</span>
+        </div>
+        <div class="status-count">{{ data()?.proposalSummary?.returned || 0 }}</div>
+        <div class="status-desc">Clarifications requested from District Collector / Agency</div>
+      </div>
+
+      <div class="status-box status-rejected" routerLink="/state/proposals">
+        <div class="status-header">
+          <span class="status-icon">❌</span>
+          <span class="status-title">Rejected Proposals</span>
+        </div>
+        <div class="status-count">{{ data()?.proposalSummary?.rejected || 0 }}</div>
+        <div class="status-desc">Proposals rejected due to statutory / environmental non-compliance</div>
+      </div>
+    </div>
+
+    <!-- Grid 2: Pipeline Funnel + Delayed Projects -->
+    <div class="bs-grid-2 main-dashboard-grid">
+      <!-- Left: Acquisition Pipeline Funnel -->
+      <div class="bs-card pipeline-card">
+        <div class="bs-card-header">
+          <div class="header-titles">
+            <h3 class="bs-card-title">State Acquisition Pipeline</h3>
+            <p class="bs-card-subtitle">End-to-end statutory milestones across all active state projects</p>
+          </div>
+          <span class="stage-count-badge">{{ data()?.pipeline?.length || 0 }} Stages</span>
+        </div>
+
+        <div class="pipeline-funnel">
+          <div *ngFor="let stage of data()?.pipeline" class="pipeline-step">
+            <div class="step-info">
+              <span class="step-name">{{ stage.stageName }}</span>
+              <span class="step-count"><strong>{{ stage.count }}</strong> records</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" [style.width.%]="stage.percentage"></div>
+            </div>
+            <div class="step-desc">{{ stage.description }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Delayed Projects & High Priority Alerts -->
+      <div class="bs-card alerts-card">
+        <div class="bs-card-header">
+          <div class="header-titles">
+            <h3 class="bs-card-title">Milestone Exceptions & Delays</h3>
+            <p class="bs-card-subtitle">Projects requiring urgent administrative intervention</p>
+          </div>
+          <span class="bs-badge bs-badge-danger">{{ data()?.delayedProjects?.length || 0 }} Overdue</span>
+        </div>
+
+        <div class="delayed-projects-list">
+          <div *ngFor="let dp of data()?.delayedProjects" class="delayed-item">
+            <div class="delayed-top">
+              <span class="project-title">{{ dp.projectName }}</span>
+              <span class="days-badge">{{ dp.daysDelayed }} days overdue</span>
+            </div>
+            <div class="delayed-details">
+              <span class="detail-item">📍 {{ dp.districtName }}</span>
+              <span class="detail-item">🏷️ {{ dp.projectType }}</span>
+            </div>
+            <div class="milestone-name">
+              ⚠️ Delayed Milestone: <strong>{{ dp.delayedMilestone }}</strong>
+            </div>
+            <div class="delayed-actions">
+              <a [routerLink]="['/state/projects']" [queryParams]="{ projectId: dp.projectId }" class="bs-btn bs-btn-sm bs-btn-outline">
+                View on Map 🗺️
+              </a>
+              <a routerLink="/state/proposals" class="bs-btn bs-btn-sm bs-btn-primary">
+                Review Proposal 📋
+              </a>
+            </div>
+          </div>
+
+          <div *ngIf="!data()?.delayedProjects?.length" class="empty-delayed">
+            <span class="check-icon">✨</span>
+            <p>All state infrastructure milestones are proceeding on schedule.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- District-wise Progress Matrix Table -->
+    <div class="bs-card district-table-card">
+      <div class="bs-card-header">
+        <div class="header-titles">
+          <h3 class="bs-card-title">District-wise Acquisition Matrix</h3>
+          <p class="bs-card-subtitle">Comprehensive progress by Competent Authority Land Acquisition (CALA) jurisdictions</p>
+        </div>
+        <a routerLink="/state/acquisition" class="bs-btn bs-btn-sm bs-btn-outline">
+          View Detailed Analytics 📈
+        </a>
+      </div>
+
+      <div class="bs-table-container">
+        <table class="bs-table">
+          <thead>
+            <tr>
+              <th>District</th>
+              <th>Code</th>
+              <th>Active Projects</th>
+              <th>Required (Ha)</th>
+              <th>Acquired (Ha)</th>
+              <th>Acquisition %</th>
+              <th>Compensation Disbursed</th>
+              <th>R&R Cases</th>
+              <th>Health Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let dist of data()?.districtProgress">
+              <td>
+                <span class="district-name"><strong>{{ dist.districtName }}</strong></span>
+              </td>
+              <td><code>{{ dist.districtCode }}</code></td>
+              <td>{{ dist.totalProjects }}</td>
+              <td>{{ dist.landProposedHectares | number:'1.2-2' }} Ha</td>
+              <td>{{ dist.landAcquiredHectares | number:'1.2-2' }} Ha</td>
+              <td>
+                <div class="table-progress">
+                  <div class="mini-progress-bar">
+                    <div class="bar-fill" [style.width.%]="dist.acquisitionPercentage"></div>
+                  </div>
+                  <span class="progress-num">{{ dist.acquisitionPercentage }}%</span>
+                </div>
+              </td>
+              <td><strong>{{ formatCurrency(dist.compensationDisbursed) }}</strong></td>
+              <td>{{ dist.rrCasesCovered }} Cases</td>
+              <td>
+                <span class="bs-badge" [ngClass]="{
+                  'bs-badge-success': dist.status === 'OnTrack',
+                  'bs-badge-info': dist.status === 'Active',
+                  'bs-badge-danger': dist.status === 'Delayed'
+                }">
+                  {{ dist.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

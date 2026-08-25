@@ -1,0 +1,297 @@
+<div class="agency-dashboard-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>Project Agency</span>
+        <span class="divider">/</span>
+        <span class="active">Overview</span>
+      </div>
+      <h1 class="page-title">
+        Project Agency Overview
+        <span class="agency-badge" *ngIf="dashboard()">{{ dashboard()?.organizationName }}</span>
+      </h1>
+      <p class="page-subtitle">
+        Central operational dashboard for project proposal creation, land requirement submission, and statutory acquisition tracking
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <span class="last-updated" *ngIf="dashboard()">
+        Last updated: {{ dashboard()?.lastUpdated | date:'mediumTime' }}
+      </span>
+      <a routerLink="/agency/proposals/create" class="bs-btn bs-btn-primary">
+        <span>➕</span> Create Proposal
+      </a>
+      <button class="bs-btn bs-btn-outline" (click)="loadDashboard()" [disabled]="loading()">
+        <span>🔄</span> {{ loading() ? 'Refreshing...' : 'Refresh' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && !dashboard()">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading Project Agency operational data...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadDashboard()">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <ng-container *ngIf="dashboard()">
+    <!-- 8 KPI Cards -->
+    <div class="kpi-grid">
+      <app-stat-card
+        title="Total Projects"
+        [value]="dashboard()?.kpis?.totalProjects || 0"
+        unit="Corridors"
+        subtext="Under agency ownership"
+        icon="🏗️"
+        variant="navy"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Draft Proposals"
+        [value]="dashboard()?.kpis?.draftProposals || 0"
+        unit="Drafts"
+        subtext="In preparation"
+        icon="📝"
+        variant="blue"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Submitted / Review"
+        [value]="dashboard()?.kpis?.submittedUnderReview || 0"
+        unit="Proposals"
+        subtext="District/State Review"
+        icon="⏳"
+        variant="amber"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Approved Projects"
+        [value]="dashboard()?.kpis?.approvedProjects || 0"
+        unit="Sanctioned"
+        subtext="Acquisition active"
+        icon="✅"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Land Required"
+        [value]="(dashboard()?.kpis?.landRequiredHectares || 0) + ' Ha'"
+        unit=""
+        subtext="Total corridor scope"
+        icon="📐"
+        variant="navy"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Land Acquired"
+        [value]="(dashboard()?.kpis?.landAcquiredHectares || 0) + ' Ha'"
+        unit=""
+        subtext="Possession / Award paid"
+        icon="🌾"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Compensation Paid"
+        [value]="formatCurrency(dashboard()?.kpis?.compensationPaid || 0)"
+        unit=""
+        subtext="Direct Benefit Transfer"
+        icon="💸"
+        variant="blue"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Delayed Milestones"
+        [value]="dashboard()?.kpis?.delayedProjects || 0"
+        unit="Overdue"
+        subtext="Action required"
+        icon="⚠️"
+        variant="red"
+      ></app-stat-card>
+    </div>
+
+    <!-- Attention Required Section -->
+    <div class="attention-section bs-card" *ngIf="dashboard()?.attentionItems?.length">
+      <div class="attention-header">
+        <div class="attention-title-group">
+          <span class="attention-icon">🚨</span>
+          <div>
+            <h3 class="attention-title">Attention Required</h3>
+            <p class="attention-subtitle">Critical operational items requiring immediate Project Agency action</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="attention-grid">
+        <div class="attention-card" *ngFor="let item of dashboard()?.attentionItems" [ngClass]="'severity-' + item.severity.toLowerCase()">
+          <div class="item-header">
+            <span class="severity-badge" [ngClass]="'badge-' + item.severity.toLowerCase()">{{ item.severity }}</span>
+            <span class="item-type font-mono">{{ item.type }}</span>
+          </div>
+          <h4 class="item-title">{{ item.title }}</h4>
+          <p class="item-desc">{{ item.description }}</p>
+          <a [routerLink]="item.actionRoute" class="action-link">
+            Take Action ➔
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2-Column: Land Acquisition Pipeline & Recent Activity -->
+    <div class="dashboard-split-grid">
+      <!-- Land Acquisition Summary Pipeline -->
+      <div class="bs-card pipeline-card">
+        <div class="bs-card-header">
+          <div>
+            <h3 class="bs-card-title">Land Acquisition Stage Distribution</h3>
+            <p class="bs-card-subtitle">Cadastral Khasra progression across RFCTLARR statutory milestones</p>
+          </div>
+        </div>
+
+        <div class="pipeline-list">
+          <div class="pipeline-row" *ngFor="let stage of dashboard()?.acquisitionProgress">
+            <div class="row-meta">
+              <span class="stage-name">{{ stage.stage }}</span>
+              <span class="stage-metrics">
+                <strong>{{ stage.parcelsCount }} Parcels</strong> • {{ stage.areaHectares }} Ha ({{ stage.percentage }}%)
+              </span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-bar-fill" [style.width.%]="stage.percentage"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Operational Activity -->
+      <div class="bs-card activity-card">
+        <div class="bs-card-header">
+          <div>
+            <h3 class="bs-card-title">Recent Activity Feed</h3>
+            <p class="bs-card-subtitle">Audit logs and workflow status updates from CALA and State authorities</p>
+          </div>
+        </div>
+
+        <div class="activity-feed">
+          <div class="activity-item" *ngFor="let act of dashboard()?.recentActivity">
+            <div class="activity-dot"></div>
+            <div class="activity-content">
+              <div class="act-header">
+                <span class="act-title">{{ act.title }}</span>
+                <span class="act-time font-mono text-xs">{{ act.timestamp | date:'short' }}</span>
+              </div>
+              <p class="act-desc">{{ act.description }}</p>
+              <div class="act-meta text-xs">
+                <span class="act-by">{{ act.actionBy }}</span>
+                <span class="divider">•</span>
+                <span class="act-role">{{ act.role }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project List Table -->
+    <div class="bs-card projects-table-card">
+      <div class="table-header-bar">
+        <div class="titles">
+          <h3 class="bs-card-title">Owned Infrastructure Projects</h3>
+          <p class="bs-card-subtitle">Managed corridors under {{ dashboard()?.organizationName }} jurisdiction</p>
+        </div>
+
+        <div class="table-actions">
+          <div class="search-input-box">
+            <span>🔍</span>
+            <input type="text" placeholder="Search project name, code, location..." [(ngModel)]="searchQuery" />
+          </div>
+
+          <select class="bs-select" [(ngModel)]="selectedStatus">
+            <option value="">All Project Statuses</option>
+            <option value="Planning">Planning</option>
+            <option value="ProposalSubmitted">Proposal Submitted</option>
+            <option value="UnderVerification">Under Verification</option>
+            <option value="Approved">Approved</option>
+            <option value="AcquisitionInProgress">Acquisition In Progress</option>
+            <option value="CompensationPhase">Compensation Phase</option>
+            <option value="PossessionPhase">Possession Phase</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="bs-table">
+          <thead>
+            <tr>
+              <th>Project Code</th>
+              <th>Project Name</th>
+              <th>Type</th>
+              <th>Location</th>
+              <th>Land Required</th>
+              <th>Land Acquired</th>
+              <th>Acquisition Progress</th>
+              <th>Current Status</th>
+              <th>Last Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of getFilteredProjects()">
+              <td class="font-mono text-xs text-primary">{{ p.projectCode }}</td>
+              <td class="font-bold">
+                <a [routerLink]="['/agency/projects', p.projectId]" class="project-link">
+                  {{ p.projectName }}
+                </a>
+              </td>
+              <td><span class="bs-badge bs-badge-info">{{ p.projectType }}</span></td>
+              <td>{{ p.location }}</td>
+              <td class="font-mono">{{ p.landRequiredHectares }} Ha</td>
+              <td class="font-mono text-success">{{ p.landAcquiredHectares }} Ha</td>
+              <td>
+                <div class="mini-progress-cell">
+                  <div class="mini-track">
+                    <div class="mini-fill" [style.width.%]="p.progressPercentage"></div>
+                  </div>
+                  <span class="mini-pct font-mono text-xs">{{ p.progressPercentage }}%</span>
+                </div>
+              </td>
+              <td>
+                <span class="bs-badge" [ngClass]="p.status === 'Completed' ? 'bs-badge-success' : (p.status === 'Approved' || p.status === 'AcquisitionInProgress' ? 'bs-badge-primary' : 'bs-badge-warning')">
+                  {{ p.status }}
+                </span>
+              </td>
+              <td class="text-xs text-muted">{{ p.lastUpdated | date:'mediumDate' }}</td>
+              <td>
+                <div class="action-buttons">
+                  <a [routerLink]="['/agency/projects', p.projectId]" class="bs-btn bs-btn-xs bs-btn-outline" title="Open Workspace">
+                    Workspace ➔
+                  </a>
+                  <a routerLink="/agency/tracking" class="bs-btn bs-btn-xs bs-btn-secondary" title="Track Proposal">
+                    Track 🧭
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="getFilteredProjects().length === 0">
+              <td colspan="10" class="text-center py-4 text-muted">
+                No infrastructure projects match the selected criteria.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,214 @@
+@use '../../../../../styles/tokens' as *;
+
+.my-projects-page {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  .header-left {
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--bs-text-muted, #94a3b8);
+      margin-bottom: 0.25rem;
+      .divider { opacity: 0.5; }
+      .active { color: var(--bs-primary, #3b82f6); font-weight: 600; }
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--bs-text-main, #f8fafc);
+      margin: 0 0 0.25rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.85rem;
+      color: var(--bs-text-muted, #94a3b8);
+      margin: 0;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+.filters-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--bs-border-subtle, rgba(255, 255, 255, 0.1));
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+    width: 380px;
+
+    .search-icon { font-size: 0.9rem; opacity: 0.7; }
+    .search-input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.85rem;
+      width: 100%;
+      outline: none;
+    }
+  }
+
+  .filters-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  .project-card {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .code-badge {
+        font-size: 0.7rem;
+        color: #60a5fa;
+        background: rgba(59, 130, 246, 0.1);
+        padding: 0.2rem 0.45rem;
+        border-radius: 4px;
+      }
+    }
+
+    .p-title {
+      font-size: 1.05rem;
+      margin: 0;
+      line-height: 1.4;
+
+      a {
+        color: #f8fafc;
+        text-decoration: none;
+        &:hover {
+          color: #3b82f6;
+        }
+      }
+    }
+
+    .p-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+
+      .location-pill, .type-pill {
+        color: var(--bs-text-muted, #94a3b8);
+      }
+    }
+
+    .progress-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+
+      .prog-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+
+        .prog-lbl { color: var(--bs-text-muted, #94a3b8); }
+        .prog-val { color: #10b981; }
+      }
+
+      .prog-track {
+        height: 6px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 3px;
+        overflow: hidden;
+
+        .prog-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #3b82f6, #10b981);
+          border-radius: 3px;
+        }
+      }
+    }
+
+    .metrics-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--bs-border-subtle, rgba(255, 255, 255, 0.06));
+      border-radius: 6px;
+      padding: 0.6rem;
+
+      .m-box {
+        display: flex;
+        flex-direction: column;
+
+        .m-lbl { font-size: 0.65rem; color: var(--bs-text-muted, #94a3b8); }
+        .m-val { font-size: 0.85rem; font-weight: 700; color: #fff; }
+      }
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+
+      .full-width {
+        flex: 1;
+        justify-content: center;
+      }
+      .icon-btn-square {
+        padding: 0.5rem 0.75rem;
+      }
+    }
+  }
+}
+
+.empty-card {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  .empty-icon { font-size: 3rem; }
+  .empty-title { font-size: 1.25rem; color: #fff; margin: 0; }
+  .empty-sub { font-size: 0.85rem; color: var(--bs-text-muted, #94a3b8); margin: 0; }
+}

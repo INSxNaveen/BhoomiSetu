@@ -1,0 +1,449 @@
+<div class="bs-page proposal-review-container">
+  <!-- Page Header -->
+  <div class="bs-page-header">
+    <div class="header-left">
+      <div class="title-row">
+        <h1 class="bs-page-title">Statutory Proposal Review Workspace</h1>
+        <span class="bs-badge bs-badge-primary">State Land Acquisition Authority</span>
+      </div>
+      <p class="bs-page-subtitle">Scrutinize infrastructure alignment schedules, land schedules, valuation reports, and grant administrative sanction under RFCTLARR 2013.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-outline bs-btn-sm" (click)="loadProposals()" [disabled]="loading()">
+        🔄 Refresh List
+      </button>
+      <a routerLink="/state/dashboard" class="bs-btn bs-btn-outline bs-btn-sm">
+        ← Back to Dashboard
+      </a>
+    </div>
+  </div>
+
+  <!-- Success Toast -->
+  <div *ngIf="successToast" class="bs-success-toast">
+    <span class="toast-icon">✅</span>
+    <span class="toast-msg">{{ successToast }}</span>
+  </div>
+
+  <!-- Filters Row -->
+  <div class="filters-card">
+    <div class="search-input-wrapper">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="bs-input"
+        placeholder="Search by Proposal Number, Project Name, Code..."
+        [(ngModel)]="searchQuery"
+        (input)="loadProposals()"
+      />
+    </div>
+
+    <div class="select-filters">
+      <select class="bs-select" [(ngModel)]="selectedStatus" (change)="loadProposals()">
+        <option value="">All Workflow Stages</option>
+        <option value="StateReview">State Review (Pending)</option>
+        <option value="DistrictVerification">District Verification</option>
+        <option value="Approved">State Approved</option>
+        <option value="ReturnedForCorrection">Returned for Correction</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+
+      <select class="bs-select" [(ngModel)]="selectedProjectType" (change)="loadProposals()">
+        <option value="">All Categories</option>
+        <option value="NationalHighway">National Highways</option>
+        <option value="IndustrialCorridor">Industrial Corridors</option>
+        <option value="RailwayLine">Dedicated Rail Links</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading() && !proposals().length" class="bs-loading-state">
+    <div class="bs-spinner"></div>
+    <p>Loading statutory proposals...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error()" class="bs-error-banner">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadProposals()">Retry</button>
+  </div>
+
+  <!-- Proposals Data Table -->
+  <div class="bs-card proposals-table-card" *ngIf="!loading() || proposals().length">
+    <div class="bs-table-container">
+      <table class="bs-table">
+        <thead>
+          <tr>
+            <th>Proposal Number</th>
+            <th>Project Details</th>
+            <th>District</th>
+            <th>Land Area (Ha)</th>
+            <th>Affected Families</th>
+            <th>Est. Compensation</th>
+            <th>Current Stage</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of proposals()" [class.row-highlight]="selectedProposal()?.id === p.id">
+            <td>
+              <code><strong>{{ p.proposalNumber }}</strong></code>
+              <span class="priority-tag" [ngClass]="{
+                'priority-high': p.priority === 'High',
+                'priority-medium': p.priority === 'Medium'
+              }">{{ p.priority }}</span>
+            </td>
+            <td>
+              <div class="project-name-cell">
+                <strong>{{ p.projectName }}</strong>
+                <span class="project-code"><code>{{ p.projectCode }}</code> • {{ p.projectType }}</span>
+              </div>
+            </td>
+            <td>📍 {{ p.districtName }}</td>
+            <td><strong>{{ p.landAreaProposed | number:'1.2-2' }}</strong> Ha</td>
+            <td>{{ p.affectedFamilyCount }} Families</td>
+            <td><strong>{{ formatCurrency(p.estimatedCompensation) }}</strong></td>
+            <td>
+              <span class="stage-text">{{ p.currentStage }}</span>
+            </td>
+            <td>
+              <span class="bs-badge" [ngClass]="{
+                'bs-badge-warning': p.status === 'StateReview' || p.status === 'DistrictVerification' || p.status === 'Submitted',
+                'bs-badge-success': p.status === 'Approved' || p.status === 'AcquisitionInitiated',
+                'bs-badge-danger': p.status === 'Rejected',
+                'bs-badge-info': p.status === 'ReturnedForCorrection'
+              }">
+                {{ p.status }}
+              </span>
+            </td>
+            <td>
+              <button class="bs-btn bs-btn-sm bs-btn-primary" (click)="openProposalDetail(p.id)">
+                🔍 Inspect & Review
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="!proposals().length && !loading()">
+            <td colspan="9" class="text-center py-8 text-muted">
+              No land acquisition proposals found matching the selected criteria.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detailed Proposal Inspection Drawer / Modal -->
+  <div class="proposal-modal-backdrop" *ngIf="selectedProposal()" (click)="closeDetail()">
+    <div class="proposal-modal-content" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <div class="header-badge-row">
+            <span class="bs-badge bs-badge-primary">Statutory Scrutiny Workspace</span>
+            <span class="bs-badge" [ngClass]="{
+              'bs-badge-warning': selectedProposal()?.status === 'StateReview' || selectedProposal()?.status === 'DistrictVerification',
+              'bs-badge-success': selectedProposal()?.status === 'Approved',
+              'bs-badge-danger': selectedProposal()?.status === 'Rejected',
+              'bs-badge-info': selectedProposal()?.status === 'ReturnedForCorrection'
+            }">
+              {{ selectedProposal()?.status }}
+            </span>
+          </div>
+          <h2 class="modal-proposal-title">{{ selectedProposal()?.proposalNumber }}</h2>
+          <p class="modal-project-sub">{{ selectedProposal()?.projectName }} ({{ selectedProposal()?.projectCode }})</p>
+        </div>
+
+        <button class="modal-close-btn" (click)="closeDetail()">✕</button>
+      </div>
+
+      <!-- Workflow Action Bar (Visible when in Review/Verification status) -->
+      <div class="modal-action-bar">
+        <div class="action-bar-info">
+          <span>Current Stage: <strong>{{ selectedProposal()?.currentStage }}</strong></span>
+        </div>
+
+        <div class="action-bar-buttons">
+          <button class="bs-btn bs-btn-sm bs-btn-success" (click)="openApproveDialog()" [disabled]="selectedProposal()?.status === 'Approved' || selectedProposal()?.status === 'Rejected'">
+            ✅ Sanction & Approve
+          </button>
+          <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="openReturnDialog()" [disabled]="selectedProposal()?.status === 'Approved'">
+            ↩️ Return for Clarification
+          </button>
+          <button class="bs-btn bs-btn-sm bs-btn-danger" (click)="openRejectDialog()" [disabled]="selectedProposal()?.status === 'Approved'">
+            ❌ Reject Proposal
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Tabs -->
+      <div class="modal-tabs">
+        <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="activeTab = 'overview'">
+          📌 Project Overview
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'land'" (click)="activeTab = 'land'">
+          🗺️ Land Details & Parcels
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'documents'" (click)="activeTab = 'documents'">
+          📁 Statutory Documents ({{ selectedProposal()?.documents?.length || 0 }})
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'families'" (click)="activeTab = 'families'">
+          👨‍👩‍👧‍👦 Affected Families & R&R
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'timeline'" (click)="activeTab = 'timeline'">
+          📜 Review History & Timeline
+        </button>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="modal-tab-body">
+        <!-- TAB 1: OVERVIEW -->
+        <div *ngIf="activeTab === 'overview'" class="tab-panel">
+          <div class="info-grid-2">
+            <div class="info-card">
+              <h4 class="info-card-title">Administrative Attributes</h4>
+              <div class="info-row">
+                <span class="label">Implementing Agency:</span>
+                <span class="val"><strong>{{ selectedProposal()?.projectAgency }}</strong></span>
+              </div>
+              <div class="info-row">
+                <span class="label">Jurisdiction District:</span>
+                <span class="val">📍 {{ selectedProposal()?.districtName }}, {{ selectedProposal()?.stateName }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Project Category:</span>
+                <span class="val">🏷️ {{ selectedProposal()?.projectType }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Estimated Project Cost:</span>
+                <span class="val"><strong>{{ formatCurrency(selectedProposal()?.estimatedCost || 0) }}</strong></span>
+              </div>
+              <div class="info-row">
+                <span class="label">Nodal Officer:</span>
+                <span class="val">👤 {{ selectedProposal()?.submittedBy }}</span>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <h4 class="info-card-title">Land & Statutory Sanctions</h4>
+              <div class="info-row">
+                <span class="label">Total Land Proposed:</span>
+                <span class="val highlight-val"><strong>{{ selectedProposal()?.landAreaProposed | number:'1.2-2' }} Hectares</strong></span>
+              </div>
+              <div class="info-row">
+                <span class="label">Estimated Compensation:</span>
+                <span class="val highlight-val"><strong>{{ formatCurrency(selectedProposal()?.estimatedCompensation || 0) }}</strong></span>
+              </div>
+              <div class="info-row">
+                <span class="label">Affected Families:</span>
+                <span class="val">👨‍👩‍👧‍👦 {{ selectedProposal()?.affectedFamilyCount }} Families</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Date Submitted:</span>
+                <span class="val">📅 {{ selectedProposal()?.submittedAt | date:'mediumDate' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: LAND DETAILS & GIS -->
+        <div *ngIf="activeTab === 'land'" class="tab-panel">
+          <div class="land-details-summary">
+            <div class="land-kpi-row">
+              <div class="land-stat">
+                <span class="stat-label">Total Land Required</span>
+                <span class="stat-val">{{ selectedProposal()?.landDetails?.totalRequiredHectares | number:'1.2-2' }} Ha</span>
+              </div>
+              <div class="land-stat">
+                <span class="stat-label">Government / Forest Land</span>
+                <span class="stat-val">{{ selectedProposal()?.landDetails?.governmentLandHectares | number:'1.2-2' }} Ha</span>
+              </div>
+              <div class="land-stat">
+                <span class="stat-label">Private Revenue Land</span>
+                <span class="stat-val">{{ selectedProposal()?.landDetails?.privateLandHectares | number:'1.2-2' }} Ha</span>
+              </div>
+              <div class="land-stat">
+                <span class="stat-label">Total Survey Parcels</span>
+                <span class="stat-val">{{ selectedProposal()?.landDetails?.affectedParcelsCount }} Parcels</span>
+              </div>
+            </div>
+
+            <div class="gis-crosslink-card">
+              <div class="crosslink-info">
+                <h4>Interactive PostGIS Cadastral Alignment</h4>
+                <p>Inspect cadastral survey boundaries, khasra polygons, landowner records, and satellite overlay for this corridor.</p>
+              </div>
+              <button class="bs-btn bs-btn-primary" (click)="navigateToGis(selectedProposal()!.projectId)">
+                🗺️ View on GIS Map & Cadastral Overlay
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: STATUTORY DOCUMENTS -->
+        <div *ngIf="activeTab === 'documents'" class="tab-panel">
+          <div class="documents-list">
+            <div *ngFor="let doc of selectedProposal()?.documents" class="doc-item">
+              <div class="doc-left">
+                <span class="doc-icon">📄</span>
+                <div class="doc-info">
+                  <span class="doc-name"><strong>{{ doc.fileName }}</strong></span>
+                  <span class="doc-meta">Type: {{ doc.documentType }} • Size: {{ doc.fileSizeFormatted }} • Uploaded: {{ doc.uploadedAt | date:'mediumDate' }}</span>
+                </div>
+              </div>
+              <div class="doc-actions">
+                <span class="bs-badge bs-badge-success">Statutory Verified</span>
+                <button class="bs-btn bs-btn-sm bs-btn-outline" title="Download Document">⬇️ Download</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: AFFECTED FAMILIES & R&R -->
+        <div *ngIf="activeTab === 'families'" class="tab-panel">
+          <div class="info-grid-2">
+            <div class="info-card">
+              <h4 class="info-card-title">Family Demographics & Relocation</h4>
+              <div class="info-row">
+                <span class="label">Total Affected Families:</span>
+                <span class="val"><strong>{{ selectedProposal()?.affectedFamilies?.totalAffected }}</strong></span>
+              </div>
+              <div class="info-row">
+                <span class="label">Physically Displaced Families:</span>
+                <span class="val"><strong>{{ selectedProposal()?.affectedFamilies?.displaced }}</strong></span>
+              </div>
+              <div class="info-row">
+                <span class="label">Eligible for RFCTLARR 2nd Schedule R&R:</span>
+                <span class="val"><strong>{{ selectedProposal()?.affectedFamilies?.eligibleForRr }}</strong></span>
+              </div>
+              <div class="info-row">
+                <span class="label">R&R Packages Completed:</span>
+                <span class="val"><strong>{{ selectedProposal()?.affectedFamilies?.rrCompleted }} Cases</strong></span>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <h4 class="info-card-title">Financial Compensation Status</h4>
+              <div class="info-row">
+                <span class="label">Total Assessed Compensation:</span>
+                <span class="val highlight-val"><strong>{{ formatCurrency(selectedProposal()?.affectedFamilies?.compensationAssessed || 0) }}</strong></span>
+              </div>
+              <div class="info-row">
+                <span class="label">Total Disbursed (DBT):</span>
+                <span class="val highlight-val"><strong>{{ formatCurrency(selectedProposal()?.affectedFamilies?.compensationDisbursed || 0) }}</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: TIMELINE & REVIEW HISTORY -->
+        <div *ngIf="activeTab === 'timeline'" class="tab-panel">
+          <div class="timeline-container">
+            <div *ngFor="let item of selectedProposal()?.timeline" class="timeline-entry">
+              <div class="entry-dot"></div>
+              <div class="entry-content">
+                <div class="entry-header">
+                  <span class="entry-stage"><strong>{{ item.stage }}</strong>: {{ item.action }}</span>
+                  <span class="entry-date">{{ item.reviewedAt | date:'medium' }}</span>
+                </div>
+                <div class="entry-actor">👤 {{ item.actorName }} (<em>{{ item.actorRole }}</em>)</div>
+                <div class="entry-comments">"{{ item.comments }}"</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW MODAL: APPROVE -->
+  <div class="dialog-backdrop" *ngIf="showApproveModal" (click)="showApproveModal = false">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>Approve Land Acquisition Proposal</h3>
+        <button class="dialog-close" (click)="showApproveModal = false">✕</button>
+      </div>
+
+      <div class="dialog-body">
+        <p>You are granting <strong>State Administrative Sanction</strong> to Proposal <code>{{ selectedProposal()?.proposalNumber }}</code> under RFCTLARR 2013.</p>
+        <p class="text-sm text-muted">This will transition the project to <strong>Approved</strong> and generate statutory notifications for gazette publication.</p>
+
+        <div class="form-group mt-4">
+          <label>Sanction Order Comments / Endorsement (Optional):</label>
+          <textarea class="bs-input" rows="3" [(ngModel)]="workflowComment" placeholder="Enter administrative approval remarks..."></textarea>
+        </div>
+
+        <div *ngIf="workflowError" class="dialog-error">{{ workflowError }}</div>
+      </div>
+
+      <div class="dialog-footer">
+        <button class="bs-btn bs-btn-outline bs-btn-sm" (click)="showApproveModal = false">Cancel</button>
+        <button class="bs-btn bs-btn-success bs-btn-sm" (click)="submitApprove()" [disabled]="workflowActionLoading">
+          <span *ngIf="workflowActionLoading" class="bs-spinner bs-spinner-sm"></span>
+          Confirm Administrative Sanction ✅
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW MODAL: RETURN -->
+  <div class="dialog-backdrop" *ngIf="showReturnModal" (click)="showReturnModal = false">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3>Return Proposal for Clarification</h3>
+        <button class="dialog-close" (click)="showReturnModal = false">✕</button>
+      </div>
+
+      <div class="dialog-body">
+        <p>Return Proposal <code>{{ selectedProposal()?.proposalNumber }}</code> back to the District Collectorate / Project Implementing Agency for corrections.</p>
+
+        <div class="form-group mt-4">
+          <label>Mandatory Return Reason / Clarifications Required: <span class="text-danger">*</span></label>
+          <textarea class="bs-input" rows="4" [(ngModel)]="workflowReason" placeholder="Specify missing documents, valuation discrepancies, or survey corrections needed..."></textarea>
+        </div>
+
+        <div *ngIf="workflowError" class="dialog-error">{{ workflowError }}</div>
+      </div>
+
+      <div class="dialog-footer">
+        <button class="bs-btn bs-btn-outline bs-btn-sm" (click)="showReturnModal = false">Cancel</button>
+        <button class="bs-btn bs-btn-warning bs-btn-sm" (click)="submitReturn()" [disabled]="workflowActionLoading">
+          <span *ngIf="workflowActionLoading" class="bs-spinner bs-spinner-sm"></span>
+          Return to District ↩️
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKFLOW MODAL: REJECT -->
+  <div class="dialog-backdrop" *ngIf="showRejectModal" (click)="showRejectModal = false">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h3 class="text-danger">Reject Land Acquisition Proposal</h3>
+        <button class="dialog-close" (click)="showRejectModal = false">✕</button>
+      </div>
+
+      <div class="dialog-body">
+        <p class="text-danger"><strong>Warning:</strong> Rejecting this proposal will terminate the acquisition process under this proposal number.</p>
+
+        <div class="form-group mt-4">
+          <label>Statutory / Environmental Rejection Reason: <span class="text-danger">*</span></label>
+          <textarea class="bs-input" rows="4" [(ngModel)]="workflowReason" placeholder="State statutory grounds, wetland violation, or non-feasibility reasons..."></textarea>
+        </div>
+
+        <div *ngIf="workflowError" class="dialog-error">{{ workflowError }}</div>
+      </div>
+
+      <div class="dialog-footer">
+        <button class="bs-btn bs-btn-outline bs-btn-sm" (click)="showRejectModal = false">Cancel</button>
+        <button class="bs-btn bs-btn-danger bs-btn-sm" (click)="submitReject()" [disabled]="workflowActionLoading">
+          <span *ngIf="workflowActionLoading" class="bs-spinner bs-spinner-sm"></span>
+          Confirm Rejection ❌
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

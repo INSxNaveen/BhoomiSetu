@@ -1,0 +1,86 @@
+<div class="dashboard-page">
+  <div class="page-header">
+    <div>
+      <h1 class="title">National Land Acquisition Dashboard</h1>
+      <p class="subtitle">Role View: <strong>{{ user()?.role }}</strong> | Scope: {{ user()?.organizationName }}</p>
+    </div>
+  </div>
+
+  <!-- Stat Cards Grid -->
+  <div class="grid grid-4" *ngIf="summary">
+    <div class="card stat-card">
+      <div class="stat-icon blue">🏗️</div>
+      <div class="stat-content">
+        <div class="stat-label">Total Projects</div>
+        <div class="stat-value">{{ summary.totalProjects }}</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon amber">📜</div>
+      <div class="stat-content">
+        <div class="stat-label">Pending Proposals</div>
+        <div class="stat-value">{{ summary.pendingProposals }}</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon emerald">🗺️</div>
+      <div class="stat-content">
+        <div class="stat-label">Land Proposed / Acquired</div>
+        <div class="stat-value">{{ summary.totalLandProposedHectares }} Ha</div>
+        <div class="stat-sub">{{ summary.totalLandAcquiredHectares }} Ha Acquired</div>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <div class="stat-icon purple">💰</div>
+      <div class="stat-content">
+        <div class="stat-label">Compensation Disbursed</div>
+        <div class="stat-value">₹ {{ (summary.totalCompensationDisbursedInr / 10000000).toFixed(2) }} Cr</div>
+        <div class="stat-sub">Assessed: ₹ {{ (summary.totalCompensationAssessedInr / 10000000).toFixed(2) }} Cr</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Summary Table -->
+  <div class="card margin-top">
+    <h2 class="card-title">National Lifecycle Status Overview</h2>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Lifecycle Stage</th>
+          <th>Status Count</th>
+          <th>System Impact</th>
+          <th>Action Needed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>District Verification Queue</td>
+          <td><span class="badge badge-warning">1 Pending</span></td>
+          <td>Field verification by Collectorate</td>
+          <td>Review Proposal Docs</td>
+        </tr>
+        <tr>
+          <td>State Sanction & Approval</td>
+          <td><span class="badge badge-success">1 Approved</span></td>
+          <td>RFCTLARR Notification Issued</td>
+          <td>Publish Gazette Notification</td>
+        </tr>
+        <tr>
+          <td>Compensation Disbursement</td>
+          <td><span class="badge badge-info">₹ 2.64 Cr Paid</span></td>
+          <td>DBT Direct Bank Transfer</td>
+          <td>Verify Treasury Logs</td>
+        </tr>
+        <tr>
+          <td>Possession & Resettlement</td>
+          <td><span class="badge badge-success">1 Family Completed</span></td>
+          <td>Handed over to NHAI Agency</td>
+          <td>Clear Project Corridor</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="proposals-page">
+  <div class="page-header">
+    <div>
+      <h1 class="title">Land Acquisition Proposals & Workflow State Machine</h1>
+      <p class="subtitle">Active Role: <strong>{{ user()?.role }}</strong> | Verified State Machine Transitions</p>
+    </div>
+  </div>
+
+  <div class="card table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Proposal #</th>
+          <th>Project Code / Name</th>
+          <th>State / District</th>
+          <th>Land (Ha)</th>
+          <th>Families</th>
+          <th>Est. Compensation</th>
+          <th>Current Stage & Status</th>
+          <th>Workflow Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of proposals">
+          <td><strong>{{ p.proposalNumber }}</strong></td>
+          <td>
+            <div style="font-weight: 600;">{{ p.projectCode }}</div>
+            <div style="font-size: 0.75rem; color: var(--color-text-muted);">{{ p.projectName }}</div>
+          </td>
+          <td>{{ p.stateName }} / {{ p.districtName }}</td>
+          <td>{{ p.landAreaProposed }} Ha</td>
+          <td>{{ p.affectedFamilyCount }}</td>
+          <td>₹ {{ (p.estimatedCompensation / 10000000).toFixed(2) }} Cr</td>
+          <td>
+            <div class="badge" [ngClass]="getBadgeClass(p.status)">{{ p.status }}</div>
+            <div style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 4px;">{{ p.currentStage }}</div>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <!-- District Verification Action -->
+              <button *ngIf="user()?.role === 'DistrictAdmin' && p.status === 'Submitted'"
+                      class="btn btn-primary btn-sm" (click)="onReview(p.id, 'Verify')">
+                Verify Land
+              </button>
+
+              <!-- State Approval Action -->
+              <button *ngIf="(user()?.role === 'StateAdmin' || user()?.role === 'SuperAdmin') && (p.status === 'StateReview' || p.status === 'Submitted' || p.status === 'DistrictVerification')"
+                      class="btn btn-primary btn-sm" (click)="onReview(p.id, 'Approve')">
+                Approve Sanction
+              </button>
+
+              <button *ngIf="p.status === 'Draft' && user()?.role === 'ProjectAgency'"
+                      class="btn btn-outline btn-sm" (click)="onReview(p.id, 'Submit')">
+                Submit Proposal
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Action Modal -->
+  <div class="modal-overlay" *ngIf="selectedProposalId">
+    <div class="modal-card card">
+      <h3>Confirm Workflow Action: {{ selectedAction }}</h3>
+      <p style="font-size: 0.875rem; margin: 12px 0;">Enter official remarks for audit log and decision trail:</p>
+      <textarea class="form-control" [(ngModel)]="actionComments" rows="3" placeholder="Enter review comments..."></textarea>
+      <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px;">
+        <button class="btn btn-outline" (click)="selectedProposalId = null">Cancel</button>
+        <button class="btn btn-primary" (click)="submitReview()">Confirm Action</button>
+      </div>
+    </div>
+  </div>
+</div>

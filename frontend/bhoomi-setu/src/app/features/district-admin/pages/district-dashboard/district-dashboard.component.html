@@ -1,0 +1,283 @@
+<div class="district-dashboard-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>District Administration</span>
+        <span class="divider">/</span>
+        <span class="active">Operations Dashboard</span>
+      </div>
+      <h1 class="page-title">
+        District Operations Dashboard
+        <span class="badge-district" *ngIf="data()">{{ data()?.districtName }} • {{ data()?.stateName }}</span>
+      </h1>
+      <p class="page-subtitle">
+        Operational field control room for CALA land acquisition, joint survey, DBT disbursements, and rehabilitation
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <span class="last-updated" *ngIf="data()">
+        <span class="pulse-dot"></span> Live Sync: {{ data()?.lastUpdated | date:'shortTime' }}
+      </span>
+      <button class="bs-btn bs-btn-primary" (click)="loadDashboard()" [disabled]="loading()">
+        <span class="btn-icon">🔄</span> {{ loading() ? 'Syncing...' : 'Refresh Field Data' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && !data()">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading CALA field records for {{ selectedTehsil ? 'selected Tehsil' : 'district' }}...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadDashboard()">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <ng-container *ngIf="data()">
+    <!-- 6 KPI Matrix -->
+    <div class="bs-grid-6 kpi-grid">
+      <app-stat-card
+        title="Active Projects"
+        [value]="data()?.kpis?.activeProjects || 0"
+        unit="Corridors"
+        subtext="Under CALA jurisdiction"
+        icon="🏗️"
+        variant="blue"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Land Parcels"
+        [value]="data()?.kpis?.totalLandParcels || 0"
+        unit="Khasras"
+        [subtext]="(data()?.kpis?.totalLandRequiredHectares || 0) + ' Ha Area'"
+        icon="📐"
+        variant="navy"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Land in Possession"
+        [value]="(data()?.kpis?.totalLandAcquiredHectares || 0) + ' Ha'"
+        unit=""
+        [subtext]="(data()?.kpis?.landAcquisitionPercentage || 0) + '% Acquired'"
+        icon="📜"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Pending Verifications"
+        [value]="data()?.kpis?.pendingVerificationsCount || 0"
+        unit="Parcels"
+        subtext="Action Required"
+        icon="📋"
+        variant="red"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Compensation Disbursed"
+        [value]="formatCurrency(data()?.kpis?.totalCompensationDisbursed || 0)"
+        unit=""
+        [subtext]="(data()?.kpis?.compensationDisbursementPercentage || 0) + '% Payout'"
+        icon="💰"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="R&R Rehabilitation"
+        [value]="(data()?.kpis?.rrProgressPercentage || 0) + '%'"
+        unit="Progress"
+        [subtext]="(data()?.kpis?.rrCompletedCount || 0) + ' Settled'"
+        icon="🏡"
+        variant="saffron"
+      ></app-stat-card>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="filters-card">
+      <div class="filters-left">
+        <span class="filter-label">Operational Filter:</span>
+        <select class="bs-select" [(ngModel)]="selectedTehsil" (change)="onFilterChange()">
+          <option value="">All Tehsils in District</option>
+          <option *ngFor="let t of data()?.tehsilBreakdown" [value]="t.tehsilId">{{ t.tehsilName }}</option>
+        </select>
+
+        <select class="bs-select" [(ngModel)]="selectedProjectType" (change)="onFilterChange()">
+          <option value="">All Infrastructure Sectors</option>
+          <option value="NationalHighway">National Highways (NHAI)</option>
+          <option value="RailwayLine">Railways & DFC</option>
+          <option value="Airport">Airports & Logistics</option>
+          <option value="IndustrialCorridor">Industrial Corridors</option>
+          <option value="UrbanInfrastructure">Urban Infrastructure</option>
+          <option value="Irrigation">Irrigation Canals</option>
+          <option value="PowerAndEnergy">Power Transmission</option>
+        </select>
+      </div>
+
+      <div class="filters-right">
+        <span class="records-count">District: <strong>{{ data()?.districtName }}</strong> • CALA Zone Active</span>
+      </div>
+    </div>
+
+    <!-- Middle Split: Pipeline Funnel (Left) + Field Verification Summary (Right) -->
+    <div class="split-row">
+      <!-- 7-Stage Acquisition Pipeline Funnel -->
+      <div class="bs-card pipeline-card">
+        <div class="bs-card-header">
+          <div class="header-titles">
+            <h3 class="bs-card-title">District Land Acquisition Pipeline</h3>
+            <p class="bs-card-subtitle">Real-time throughput across statutory acquisition milestones</p>
+          </div>
+          <span class="total-badge">{{ data()?.kpis?.totalLandParcels || 0 }} Total Parcels</span>
+        </div>
+
+        <div class="funnel-container">
+          <div class="funnel-bar-row" *ngFor="let stage of data()?.pipeline">
+            <div class="stage-info">
+              <span class="stage-name">{{ stage.stageName }}</span>
+              <span class="stage-desc">{{ stage.description }}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" [style.width.%]="stage.percentage"></div>
+            </div>
+            <div class="stage-count">
+              <strong>{{ stage.count }}</strong>
+              <span class="pct">{{ stage.percentage }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALA Verification Summary -->
+      <div class="bs-card verification-card">
+        <div class="bs-card-header">
+          <div class="header-titles">
+            <h3 class="bs-card-title">Field Verification Summary</h3>
+            <p class="bs-card-subtitle">Ground revenue survey status</p>
+          </div>
+          <a routerLink="/district/verification" class="view-link">Open Verification ➔</a>
+        </div>
+
+        <div class="verification-boxes">
+          <div class="v-box pending" routerLink="/district/verification">
+            <div class="v-top">
+              <span class="v-icon">⏳</span>
+              <span class="v-count">{{ data()?.verificationSummary?.pending || 0 }}</span>
+            </div>
+            <div class="v-title">Pending Verification</div>
+            <div class="v-desc">Awaiting revenue field inspection</div>
+          </div>
+
+          <div class="v-box verified" routerLink="/district/verification">
+            <div class="v-top">
+              <span class="v-icon">✅</span>
+              <span class="v-count">{{ data()?.verificationSummary?.verified || 0 }}</span>
+            </div>
+            <div class="v-title">Verified & Surveyed</div>
+            <div class="v-desc">Khasra boundaries verified</div>
+          </div>
+
+          <div class="v-box returned" routerLink="/district/verification">
+            <div class="v-top">
+              <span class="v-icon">↩️</span>
+              <span class="v-count">{{ data()?.verificationSummary?.returned || 0 }}</span>
+            </div>
+            <div class="v-title">Returned for Correction</div>
+            <div class="v-desc">Discrepancy reported</div>
+          </div>
+        </div>
+
+        <div class="verification-action-cta">
+          <button class="bs-btn bs-btn-primary w-100" routerLink="/district/verification">
+            📋 Review Pending Field Verifications ({{ data()?.verificationSummary?.pending || 0 }})
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Split: Tehsil Progress Matrix (Left) + Delayed Milestones & Activity Feed (Right) -->
+    <div class="bottom-row">
+      <!-- Tehsil Progress Matrix -->
+      <div class="bs-card tehsil-card">
+        <div class="bs-card-header">
+          <div class="header-titles">
+            <h3 class="bs-card-title">Tehsil Operational Progress</h3>
+            <p class="bs-card-subtitle">CALA sub-district performance and revenue survey progress</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="bs-table">
+            <thead>
+              <tr>
+                <th>Tehsil</th>
+                <th>Parcels</th>
+                <th>Land Area (Ha)</th>
+                <th>Verified</th>
+                <th>Compensation Disbursed</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of data()?.tehsilBreakdown">
+                <td class="font-bold">{{ t.tehsilName }}</td>
+                <td>{{ t.parcelsCount }}</td>
+                <td>{{ t.landAreaHectares }} Ha</td>
+                <td>
+                  <span class="verified-pill">{{ t.verifiedCount }} / {{ t.parcelsCount }}</span>
+                </td>
+                <td class="font-mono">{{ formatCurrency(t.compensationDisbursed) }}</td>
+                <td>
+                  <span class="bs-badge" [ngClass]="t.status === 'OnTrack' ? 'bs-badge-success' : 'bs-badge-warning'">
+                    {{ t.status }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Delayed Milestones & Activity Feed -->
+      <div class="bs-card feed-card">
+        <div class="bs-card-header">
+          <div class="header-titles">
+            <h3 class="bs-card-title">Milestone Alerts & Recent Activity</h3>
+            <p class="bs-card-subtitle">Critical field exceptions requiring CALA intervention</p>
+          </div>
+        </div>
+
+        <!-- Delayed Milestones -->
+        <div class="delayed-feed" *ngIf="data()?.delayedMilestones?.length">
+          <div class="feed-item delayed" *ngFor="let m of data()?.delayedMilestones">
+            <div class="feed-icon">⚠️</div>
+            <div class="feed-body">
+              <div class="feed-title">{{ m.projectName }}</div>
+              <div class="feed-desc">{{ m.milestoneName }} — Overdue by {{ m.daysDelayed }} days</div>
+            </div>
+            <a routerLink="/district/projects" class="bs-btn bs-btn-sm bs-btn-outline">Inspect</a>
+          </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div class="activity-feed">
+          <div class="feed-item" *ngFor="let a of data()?.recentActivity">
+            <div class="feed-icon">📌</div>
+            <div class="feed-body">
+              <div class="feed-title">{{ a.title }}</div>
+              <div class="feed-desc">{{ a.description }}</div>
+              <span class="feed-time">{{ a.timestamp | date:'short' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

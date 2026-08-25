@@ -1,0 +1,387 @@
+<div class="project-workspace-page">
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && !workspace()">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading infrastructure project workspace...</div>
+  </div>
+
+  <!-- Error State / Security Denied -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <a routerLink="/agency/projects" class="bs-btn bs-btn-sm bs-btn-outline ml-auto">Back to Projects</a>
+  </div>
+
+  <!-- Workspace Container -->
+  <ng-container *ngIf="workspace()">
+    <!-- Workspace Header -->
+    <div class="workspace-header bs-card">
+      <div class="header-top">
+        <div class="breadcrumb">
+          <a routerLink="/agency/projects">My Projects</a>
+          <span class="divider">/</span>
+          <span class="active font-mono">{{ workspace()?.projectCode }}</span>
+        </div>
+        <div class="header-badges">
+          <span class="org-pill">🏛️ {{ workspace()?.organizationName }}</span>
+          <span class="bs-badge" [ngClass]="workspace()?.status === 'Completed' ? 'bs-badge-success' : (workspace()?.status === 'Approved' || workspace()?.status === 'AcquisitionInProgress' ? 'bs-badge-primary' : 'bs-badge-warning')">
+            {{ workspace()?.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="header-main">
+        <div class="title-meta">
+          <h1 class="project-title">{{ workspace()?.projectName }}</h1>
+          <div class="meta-row">
+            <span>📍 {{ workspace()?.districtName }}, {{ workspace()?.stateName }}</span>
+            <span class="divider">•</span>
+            <span>🏷️ {{ workspace()?.projectType }}</span>
+            <span class="divider">•</span>
+            <span class="font-mono">Est. Cost: {{ formatCurrency(workspace()?.estimatedCost || 0) }}</span>
+          </div>
+        </div>
+
+        <div class="progress-box">
+          <div class="prog-label-row">
+            <span>Overall Corridor Acquisition</span>
+            <strong class="font-mono text-success">{{ workspace()?.overallProgress }}%</strong>
+          </div>
+          <div class="prog-track">
+            <div class="prog-fill" [style.width.%]="workspace()?.overallProgress"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="workspace-tabs">
+        <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">
+          📋 Overview
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'land'" (click)="setTab('land')">
+          📐 Land Cadastre ({{ workspace()?.landParcels?.length || 0 }})
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'documents'" (click)="setTab('documents')">
+          📄 Documents ({{ workspace()?.documents?.length || 0 }})
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'compensation'" (click)="setTab('compensation')">
+          💸 Compensation DBT
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'possession'" (click)="setTab('possession')">
+          🌾 Possession (Sec 38)
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'rehabilitation'" (click)="setTab('rehabilitation')">
+          🏡 R&R Second Schedule
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'timeline'" (click)="setTab('timeline')">
+          ⏱️ Milestones Timeline
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 1: OVERVIEW -->
+    <div class="tab-content" *ngIf="activeTab === 'overview'">
+      <div class="bs-grid-4 stats-grid">
+        <app-stat-card
+          title="Required Land"
+          [value]="(workspace()?.requiredAreaHectares || 0) + ' Ha'"
+          unit=""
+          subtext="Total corridor RoW"
+          icon="📐"
+          variant="navy"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="Acquired Land"
+          [value]="(workspace()?.acquiredAreaHectares || 0) + ' Ha'"
+          unit=""
+          [subtext]="(workspace()?.overallProgress || 0) + '% Possessed'"
+          icon="✅"
+          variant="green"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="CALA Compensation"
+          [value]="formatCurrency(workspace()?.compensation?.disbursedAmount || 0)"
+          unit=""
+          [subtext]="(workspace()?.compensation?.disbursementPercentage || 0) + '% Disbursed'"
+          icon="💰"
+          variant="blue"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="R&R Packages"
+          [value]="(workspace()?.rehabilitation?.completedCases || 0) + ' / ' + (workspace()?.rehabilitation?.eligibleCases || 0)"
+          unit="Settled"
+          [subtext]="(workspace()?.rehabilitation?.completionPercentage || 0) + '% Delivered'"
+          icon="🏡"
+          variant="amber"
+        ></app-stat-card>
+      </div>
+
+      <div class="bs-card section-card mt-3">
+        <h3 class="bs-card-title">Project Alignment & Public Purpose Rationale</h3>
+        <p class="project-desc">{{ workspace()?.description }}</p>
+
+        <div class="details-grid mt-3">
+          <div class="d-item"><span class="d-lbl">Project Code:</span> <span class="d-val font-mono">{{ workspace()?.projectCode }}</span></div>
+          <div class="d-item"><span class="d-lbl">Implementing Body:</span> <span class="d-val">{{ workspace()?.organizationName }}</span></div>
+          <div class="d-item"><span class="d-lbl">State Jurisdiction:</span> <span class="d-val">{{ workspace()?.stateName }}</span></div>
+          <div class="d-item"><span class="d-lbl">District Jurisdiction:</span> <span class="d-val">{{ workspace()?.districtName }}</span></div>
+          <div class="d-item"><span class="d-lbl">Planned Start Date:</span> <span class="d-val">{{ workspace()?.startDate | date:'mediumDate' }}</span></div>
+          <div class="d-item"><span class="d-lbl">Target Completion:</span> <span class="d-val">{{ workspace()?.targetCompletionDate | date:'mediumDate' }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: LAND CADASTRE & GIS MAP -->
+    <div class="tab-content" *ngIf="activeTab === 'land'">
+      <div class="land-layout-grid">
+        <!-- Land Table -->
+        <div class="bs-card land-table-card">
+          <div class="bs-card-header">
+            <div>
+              <h3 class="bs-card-title">Demarcated Land Parcels (Khasra Cadastre)</h3>
+              <p class="bs-card-subtitle">Surveyed boundary plots under acquisition jurisdiction</p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="bs-table">
+              <thead>
+                <tr>
+                  <th>Survey No.</th>
+                  <th>Parcel ID</th>
+                  <th>Village (Tehsil)</th>
+                  <th>Area</th>
+                  <th>Land Type</th>
+                  <th>Acquisition Status</th>
+                  <th>Primary Owner</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let lp of workspace()?.landParcels">
+                  <td class="font-bold text-primary font-mono">{{ lp.surveyNumber }}</td>
+                  <td class="font-mono text-xs text-muted">{{ lp.parcelNumber }}</td>
+                  <td>{{ lp.villageName }} ({{ lp.tehsilName }})</td>
+                  <td class="font-mono">{{ lp.areaHectares }} Ha</td>
+                  <td>{{ lp.landType }}</td>
+                  <td>
+                    <span class="bs-badge" [ngClass]="lp.acquisitionStatus === 'PossessionTaken' ? 'bs-badge-success' : (lp.acquisitionStatus === 'CompensationPaid' ? 'bs-badge-primary' : 'bs-badge-warning')">
+                      {{ lp.acquisitionStatus }}
+                    </span>
+                  </td>
+                  <td>{{ lp.owners?.[0]?.ownerName || 'State Gram Sabha' }}</td>
+                </tr>
+                <tr *ngIf="workspace()?.landParcels?.length === 0">
+                  <td colspan="7" class="text-center py-4 text-muted">No parcel records demarcated yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Interactive GIS Map Canvas -->
+        <div class="bs-card map-card">
+          <div class="bs-card-header">
+            <div>
+              <h3 class="bs-card-title">Spatial Cadastre Overlay</h3>
+              <p class="bs-card-subtitle">Interactive PostGIS boundaries</p>
+            </div>
+          </div>
+          <div id="project-land-map" class="leaflet-map-canvas"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: DOCUMENTS -->
+    <div class="tab-content" *ngIf="activeTab === 'documents'">
+      <div class="bs-card">
+        <div class="bs-card-header">
+          <div>
+            <h3 class="bs-card-title">Clearance Documentation & Statutory Gazettes</h3>
+            <p class="bs-card-subtitle">Repository of uploaded DPRs, Land Schedules, and Section notifications</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="bs-table">
+            <thead>
+              <tr>
+                <th>Document Name</th>
+                <th>Category</th>
+                <th>Version</th>
+                <th>Uploaded By</th>
+                <th>Uploaded Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let doc of workspace()?.documents">
+                <td class="font-bold">📄 {{ doc.fileName }}</td>
+                <td><span class="bs-badge bs-badge-info">{{ doc.documentType }}</span></td>
+                <td class="font-mono text-xs">v{{ doc.version }}.0</td>
+                <td>{{ doc.uploadedBy }}</td>
+                <td class="text-xs text-muted">{{ doc.uploadedAt | date:'mediumDate' }}</td>
+                <td><span class="bs-badge bs-badge-success">✓ {{ doc.status }}</span></td>
+              </tr>
+              <tr *ngIf="workspace()?.documents?.length === 0">
+                <td colspan="6" class="text-center py-4 text-muted">No statutory documents uploaded.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: COMPENSATION -->
+    <div class="tab-content" *ngIf="activeTab === 'compensation'">
+      <div class="bs-grid-4 stats-grid mb-3">
+        <app-stat-card
+          title="Total Assessed Award"
+          [value]="formatCurrency(workspace()?.compensation?.assessedAmount || 0)"
+          unit=""
+          subtext="Base + 100% Solatium"
+          icon="⚖️"
+          variant="navy"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="CALA Approved"
+          [value]="formatCurrency(workspace()?.compensation?.approvedAmount || 0)"
+          unit=""
+          subtext="Sanctioned for DBT"
+          icon="📜"
+          variant="blue"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="DBT Disbursed"
+          [value]="formatCurrency(workspace()?.compensation?.disbursedAmount || 0)"
+          unit=""
+          [subtext]="(workspace()?.compensation?.disbursementPercentage || 0) + '% Settled'"
+          icon="💸"
+          variant="green"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="Pending Disbursement"
+          [value]="formatCurrency(workspace()?.compensation?.pendingAmount || 0)"
+          unit=""
+          subtext="In banking pipeline"
+          icon="⏳"
+          variant="amber"
+        ></app-stat-card>
+      </div>
+    </div>
+
+    <!-- TAB 5: POSSESSION -->
+    <div class="tab-content" *ngIf="activeTab === 'possession'">
+      <div class="bs-grid-3 stats-grid mb-3">
+        <app-stat-card
+          title="Total Parcels in Scope"
+          [value]="(workspace()?.possession?.totalParcels || 0) + ' Parcels'"
+          unit=""
+          subtext="Notified Khasra boundary"
+          icon="📐"
+          variant="navy"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="Possession Taken"
+          [value]="(workspace()?.possession?.possessionTakenCount || 0) + ' Parcels'"
+          unit=""
+          [subtext]="(workspace()?.possession?.possessionHectares || 0) + ' Ha Area Handed Over'"
+          icon="✅"
+          variant="green"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="Handover Completion"
+          [value]="(workspace()?.possession?.completionPercentage || 0) + '%'"
+          unit=""
+          subtext="Section 38 Panchnama executed"
+          icon="🏆"
+          variant="blue"
+        ></app-stat-card>
+      </div>
+    </div>
+
+    <!-- TAB 6: REHABILITATION -->
+    <div class="tab-content" *ngIf="activeTab === 'rehabilitation'">
+      <div class="bs-grid-4 stats-grid mb-3">
+        <app-stat-card
+          title="Total Affected Families"
+          [value]="(workspace()?.rehabilitation?.totalAffectedFamilies || 0) + ' Families'"
+          unit=""
+          subtext="Identified in SIA"
+          icon="👨‍👩‍👧‍👦"
+          variant="navy"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="Displaced Families"
+          [value]="(workspace()?.rehabilitation?.displacedFamilies || 0) + ' Families'"
+          unit=""
+          subtext="Relocation entitled"
+          icon="🏠"
+          variant="amber"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="R&R Packages Delivered"
+          [value]="(workspace()?.rehabilitation?.completedCases || 0) + ' Settled'"
+          unit=""
+          [subtext]="(workspace()?.rehabilitation?.completionPercentage || 0) + '% Completion'"
+          icon="🏡"
+          variant="green"
+        ></app-stat-card>
+
+        <app-stat-card
+          title="Grants Disbursed"
+          [value]="formatCurrency(workspace()?.rehabilitation?.totalGrantsDisbursed || 0)"
+          unit=""
+          subtext="Subsistence & Plot Grants"
+          icon="💰"
+          variant="blue"
+        ></app-stat-card>
+      </div>
+    </div>
+
+    <!-- TAB 7: TIMELINE -->
+    <div class="tab-content" *ngIf="activeTab === 'timeline'">
+      <div class="bs-card">
+        <div class="bs-card-header">
+          <div>
+            <h3 class="bs-card-title">Statutory Acquisition Lifecycle Milestones</h3>
+            <p class="bs-card-subtitle">Scheduled vs Actual completion under RFCTLARR Act 2013 timeline</p>
+          </div>
+        </div>
+
+        <div class="timeline-list">
+          <div class="timeline-item" *ngFor="let m of workspace()?.timeline" [class.is-delayed]="m.isDelayed" [class.is-completed]="m.status === 'Completed'">
+            <div class="t-node">
+              <span *ngIf="m.status === 'Completed'">✓</span>
+              <span *ngIf="m.status !== 'Completed' && !m.isDelayed">{{ m.sequenceNumber }}</span>
+              <span *ngIf="m.isDelayed">⚠️</span>
+            </div>
+            <div class="t-content">
+              <div class="t-header">
+                <span class="t-name font-bold">{{ m.name }}</span>
+                <span class="bs-badge" [ngClass]="m.status === 'Completed' ? 'bs-badge-success' : (m.isDelayed ? 'bs-badge-danger' : 'bs-badge-warning')">
+                  {{ m.status }}
+                </span>
+              </div>
+              <p class="t-desc">{{ m.description }}</p>
+              <div class="t-dates text-xs font-mono">
+                <span>Planned: {{ m.plannedDate | date:'mediumDate' }}</span>
+                <span *ngIf="m.actualDate" class="text-success ml-2">• Completed: {{ m.actualDate | date:'mediumDate' }}</span>
+                <span *ngIf="m.isDelayed" class="text-danger ml-2">• Milestone Overdue!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

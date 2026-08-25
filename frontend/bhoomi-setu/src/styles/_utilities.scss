@@ -1,0 +1,76 @@
+/* ==========================================================================
+   BHOOMISETU UTILITY SYSTEM
+   ========================================================================== */
+
+.bs-divider {
+  height: 1px;
+  background: var(--bs-border);
+  margin: var(--space-4) 0;
+  border: none;
+}
+
+.bs-text-muted { color: var(--bs-text-muted) !important; }
+.bs-text-primary { color: var(--bs-text-primary) !important; }
+.bs-text-blue { color: var(--bs-blue-600) !important; }
+.bs-text-green { color: var(--bs-green-600) !important; }
+.bs-text-red { color: var(--bs-red-600) !important; }
+.bs-text-amber { color: var(--bs-amber-600) !important; }
+.bs-font-bold { font-weight: var(--font-weight-bold) !important; }
+
+/* Pulse Indicator */
+.bs-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--bs-green-500);
+  display: inline-block;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+  animation: bs-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes bs-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+
+/* Spinner */
+.bs-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2.5px solid var(--bs-border-strong);
+  border-top-color: var(--bs-blue-600);
+  border-radius: 50%;
+  animation: bs-spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes bs-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.bs-empty-state {
+  text-align: center;
+  padding: var(--space-10) var(--space-4);
+  color: var(--bs-text-muted);
+
+  .bs-empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-2);
+    opacity: 0.8;
+  }
+
+  h4 {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+    color: var(--bs-navy-900);
+    margin-bottom: var(--space-1);
+  }
+
+  p {
+    font-size: var(--font-size-sm);
+    color: var(--bs-text-muted);
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}

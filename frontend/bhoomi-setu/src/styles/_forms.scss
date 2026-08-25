@@ -1,0 +1,91 @@
+/* ==========================================================================
+   BHOOMISETU FORM SYSTEM
+   ========================================================================== */
+
+.bs-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1-5);
+  margin-bottom: var(--space-4);
+
+  label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--bs-text-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .req {
+      color: var(--bs-red-600);
+      margin-left: var(--space-0-5);
+    }
+  }
+
+  .bs-hint {
+    font-size: var(--font-size-xs);
+    color: var(--bs-text-muted);
+  }
+
+  .bs-error {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--bs-red-600);
+  }
+}
+
+.bs-input,
+.bs-select {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  color: var(--bs-text-primary);
+  background-color: var(--bs-surface);
+  border: 1.5px solid var(--bs-border);
+  border-radius: var(--bs-radius-md);
+  outline: none;
+  transition: border-color var(--bs-transition-fast), box-shadow var(--bs-transition-fast);
+
+  &:focus {
+    border-color: var(--bs-blue-500);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+
+  &::placeholder {
+    color: var(--bs-text-light);
+  }
+
+  &:disabled {
+    background-color: var(--bs-surface-muted);
+    color: var(--bs-text-muted);
+    cursor: not-allowed;
+  }
+}
+
+.bs-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.25rem;
+}
+
+.bs-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--bs-text-secondary);
+  cursor: pointer;
+  user-select: none;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--bs-blue-600);
+    cursor: pointer;
+  }
+}

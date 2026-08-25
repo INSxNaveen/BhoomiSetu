@@ -1,0 +1,205 @@
+<div class="district-possession-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>District Administration</span>
+        <span class="divider">/</span>
+        <span class="active">Land Possession</span>
+      </div>
+      <h1 class="page-title">Land Possession & Revenue Mutation</h1>
+      <p class="page-subtitle">
+        Statutory handover under Section 38 of RFCTLARR Act 2013, encumbrance-free physical possession, and RoR record updating
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-primary" (click)="loadPossession()" [disabled]="loading()">
+        <span class="btn-icon">🔄</span> {{ loading() ? 'Loading...' : 'Refresh Possession Records' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Toast -->
+  <div class="bs-success-banner" *ngIf="successMessage()">
+    <span class="banner-icon">✅</span>
+    <span>{{ successMessage() }}</span>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && !summary()">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading possession status ledger...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadPossession()">Retry</button>
+  </div>
+
+  <!-- Main Content -->
+  <ng-container *ngIf="summary()">
+    <!-- 4 Overview Cards -->
+    <div class="bs-grid-4 stats-grid">
+      <app-stat-card
+        title="Total Land in Scope"
+        [value]="(summary()?.totalParcels || 0) + ' Parcels'"
+        unit=""
+        subtext="Notified Khasra boundary"
+        icon="📐"
+        variant="navy"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Physical Possession Taken"
+        [value]="(summary()?.possessionTakenCount || 0) + ' Parcels'"
+        unit=""
+        [subtext]="(summary()?.possessionCompletedHectares || 0) + ' Ha Area'"
+        icon="✅"
+        variant="green"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Section 38 Notice Issued"
+        [value]="(summary()?.noticeIssuedCount || 0) + ' Parcels'"
+        unit=""
+        subtext="Handover Window Active"
+        icon="📜"
+        variant="amber"
+      ></app-stat-card>
+
+      <app-stat-card
+        title="Possession Completion"
+        [value]="(summary()?.completionPercentage || 0) + '%'"
+        unit="Rate"
+        subtext="Revenue Mutation Recorded"
+        icon="🏆"
+        variant="blue"
+      ></app-stat-card>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="bs-card filter-card">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="bs-input search-input"
+          placeholder="Search Survey No., Landowner, or Project..."
+          [(ngModel)]="searchQuery"
+        />
+      </div>
+
+      <div class="filters-group">
+        <select class="bs-select" [(ngModel)]="selectedStatus">
+          <option value="">All Possession Stages</option>
+          <option value="PossessionTaken">Possession Taken (Complete)</option>
+          <option value="NoticeIssued">Notice Issued (Pending Handover)</option>
+          <option value="Pending">Pending Notice</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bs-card table-card">
+      <div class="table-responsive">
+        <table class="bs-table">
+          <thead>
+            <tr>
+              <th>Survey No.</th>
+              <th>Parcel ID</th>
+              <th>Infrastructure Project</th>
+              <th>Village & Tehsil</th>
+              <th>Area (Ha)</th>
+              <th>Registered Owner</th>
+              <th>Possession Status</th>
+              <th>Handover Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of getFilteredRecords()">
+              <td class="survey-cell font-mono">{{ item.surveyNumber }}</td>
+              <td class="font-mono text-muted">{{ item.parcelNumber }}</td>
+              <td>{{ item.projectName }}</td>
+              <td>{{ item.villageName }} ({{ item.tehsilName }})</td>
+              <td class="font-mono">{{ item.areaHectares }} Ha</td>
+              <td class="font-bold">{{ item.ownerName }}</td>
+              <td>
+                <span class="bs-badge" [ngClass]="item.possessionStatus === 'PossessionTaken' ? 'bs-badge-success' : 'bs-badge-warning'">
+                  {{ item.possessionStatus }}
+                </span>
+              </td>
+              <td class="font-mono text-xs">
+                <span *ngIf="item.possessionDate">{{ item.possessionDate | date:'mediumDate' }}</span>
+                <span *ngIf="!item.possessionDate" class="text-muted">Pending</span>
+              </td>
+              <td>
+                <button
+                  class="bs-btn bs-btn-xs bs-btn-success"
+                  *ngIf="item.possessionStatus !== 'PossessionTaken'"
+                  (click)="openTakePossession(item)"
+                >
+                  Take Possession ➔
+                </button>
+                <span *ngIf="item.possessionStatus === 'PossessionTaken'" class="text-success font-bold text-xs">
+                  ✓ Mutated
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="getFilteredRecords().length === 0">
+              <td colspan="9" class="text-center py-4 text-muted">
+                No possession records matching the filter.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Take Possession Modal -->
+  <div class="bs-modal-backdrop" *ngIf="showPossessionModal" (click)="closeModal()">
+    <div class="bs-modal-card possession-modal" (click)="$event.stopPropagation()">
+      <div class="bs-modal-header">
+        <div>
+          <span class="modal-pretitle font-mono">Survey No. {{ selectedRecord?.surveyNumber }}</span>
+          <h2 class="bs-modal-title">Record Physical Land Possession & Handover</h2>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="bs-modal-body">
+        <p class="modal-instruction">
+          You are confirming physical encumbrance-free possession for <strong>{{ selectedRecord?.villageName }} ({{ selectedRecord?.areaHectares }} Ha)</strong>
+          under Section 38 of RFCTLARR Act 2013. The land parcel will be transitioned to the executing agency.
+        </p>
+
+        <div class="bs-error-banner" *ngIf="actionError">
+          <span>⚠️ {{ actionError }}</span>
+        </div>
+
+        <div class="form-group">
+          <label>Panchnama Execution & Revenue Mutation Remarks:</label>
+          <textarea
+            class="bs-textarea"
+            rows="3"
+            [(ngModel)]="possessionComments"
+            placeholder="Enter possession handover notes..."
+          ></textarea>
+        </div>
+
+        <div class="modal-actions-bar">
+          <button class="bs-btn bs-btn-success" (click)="confirmPossession()" [disabled]="actionLoading">
+            {{ actionLoading ? 'Processing...' : 'Confirm Possession & RoR Mutation' }}
+          </button>
+          <button class="bs-btn bs-btn-outline" (click)="closeModal()" [disabled]="actionLoading">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

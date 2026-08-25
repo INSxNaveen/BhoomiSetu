@@ -1,0 +1,143 @@
+<div class="district-gis-page">
+  <!-- Top Bar -->
+  <div class="gis-topbar">
+    <div class="topbar-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>District Administration</span>
+        <span class="divider">/</span>
+        <span class="active">District GIS Map</span>
+      </div>
+      <h1 class="page-title">
+        District Spatial & Cadastral GIS Center
+        <span class="district-pill">Meerut District (Uttar Pradesh)</span>
+      </h1>
+    </div>
+
+    <div class="topbar-right">
+      <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="fitDistrictBounds()" title="Reset view to district bounds">
+        🎯 Fit District Bounds
+      </button>
+      <button class="bs-btn bs-btn-sm bs-btn-primary" (click)="loadDistrictGisData()" [disabled]="loading()">
+        🔄 Refresh Map
+      </button>
+    </div>
+  </div>
+
+  <!-- Error Banner -->
+  <div class="bs-error-banner mx-4 mt-2" *ngIf="errorMessage()">
+    <span>⚠️ {{ errorMessage() }}</span>
+  </div>
+
+  <!-- Split GIS Workspace: Left Drawer + Right Map Canvas -->
+  <div class="gis-workspace-split">
+    <!-- Left Project Sidebar Drawer -->
+    <aside class="gis-sidebar">
+      <div class="sidebar-search-box">
+        <input
+          type="text"
+          class="bs-input w-100"
+          placeholder="Filter project or corridor..."
+          [(ngModel)]="searchQuery"
+          (input)="onFilterChange()"
+        />
+      </div>
+
+      <div class="sidebar-filter-row">
+        <select class="bs-select w-100" [(ngModel)]="filterType" (change)="onFilterChange()">
+          <option value="">All Sectors</option>
+          <option value="NationalHighway">National Highways</option>
+          <option value="RailwayLine">Railways & DFC</option>
+          <option value="Airport">Airports & Logistics</option>
+          <option value="UrbanInfrastructure">Urban Infrastructure</option>
+        </select>
+      </div>
+
+      <!-- Project Cards List -->
+      <div class="project-cards-list">
+        <div
+          class="gis-project-card"
+          *ngFor="let p of getFilteredProjects()"
+          [class.selected]="selectedProject?.id === p.id"
+          (click)="selectProject(p)"
+        >
+          <div class="card-top">
+            <span class="proj-code font-mono">{{ p.projectCode }}</span>
+            <span class="proj-status bs-badge bs-badge-success">{{ p.status }}</span>
+          </div>
+
+          <h4 class="proj-name">{{ p.name }}</h4>
+
+          <div class="proj-metrics-grid">
+            <div class="metric">
+              <span class="lbl">Required Area</span>
+              <span class="val font-mono">{{ p.landRequiredHectares }} Ha</span>
+            </div>
+            <div class="metric">
+              <span class="lbl">Acquired</span>
+              <span class="val font-mono text-success">{{ p.landAcquiredHectares }} Ha</span>
+            </div>
+            <div class="metric">
+              <span class="lbl">Progress</span>
+              <span class="val font-bold">{{ p.acquisitionPercentage }}%</span>
+            </div>
+            <div class="metric">
+              <span class="lbl">Compensation</span>
+              <span class="val font-mono">{{ formatCurrency(p.totalCompensation) }}</span>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <a [routerLink]="['/district/verification']" class="bs-btn bs-btn-xs bs-btn-primary">
+              📋 Field Verifications
+            </a>
+          </div>
+        </div>
+
+        <div *ngIf="getFilteredProjects().length === 0" class="empty-list text-muted text-center py-4">
+          No projects match the filter.
+        </div>
+      </div>
+    </aside>
+
+    <!-- Map Canvas & Floating Controls -->
+    <div class="gis-map-container">
+      <div id="district-map-canvas" class="map-viewport"></div>
+
+      <!-- Floating Layer Controls -->
+      <div class="floating-layer-controls">
+        <div class="control-header">Map Layers</div>
+        <label class="layer-toggle">
+          <input type="checkbox" [checked]="showProjectsLayer" (change)="toggleLayer('projects')" />
+          <span>🏗️ Infrastructure Corridors</span>
+        </label>
+        <label class="layer-toggle">
+          <input type="checkbox" [checked]="showParcelsLayer" (change)="toggleLayer('parcels')" />
+          <span>📐 Cadastral Khasras (PostGIS)</span>
+        </label>
+      </div>
+
+      <!-- Legend Overlay -->
+      <div class="floating-legend">
+        <div class="legend-header">Acquisition Status</div>
+        <div class="legend-item">
+          <span class="legend-color" style="background: #10b981;"></span>
+          <span>Possession Taken</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background: #3b82f6;"></span>
+          <span>Compensation Paid</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background: #fbbf24;"></span>
+          <span>Surveyed & Verified</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background: #ef4444;"></span>
+          <span>Proposed (Verification Pending)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

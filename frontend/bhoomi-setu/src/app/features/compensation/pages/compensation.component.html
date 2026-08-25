@@ -1,0 +1,41 @@
+<div class="compensation-page">
+  <div class="page-header">
+    <div>
+      <h1 class="title">Compensation Assessment & DBT Disbursement Audit</h1>
+      <p class="subtitle">Direct Bank Transfer Tracking under RFCTLARR Act 2013</p>
+    </div>
+  </div>
+
+  <div class="card table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Survey #</th>
+          <th>Project Name</th>
+          <th>Assessed Amount</th>
+          <th>Solatium (100%)</th>
+          <th>Interest</th>
+          <th>Grand Total</th>
+          <th>Payment Reference</th>
+          <th>Disbursement Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td><strong>{{ item.surveyNumber }}</strong></td>
+          <td>{{ item.projectName }}</td>
+          <td>₹ {{ item.assessedAmount.toLocaleString() }}</td>
+          <td>₹ {{ item.solatiumAmount.toLocaleString() }}</td>
+          <td>₹ {{ item.interestAmount.toLocaleString() }}</td>
+          <td><strong>₹ {{ item.totalAmount.toLocaleString() }}</strong></td>
+          <td>
+            <div *ngFor="let p of item.payments" style="font-family: monospace; font-size: 0.75rem;">
+              {{ p.paymentReference }} ({{ p.paymentMethod }})
+            </div>
+          </td>
+          <td><span class="badge badge-success">{{ item.status }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

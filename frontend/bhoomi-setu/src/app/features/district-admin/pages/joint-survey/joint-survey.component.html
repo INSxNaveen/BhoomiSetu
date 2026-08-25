@@ -1,0 +1,166 @@
+<div class="joint-survey-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>District Administration</span>
+        <span class="divider">/</span>
+        <span class="active">Joint Survey (JMS)</span>
+      </div>
+      <h1 class="page-title">Joint Measurement Surveys (JMS)</h1>
+      <p class="page-subtitle">
+        On-ground DGPS boundary demarcation, tree/structure enumeration, and landholder witness records
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <button class="bs-btn bs-btn-primary" (click)="loadSurveys()" [disabled]="loading()">
+        <span class="btn-icon">🔄</span> {{ loading() ? 'Loading...' : 'Refresh Surveys' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Toast -->
+  <div class="bs-success-banner" *ngIf="successMessage()">
+    <span class="banner-icon">✅</span>
+    <span>{{ successMessage() }}</span>
+  </div>
+
+  <!-- Filters Row -->
+  <div class="bs-card filter-card">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="bs-input search-input"
+        placeholder="Search Survey No., Project, or Village..."
+        [(ngModel)]="searchQuery"
+        (input)="onFilterChange()"
+      />
+    </div>
+
+    <div class="filters-group">
+      <select class="bs-select" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+        <option value="">All Survey States</option>
+        <option value="Scheduled">Scheduled</option>
+        <option value="InProgress">In Progress</option>
+        <option value="Completed">Completed</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && !surveys().length">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading Joint Measurement Survey schedules...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadSurveys()">Retry</button>
+  </div>
+
+  <!-- Surveys Table -->
+  <div class="bs-card table-card" *ngIf="!loading() || surveys().length">
+    <div class="table-responsive">
+      <table class="bs-table">
+        <thead>
+          <tr>
+            <th>Survey No.</th>
+            <th>Parcel Ref</th>
+            <th>Infrastructure Project</th>
+            <th>Tehsil & Village</th>
+            <th>Survey Date</th>
+            <th>Joint Team Leader</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of surveys()">
+            <td class="survey-cell font-mono">{{ s.surveyNumber }}</td>
+            <td class="font-mono text-muted">{{ s.parcelNumber }}</td>
+            <td>{{ s.projectName }}</td>
+            <td>
+              <div class="village-text">{{ s.villageName }}</div>
+              <div class="tehsil-text">{{ s.tehsilName }}</div>
+            </td>
+            <td class="font-mono">{{ s.scheduledDate | date:'mediumDate' }}</td>
+            <td>{{ s.surveyTeamLeader }}</td>
+            <td>
+              <span class="bs-badge" [ngClass]="{
+                'bs-badge-info': s.status === 'Scheduled',
+                'bs-badge-warning': s.status === 'InProgress',
+                'bs-badge-success': s.status === 'Completed'
+              }">
+                {{ s.status }}
+              </span>
+            </td>
+            <td>
+              <button
+                class="bs-btn bs-btn-xs bs-btn-outline"
+                *ngIf="s.status !== 'Completed'"
+                (click)="openStatusDialog(s)"
+              >
+                Complete Survey ➔
+              </button>
+              <span *ngIf="s.status === 'Completed'" class="text-success font-bold text-xs">
+                ✓ Recorded
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="surveys().length === 0 && !loading()">
+            <td colspan="8" class="text-center py-4 text-muted">
+              No Joint Measurement Surveys matching the filter.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Complete Survey Modal -->
+  <div class="bs-modal-backdrop" *ngIf="showStatusModal" (click)="closeModal()">
+    <div class="bs-modal-card survey-modal" (click)="$event.stopPropagation()">
+      <div class="bs-modal-header">
+        <div>
+          <span class="modal-pretitle font-mono">Survey No. {{ selectedSurvey?.surveyNumber }}</span>
+          <h2 class="bs-modal-title">Record Joint Measurement Survey Completion</h2>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="bs-modal-body">
+        <p class="modal-instruction">
+          Recording completion indicates that DGPS boundary coordinates, boundary corner pegs, and structure/tree census
+          for <strong>{{ selectedSurvey?.villageName }} ({{ selectedSurvey?.projectName }})</strong> are finalized.
+        </p>
+
+        <div class="bs-error-banner" *ngIf="actionError">
+          <span>⚠️ {{ actionError }}</span>
+        </div>
+
+        <div class="form-group">
+          <label>Survey Completion Notes & DGPS Boundary Reference:</label>
+          <textarea
+            class="bs-textarea"
+            rows="3"
+            [(ngModel)]="surveyComments"
+            placeholder="Enter DGPS survey notes..."
+          ></textarea>
+        </div>
+
+        <div class="modal-actions-bar">
+          <button class="bs-btn bs-btn-success" (click)="confirmComplete()" [disabled]="actionLoading">
+            {{ actionLoading ? 'Saving...' : 'Finalize JMS Survey' }}
+          </button>
+          <button class="bs-btn bs-btn-outline" (click)="closeModal()" [disabled]="actionLoading">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

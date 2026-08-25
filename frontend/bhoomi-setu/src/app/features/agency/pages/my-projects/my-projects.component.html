@@ -1,0 +1,138 @@
+<div class="my-projects-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="breadcrumb">
+        <span>BHOOMISETU</span>
+        <span class="divider">/</span>
+        <span>Project Agency</span>
+        <span class="divider">/</span>
+        <span class="active">My Projects</span>
+      </div>
+      <h1 class="page-title">Agency Infrastructure Corridors</h1>
+      <p class="page-subtitle">
+        Repository of all infrastructure corridors and land acquisition projects owned by your organization
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/agency/proposals/create" class="bs-btn bs-btn-primary">
+        <span>➕</span> Create New Corridor
+      </a>
+      <button class="bs-btn bs-btn-outline" (click)="loadProjects()" [disabled]="loading()">
+        <span>🔄</span> Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="bs-loading" *ngIf="loading() && projects().length === 0">
+    <div class="bs-spinner"></div>
+    <div class="loading-text">Loading agency projects...</div>
+  </div>
+
+  <!-- Error State -->
+  <div class="bs-error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-text">{{ error() }}</span>
+    <button class="bs-btn bs-btn-sm bs-btn-outline" (click)="loadProjects()">Retry</button>
+  </div>
+
+  <!-- Filters Card -->
+  <div class="bs-card filters-card">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search project name, corridor code, district..."
+        [(ngModel)]="searchQuery"
+      />
+    </div>
+
+    <div class="filters-group">
+      <select class="bs-select" [(ngModel)]="selectedType">
+        <option value="">All Sectors</option>
+        <option value="NationalHighway">National Highway</option>
+        <option value="RailwayLine">Railway Line</option>
+        <option value="Airport">Airport</option>
+        <option value="IndustrialCorridor">Industrial Corridor</option>
+        <option value="UrbanInfrastructure">Urban Infrastructure</option>
+        <option value="PowerAndEnergy">Power & Energy</option>
+      </select>
+
+      <select class="bs-select" [(ngModel)]="selectedStatus">
+        <option value="">All Stages</option>
+        <option value="Planning">Planning</option>
+        <option value="ProposalSubmitted">Proposal Submitted</option>
+        <option value="UnderVerification">Under Verification</option>
+        <option value="Approved">Approved</option>
+        <option value="AcquisitionInProgress">Acquisition In Progress</option>
+        <option value="CompensationPhase">Compensation Phase</option>
+        <option value="PossessionPhase">Possession Phase</option>
+        <option value="Completed">Completed</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Projects Grid / Cards -->
+  <div class="projects-grid">
+    <div class="project-card bs-card" *ngFor="let p of getFilteredProjects()">
+      <div class="card-top">
+        <div class="code-badge font-mono">{{ p.projectCode }}</div>
+        <span class="bs-badge" [ngClass]="p.status === 'Completed' ? 'bs-badge-success' : (p.status === 'Approved' || p.status === 'AcquisitionInProgress' ? 'bs-badge-primary' : 'bs-badge-warning')">
+          {{ p.status }}
+        </span>
+      </div>
+
+      <h3 class="p-title">
+        <a [routerLink]="['/agency/projects', p.projectId]">{{ p.projectName }}</a>
+      </h3>
+
+      <div class="p-meta">
+        <span class="location-pill">📍 {{ p.location }}</span>
+        <span class="type-pill">🏷️ {{ p.projectType }}</span>
+      </div>
+
+      <div class="progress-section">
+        <div class="prog-meta">
+          <span class="prog-lbl">Acquisition Progress</span>
+          <span class="prog-val font-mono font-bold">{{ p.progressPercentage }}%</span>
+        </div>
+        <div class="prog-track">
+          <div class="prog-fill" [style.width.%]="p.progressPercentage"></div>
+        </div>
+      </div>
+
+      <div class="metrics-row">
+        <div class="m-box">
+          <span class="m-lbl">Required Area</span>
+          <span class="m-val font-mono">{{ p.landRequiredHectares }} Ha</span>
+        </div>
+        <div class="m-box">
+          <span class="m-lbl">Acquired Area</span>
+          <span class="m-val font-mono text-success">{{ p.landAcquiredHectares }} Ha</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <a [routerLink]="['/agency/projects', p.projectId]" class="bs-btn bs-btn-primary full-width">
+          Open Workspace ➔
+        </a>
+        <a routerLink="/agency/tracking" class="bs-btn bs-btn-outline icon-btn-square" title="Track Proposal">
+          🧭
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-card bs-card" *ngIf="getFilteredProjects().length === 0 && !loading()">
+    <div class="empty-icon">📁</div>
+    <h3 class="empty-title">No Projects Found</h3>
+    <p class="empty-sub">No infrastructure corridors match your search criteria.</p>
+    <a routerLink="/agency/proposals/create" class="bs-btn bs-btn-primary mt-2">
+      ➕ Create New Proposal
+    </a>
+  </div>
+</div>

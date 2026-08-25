@@ -1,0 +1,182 @@
+<div class="login-wrapper">
+  <!-- National Tricolor Accent Top Stripe -->
+  <div class="tricolor-stripe"></div>
+
+  <!-- Background decorative graphics -->
+  <div class="bg-pattern"></div>
+
+  <div class="login-container">
+    <!-- Left Hero Panel (Enterprise Branding & Portal Value) -->
+    <div class="brand-panel">
+      <div class="emblem-brand" (click)="goToHome()" title="Return to Portal Home">
+        <div class="emblem-circle">🏛️</div>
+        <div class="brand-text">
+          <span class="gov-india">भारत सरकार • GOVERNMENT OF INDIA</span>
+          <span class="portal-main-name">BhoomiSetu</span>
+          <span class="portal-sub-name">National Land Acquisition & Management Portal</span>
+        </div>
+      </div>
+
+      <div class="hero-content">
+        <h2 class="hero-headline">Unified Land Governance & Acquisition Infrastructure</h2>
+        <p class="hero-subtext">
+          A secure, high-throughput digital public platform connecting Central Ministries, State Revenue Authorities, District Collectors, Project Implementing Agencies, and Landowners.
+        </p>
+
+        <div class="portal-features">
+          <div class="feature-item">
+            <span class="f-icon">🌐</span>
+            <div class="f-info">
+              <strong>Multi-State Corridor Oversight</strong>
+              <span>Real-time GIS alignment & compensation tracking</span>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="f-icon">💳</span>
+            <div class="f-info">
+              <strong>Direct Benefit Transfer (DBT)</strong>
+              <span>Transparent PFMS-integrated compensation disbursement</span>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="f-icon">🛡️</span>
+            <div class="f-info">
+              <strong>RFCTLARR 2013 Compliance</strong>
+              <span>Rigorous statutory timeline & R&R benefit management</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-footer">
+        <span class="secure-badge">🔒 256-Bit Encrypted Government Data Exchange</span>
+      </div>
+    </div>
+
+    <!-- Right Form Card (Enterprise Login) -->
+    <div class="form-panel">
+      <div class="login-card">
+        <div class="card-header">
+          <div class="mobile-emblem" (click)="goToHome()">🏛️</div>
+          <h2 class="form-title">Portal Sign In</h2>
+          <p class="form-subtitle">Enter your official registered credentials to access your designated console</p>
+        </div>
+
+        <!-- Success Alert -->
+        <div *ngIf="successMessage" class="alert success-alert">
+          <span class="alert-icon">✅</span>
+          <div class="alert-text">{{ successMessage }}</div>
+        </div>
+
+        <!-- Error Alert -->
+        <div *ngIf="errorMessage" class="alert error-alert">
+          <span class="alert-icon">⚠️</span>
+          <div class="alert-text">{{ errorMessage }}</div>
+        </div>
+
+        <!-- Login Form -->
+        <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form">
+          <div class="form-group">
+            <label for="username">
+              <span>Username or Official Email</span>
+              <span class="req">*</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                [(ngModel)]="username"
+                required
+                autocomplete="username"
+                placeholder="e.g. central.admin or your registered email"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="label-row">
+              <label for="password">
+                <span>Account Password</span>
+                <span class="req">*</span>
+              </label>
+            </div>
+            <div class="input-wrapper">
+              <span class="input-icon">🔑</span>
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                name="password"
+                [(ngModel)]="password"
+                required
+                autocomplete="current-password"
+                placeholder="Enter your secure password"
+                class="form-control"
+              />
+              <button
+                type="button"
+                class="btn-toggle-eye"
+                (click)="toggleShowPassword()"
+                [title]="showPassword ? 'Hide password' : 'Show password'"
+              >
+                {{ showPassword ? '👁️' : '🔒' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="remember-checkbox">
+              <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
+              <span>Keep me signed in on this device</span>
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="btn-submit-login"
+            [disabled]="loading"
+          >
+            <span *ngIf="!loading">🔐 Sign In to Console →</span>
+            <span *ngIf="loading" class="spinner-text">
+              <span class="spinner"></span> Authenticating credentials...
+            </span>
+          </button>
+        </form>
+
+        <!-- New User Registration Callout -->
+        <div class="register-callout">
+          <div class="callout-icon">✨</div>
+          <div class="callout-content">
+            <strong>First time user or designated officer?</strong>
+            <p>Register your official role to obtain instant access to your jurisdiction dashboard.</p>
+            <button type="button" class="btn-register-action" (click)="goToRegister()">
+              📝 Register with Your Role →
+            </button>
+          </div>
+        </div>
+
+        <!-- SuperAdmin Platform Access Accordion -->
+        <div class="admin-access-section">
+          <button type="button" class="btn-admin-toggle" (click)="toggleAdminHelper()">
+            <span>⚙️ Platform Governance & Super Administrator</span>
+            <span class="chevron">{{ showAdminHelper ? '▲' : '▼' }}</span>
+          </button>
+          <div *ngIf="showAdminHelper" class="admin-helper-content">
+            <p class="admin-note">
+              Super Administrator accounts govern platform organizations, user provisioning, and audit trails.
+            </p>
+            <button type="button" class="btn-fill-admin" (click)="fillAdminCredentials()">
+              🔑 Fill SuperAdmin Platform Credentials
+            </button>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <a routerLink="/" class="back-home-link">← Return to BhoomiSetu Public Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
