@@ -13,3 +13,4 @@ C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSetu.Applic
 C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\refint\BhoomiSetu.Application.dll
 C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSetu.Application.pdb
 C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\ref\BhoomiSetu.Application.dll
+C:\BhoomiSetu\backend\BhoomiSetu.Application\obj\Debug\net10.0\BhoomiSetu.Application.sourcelink.json

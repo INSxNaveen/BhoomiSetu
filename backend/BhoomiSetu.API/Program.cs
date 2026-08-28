@@ -9,6 +9,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,45 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "BhoomiSetu API",
+        Version = "v1",
+        Description = "BhoomiSetu - Unified National Land Acquisition & Management Platform API.\n\n" +
+                      "Provides complete REST endpoints for Multi-role Land Acquisition Workflows:\n" +
+                      "- Project Agency (Proposals, DPR, Land Records, Documents)\n" +
+                      "- District Admin (Field Verification, Revenue Validation, SIA, Section 4-19 Declarations)\n" +
+                      "- State Admin (State Oversight, 3-Tier Approvals, Funds, Audit Logs)\n" +
+                      "- Central Admin (National Monitoring, Cross-state Analytics)\n" +
+                      "- Citizen / Landowners (Direct Claims, Compensation Tracking)",
+        Contact = new OpenApiContact
+        {
+            Name = "BhoomiSetu Support",
+            Email = "support@bhoomisetu.gov.in"
+        }
+    });
+
+    // Configure JWT Bearer Authorization in Swagger UI
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter JWT Bearer token to authorize requests across all secure endpoints.\nExample: eyJhbGciOi..."
+    });
+
+    options.AddSecurityRequirement(doc => new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecuritySchemeReference("Bearer", doc),
+            new List<string>()
+        }
+    });
+});
 
 // Configure EF Core with PostgreSQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -79,9 +119,21 @@ using (var scope = app.Services.CreateScope())
     await DatabaseSeeder.SeedAsync(context);
 }
 
-// HTTP Pipeline Configuration
+// HTTP Pipeline Configuration - Swagger & Swagger UI
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "BhoomiSetu API v1");
+    c.RoutePrefix = "swagger";
+    c.DocumentTitle = "BhoomiSetu API - Swagger Documentation";
+    c.DocExpansion(DocExpansion.List);
+    c.EnableFilter();
+    c.DisplayRequestDuration();
+    c.EnablePersistAuthorization();
+});
+
+// Redirect root to Swagger UI for instant access
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.UseCors("AllowAll");
 app.UseAuthentication();

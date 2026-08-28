@@ -1,87 +1,114 @@
-<div class="login-wrapper">
-  <!-- National Tricolor Accent Top Stripe -->
-  <div class="tricolor-stripe"></div>
+<div class="enterprise-login-wrapper">
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
 
-  <!-- Background decorative graphics -->
-  <div class="bg-pattern"></div>
-
-  <div class="login-container">
-    <!-- Left Hero Panel (Enterprise Branding & Portal Value) -->
-    <div class="brand-panel">
-      <div class="emblem-brand" (click)="goToHome()" title="Return to Portal Home">
-        <div class="emblem-circle">🏛️</div>
-        <div class="brand-text">
-          <span class="gov-india">भारत सरकार • GOVERNMENT OF INDIA</span>
-          <span class="portal-main-name">BhoomiSetu</span>
-          <span class="portal-sub-name">National Land Acquisition & Management Portal</span>
+  <div class="login-split-container">
+    <!-- Left Showcase Panel (Enterprise Architecture & Live Status) -->
+    <div class="showcase-panel">
+      <div class="showcase-top">
+        <div class="brand-badge" (click)="goToHome()" title="Return to Platform Overview">
+          <div class="brand-logo-hex">
+            <span class="hex-icon">🌐</span>
+          </div>
+          <div class="brand-info">
+            <span class="brand-name">BhoomiSetu</span>
+            <span class="brand-tier">ENTERPRISE OS</span>
+          </div>
         </div>
       </div>
 
-      <div class="hero-content">
-        <h2 class="hero-headline">Unified Land Governance & Acquisition Infrastructure</h2>
-        <p class="hero-subtext">
-          A secure, high-throughput digital public platform connecting Central Ministries, State Revenue Authorities, District Collectors, Project Implementing Agencies, and Landowners.
+      <div class="showcase-content">
+        <span class="showcase-tag">SECURE ENTERPRISE CONSOLE</span>
+        <h2 class="showcase-headline">
+          Spatial Asset Intelligence & Land Acquisition Operations
+        </h2>
+        <p class="showcase-subtext">
+          Access high-precision cadastral mapping, automated AI deed due diligence, multi-party escrow accounts, and regulatory compliance workflows.
         </p>
 
-        <div class="portal-features">
-          <div class="feature-item">
-            <span class="f-icon">🌐</span>
-            <div class="f-info">
-              <strong>Multi-State Corridor Oversight</strong>
-              <span>Real-time GIS alignment & compensation tracking</span>
+        <!-- Live Metrics HUD -->
+        <div class="showcase-metrics-grid">
+          <div class="metric-card">
+            <div class="metric-val text-emerald">$48.6B</div>
+            <div class="metric-label">Active Portfolio Assets</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val text-blue">1.42M</div>
+            <div class="metric-label">Acres Under Governance</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val text-purple">99.98%</div>
+            <div class="metric-label">Statutory SLA Compliance</div>
+          </div>
+        </div>
+
+        <!-- Enterprise Capabilities List -->
+        <div class="showcase-features-list">
+          <div class="feat-item">
+            <span class="feat-icon">🛰️</span>
+            <div class="feat-text">
+              <strong>Sub-Meter Cadastral Alignment</strong>
+              <span>Sub-second spatial queries for multi-state corridors</span>
             </div>
           </div>
-          <div class="feature-item">
-            <span class="f-icon">💳</span>
-            <div class="f-info">
-              <strong>Direct Benefit Transfer (DBT)</strong>
-              <span>Transparent PFMS-integrated compensation disbursement</span>
+          <div class="feat-item">
+            <span class="feat-icon">💳</span>
+            <div class="feat-text">
+              <strong>ISO 20022 Institutional Escrow</strong>
+              <span>Programmatic milestone disbursement with zero leakage</span>
             </div>
           </div>
-          <div class="feature-item">
-            <span class="f-icon">🛡️</span>
-            <div class="f-info">
-              <strong>RFCTLARR 2013 Compliance</strong>
-              <span>Rigorous statutory timeline & R&R benefit management</span>
+          <div class="feat-item">
+            <span class="feat-icon">🛡️</span>
+            <div class="feat-text">
+              <strong>Zero-Trust Access Control</strong>
+              <span>Strict tenant isolation and cryptographic audit trails</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="brand-footer">
-        <span class="secure-badge">🔒 256-Bit Encrypted Government Data Exchange</span>
+      <div class="showcase-footer">
+        <div class="security-seal">
+          <span class="seal-icon">🔒</span>
+          <span>SOC 2 Type II Certified • 256-Bit TLS Encryption</span>
+        </div>
       </div>
     </div>
 
-    <!-- Right Form Card (Enterprise Login) -->
+    <!-- Right Authentication Form Panel -->
     <div class="form-panel">
-      <div class="login-card">
-        <div class="card-header">
-          <div class="mobile-emblem" (click)="goToHome()">🏛️</div>
-          <h2 class="form-title">Portal Sign In</h2>
-          <p class="form-subtitle">Enter your official registered credentials to access your designated console</p>
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="mobile-brand" (click)="goToHome()">
+            <span class="m-icon">🌐</span>
+            <span class="m-name">BhoomiSetu Enterprise</span>
+          </div>
+          <h2 class="auth-title">Enterprise Console Sign In</h2>
+          <p class="auth-subtitle">Enter your corporate credentials to access your designated workspace</p>
         </div>
 
         <!-- Success Alert -->
-        <div *ngIf="successMessage" class="alert success-alert">
-          <span class="alert-icon">✅</span>
-          <div class="alert-text">{{ successMessage }}</div>
+        <div *ngIf="successMessage" class="alert-box alert-success">
+          <span class="alert-icon">✓</span>
+          <div class="alert-body">{{ successMessage }}</div>
         </div>
 
         <!-- Error Alert -->
-        <div *ngIf="errorMessage" class="alert error-alert">
+        <div *ngIf="errorMessage" class="alert-box alert-error">
           <span class="alert-icon">⚠️</span>
-          <div class="alert-text">{{ errorMessage }}</div>
+          <div class="alert-body">{{ errorMessage }}</div>
         </div>
 
         <!-- Login Form -->
-        <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form">
-          <div class="form-group">
+        <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="auth-form">
+          <div class="form-field-group">
             <label for="username">
-              <span>Username or Official Email</span>
-              <span class="req">*</span>
+              <span>Work Email or Corporate Username</span>
+              <span class="req-star">*</span>
             </label>
-            <div class="input-wrapper">
+            <div class="input-container">
               <span class="input-icon">👤</span>
               <input
                 type="text"
@@ -90,20 +117,20 @@
                 [(ngModel)]="username"
                 required
                 autocomplete="username"
-                placeholder="e.g. central.admin or your registered email"
-                class="form-control"
+                placeholder="e.g. central.admin or your work email"
+                class="enterprise-form-input"
               />
             </div>
           </div>
 
-          <div class="form-group">
-            <div class="label-row">
+          <div class="form-field-group">
+            <div class="label-split">
               <label for="password">
                 <span>Account Password</span>
-                <span class="req">*</span>
+                <span class="req-star">*</span>
               </label>
             </div>
-            <div class="input-wrapper">
+            <div class="input-container">
               <span class="input-icon">🔑</span>
               <input
                 [type]="showPassword ? 'text' : 'password'"
@@ -112,12 +139,12 @@
                 [(ngModel)]="password"
                 required
                 autocomplete="current-password"
-                placeholder="Enter your secure password"
-                class="form-control"
+                placeholder="Enter your enterprise password"
+                class="enterprise-form-input"
               />
               <button
                 type="button"
-                class="btn-toggle-eye"
+                class="btn-eye-toggle"
                 (click)="toggleShowPassword()"
                 [title]="showPassword ? 'Hide password' : 'Show password'"
               >
@@ -126,57 +153,58 @@
             </div>
           </div>
 
-          <div class="form-options">
-            <label class="remember-checkbox">
+          <div class="form-meta-row">
+            <label class="remember-label">
               <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
-              <span>Keep me signed in on this device</span>
+              <span>Remember this enterprise device</span>
             </label>
           </div>
 
           <button
             type="submit"
-            class="btn-submit-login"
+            class="btn-auth-submit"
             [disabled]="loading"
           >
             <span *ngIf="!loading">🔐 Sign In to Console →</span>
-            <span *ngIf="loading" class="spinner-text">
-              <span class="spinner"></span> Authenticating credentials...
+            <span *ngIf="loading" class="spinner-state">
+              <span class="mini-spinner"></span> Authenticating credentials...
             </span>
           </button>
         </form>
 
-        <!-- New User Registration Callout -->
-        <div class="register-callout">
-          <div class="callout-icon">✨</div>
-          <div class="callout-content">
-            <strong>First time user or designated officer?</strong>
-            <p>Register your official role to obtain instant access to your jurisdiction dashboard.</p>
-            <button type="button" class="btn-register-action" (click)="goToRegister()">
-              📝 Register with Your Role →
+        <!-- Quick Enterprise Persona Selector (Demo & Evaluation) -->
+        <div class="persona-selector-section">
+          <div class="persona-header">
+            <span class="persona-tag">ONE-CLICK DEMO PERSONAS</span>
+            <span class="persona-hint">Click any role to test its console</span>
+          </div>
+
+          <div class="persona-grid">
+            <button
+              *ngFor="let p of enterprisePersonas"
+              type="button"
+              class="persona-card"
+              [class.active]="selectedPersona === p.roleName"
+              (click)="selectPersona(p)"
+            >
+              <div class="persona-top">
+                <span class="p-icon">{{ p.icon }}</span>
+                <span class="p-badge">{{ p.badge }}</span>
+              </div>
+              <strong class="p-name">{{ p.roleName }}</strong>
+              <span class="p-user">&#64;{{ p.username }}</span>
             </button>
           </div>
         </div>
 
-        <!-- SuperAdmin Platform Access Accordion -->
-        <div class="admin-access-section">
-          <button type="button" class="btn-admin-toggle" (click)="toggleAdminHelper()">
-            <span>⚙️ Platform Governance & Super Administrator</span>
-            <span class="chevron">{{ showAdminHelper ? '▲' : '▼' }}</span>
-          </button>
-          <div *ngIf="showAdminHelper" class="admin-helper-content">
-            <p class="admin-note">
-              Super Administrator accounts govern platform organizations, user provisioning, and audit trails.
-            </p>
-            <button type="button" class="btn-fill-admin" (click)="fillAdminCredentials()">
-              🔑 Fill SuperAdmin Platform Credentials
-            </button>
-          </div>
-        </div>
-
-        <div class="form-footer">
-          <a routerLink="/" class="back-home-link">← Return to BhoomiSetu Public Home</a>
+        <!-- Footer Links -->
+        <div class="auth-footer">
+          <a routerLink="/" class="back-link">← Return to Public Overview</a>
+          <span class="footer-dot">•</span>
+          <span class="sso-hint">SAML / Okta SSO Enabled</span>
         </div>
       </div>
     </div>
   </div>
 </div>
+

@@ -17,3 +17,4 @@ C:\BhoomiSetu\backend\BhoomiSetu.Infrastructure\obj\Debug\net10.0\BhoomiSetu.Inf
 C:\BhoomiSetu\backend\BhoomiSetu.Infrastructure\obj\Debug\net10.0\ref\BhoomiSetu.Infrastructure.dll
 C:\BhoomiSetu\backend\BhoomiSetu.Infrastructure\bin\Debug\net10.0\BhoomiSetu.Infrastructure.runtimeconfig.json
 C:\BhoomiSetu\backend\BhoomiSetu.Infrastructure\obj\Debug\net10.0\BhoomiSetu.Infrastructure.genruntimeconfig.cache
+C:\BhoomiSetu\backend\BhoomiSetu.Infrastructure\obj\Debug\net10.0\BhoomiSetu.Infrastructure.sourcelink.json

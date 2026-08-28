@@ -10,7 +10,6 @@
         "dependencies": {
           "BhoomiSetu.Application": "1.0.0",
           "BhoomiSetu.Infrastructure": "1.0.0",
-          "Microsoft.AspNetCore.OpenApi": "10.0.2",
           "Microsoft.EntityFrameworkCore.Design": "10.0.11",
           "Swashbuckle.AspNetCore": "10.2.3"
         },
@@ -73,17 +72,6 @@
           "lib/net10.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
             "assemblyVersion": "10.0.11.0",
             "fileVersion": "10.0.1126.37416"
-          }
-        }
-      },
-      "Microsoft.AspNetCore.OpenApi/10.0.2": {
-        "dependencies": {
-          "Microsoft.OpenApi": "2.7.5"
-        },
-        "runtime": {
-          "lib/net10.0/Microsoft.AspNetCore.OpenApi.dll": {
-            "assemblyVersion": "10.0.2.0",
-            "fileVersion": "10.0.225.61305"
           }
         }
       },
@@ -769,13 +757,6 @@
       "sha512": "sha512-Dy9yElSej0rVQL8LBpCLatWTKXNH6h6VBVFmGndTCf1Wge0jSvH9U8mml6ddVDAQ089q1/fDYlhyukHSgx8unQ==",
       "path": "microsoft.aspnetcore.authentication.jwtbearer/10.0.11",
       "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.10.0.11.nupkg.sha512"
-    },
-    "Microsoft.AspNetCore.OpenApi/10.0.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-YuEjUNpsoZLs0I5ONt013Z+Udsz3f9sPUh1Xm59LN7+/Z8oVG/swCUYLBbANtfreiunWnoT2uk+5kst4s2jr3Q==",
-      "path": "microsoft.aspnetcore.openapi/10.0.2",
-      "hashPath": "microsoft.aspnetcore.openapi.10.0.2.nupkg.sha512"
     },
     "Microsoft.Bcl.Cryptography/10.0.2": {
       "type": "package",

@@ -55,7 +55,7 @@ import { roleGuard } from './core/auth/guards/role.guard';
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'register', loadComponent: () => import('./features/auth/pages/register/register.component').then(m => m.RegisterComponent) },
+  { path: 'register', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'agency',
     component: AgencyLayoutComponent,

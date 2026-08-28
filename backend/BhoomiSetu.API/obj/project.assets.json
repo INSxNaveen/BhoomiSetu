@@ -93,28 +93,6 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "Microsoft.AspNetCore.OpenApi/10.0.2": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.OpenApi": "2.0.0"
-        },
-        "compile": {
-          "lib/net10.0/Microsoft.AspNetCore.OpenApi.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net10.0/Microsoft.AspNetCore.OpenApi.dll": {
-            "related": ".xml"
-          }
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ],
-        "build": {
-          "build/Microsoft.AspNetCore.OpenApi.targets": {}
-        }
-      },
       "Microsoft.Bcl.Cryptography/10.0.2": {
         "type": "package",
         "compile": {
@@ -1116,24 +1094,6 @@
         "lib/net10.0/Microsoft.AspNetCore.Authentication.JwtBearer.xml",
         "microsoft.aspnetcore.authentication.jwtbearer.10.0.11.nupkg.sha512",
         "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
-      ]
-    },
-    "Microsoft.AspNetCore.OpenApi/10.0.2": {
-      "sha512": "YuEjUNpsoZLs0I5ONt013Z+Udsz3f9sPUh1Xm59LN7+/Z8oVG/swCUYLBbANtfreiunWnoT2uk+5kst4s2jr3Q==",
-      "type": "package",
-      "path": "microsoft.aspnetcore.openapi/10.0.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "PACKAGE.md",
-        "THIRD-PARTY-NOTICES.TXT",
-        "analyzers/dotnet/cs/Microsoft.AspNetCore.OpenApi.SourceGenerators.dll",
-        "build/Microsoft.AspNetCore.OpenApi.targets",
-        "lib/net10.0/Microsoft.AspNetCore.OpenApi.dll",
-        "lib/net10.0/Microsoft.AspNetCore.OpenApi.xml",
-        "microsoft.aspnetcore.openapi.10.0.2.nupkg.sha512",
-        "microsoft.aspnetcore.openapi.nuspec"
       ]
     },
     "Microsoft.Bcl.Cryptography/10.0.2": {
@@ -3210,29 +3170,28 @@
     "net10.0": [
       "BhoomiSetu.Application >= 1.0.0",
       "BhoomiSetu.Infrastructure >= 1.0.0",
-      "Microsoft.AspNetCore.OpenApi >= 10.0.2",
       "Microsoft.EntityFrameworkCore.Design >= 10.0.11",
       "Swashbuckle.AspNetCore >= 10.2.3"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\targe\\.nuget\\packages\\": {},
+    "C:\\Users\\navee\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\BhoomiSetu\\backend\\BhoomiSetu.API\\BhoomiSetu.API.csproj",
+      "projectUniqueName": "D:\\Workspace\\BhoomiSetu\\backend\\BhoomiSetu.API\\BhoomiSetu.API.csproj",
       "projectName": "BhoomiSetu.API",
-      "projectPath": "C:\\BhoomiSetu\\backend\\BhoomiSetu.API\\BhoomiSetu.API.csproj",
-      "packagesPath": "C:\\Users\\targe\\.nuget\\packages\\",
-      "outputPath": "C:\\BhoomiSetu\\backend\\BhoomiSetu.API\\obj\\",
+      "projectPath": "D:\\Workspace\\BhoomiSetu\\backend\\BhoomiSetu.API\\BhoomiSetu.API.csproj",
+      "packagesPath": "C:\\Users\\navee\\.nuget\\packages\\",
+      "outputPath": "D:\\Workspace\\BhoomiSetu\\backend\\BhoomiSetu.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\targe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\navee\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3247,11 +3206,11 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\BhoomiSetu\\backend\\BhoomiSetu.Application\\BhoomiSetu.Application.csproj": {
-              "projectPath": "C:\\BhoomiSetu\\backend\\BhoomiSetu.Application\\BhoomiSetu.Application.csproj"
+            "D:\\Workspace\\BhoomiSetu\\backend\\BhoomiSetu.Application\\BhoomiSetu.Application.csproj": {
+              "projectPath": "D:\\Workspace\\BhoomiSetu\\backend\\BhoomiSetu.Application\\BhoomiSetu.Application.csproj"
             },
-            "C:\\BhoomiSetu\\backend\\BhoomiSetu.Infrastructure\\BhoomiSetu.Infrastructure.csproj": {
-              "projectPath": "C:\\BhoomiSetu\\backend\\BhoomiSetu.Infrastructure\\BhoomiSetu.Infrastructure.csproj"
+            "D:\\Workspace\\BhoomiSetu\\backend\\BhoomiSetu.Infrastructure\\BhoomiSetu.Infrastructure.csproj": {
+              "projectPath": "D:\\Workspace\\BhoomiSetu\\backend\\BhoomiSetu.Infrastructure\\BhoomiSetu.Infrastructure.csproj"
             }
           }
         }
@@ -3266,16 +3225,12 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net10.0": {
         "targetAlias": "net10.0",
         "dependencies": {
-          "Microsoft.AspNetCore.OpenApi": {
-            "target": "Package",
-            "version": "[10.0.2, )"
-          },
           "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
@@ -3306,7 +3261,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

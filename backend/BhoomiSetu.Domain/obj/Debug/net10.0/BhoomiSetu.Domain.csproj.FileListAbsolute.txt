@@ -9,3 +9,4 @@ C:\BhoomiSetu\backend\BhoomiSetu.Domain\obj\Debug\net10.0\BhoomiSetu.Domain.dll
 C:\BhoomiSetu\backend\BhoomiSetu.Domain\obj\Debug\net10.0\refint\BhoomiSetu.Domain.dll
 C:\BhoomiSetu\backend\BhoomiSetu.Domain\obj\Debug\net10.0\BhoomiSetu.Domain.pdb
 C:\BhoomiSetu\backend\BhoomiSetu.Domain\obj\Debug\net10.0\ref\BhoomiSetu.Domain.dll
+C:\BhoomiSetu\backend\BhoomiSetu.Domain\obj\Debug\net10.0\BhoomiSetu.Domain.sourcelink.json
