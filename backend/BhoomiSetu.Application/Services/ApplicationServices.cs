@@ -20,11 +20,13 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginRes
 {
     private readonly IApplicationDbContext _context;
     private readonly IJwtTokenService _tokenService;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public LoginCommandHandler(IApplicationDbContext context, IJwtTokenService tokenService)
+    public LoginCommandHandler(IApplicationDbContext context, IJwtTokenService tokenService, IPasswordHasher passwordHasher)
     {
         _context = context;
         _tokenService = tokenService;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task<Result<LoginResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -39,9 +41,15 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginRes
                         .ThenInclude(rp => rp.Permission)
             .FirstOrDefaultAsync(u => u.Username.ToLower() == request.Username.ToLower() && u.IsActive, cancellationToken);
 
-        if (user == null || user.PasswordHash != request.Password)
+        if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
         {
             return Result<LoginResponseDto>.Failure("Invalid username or password.");
+        }
+
+        // Automatic security migration: if password hash is still legacy format, upgrade to PBKDF2
+        if (!user.PasswordHash.StartsWith("$pbkdf2$"))
+        {
+            user.PasswordHash = _passwordHasher.HashPassword(request.Password);
         }
 
         user.LastLoginAt = DateTime.UtcNow;
@@ -81,122 +89,6 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginRes
         );
 
         return Result<LoginResponseDto>.Success(new LoginResponseDto(token, "Bearer", 86400, userInfo));
-    }
-}
-
-public record RegisterCommand(RegisterRequestDto Request) : IRequest<Result<RegistrationResultDto>>;
-
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<RegistrationResultDto>>
-{
-    private readonly IApplicationDbContext _context;
-
-    public RegisterCommandHandler(IApplicationDbContext context)
-    {
-        _context = context;
-    }
-
-    public async Task<Result<RegistrationResultDto>> Handle(RegisterCommand request, CancellationToken cancellationToken)
-    {
-        var req = request.Request;
-
-        if (string.IsNullOrWhiteSpace(req.Username) || string.IsNullOrWhiteSpace(req.Password) || string.IsNullOrWhiteSpace(req.Email))
-        {
-            return Result<RegistrationResultDto>.Failure("Username, Email and Password are required fields.");
-        }
-
-        // Security check: SuperAdmin is strictly reserved for platform governance and cannot be registered publicly
-        if (string.Equals(req.Role, "SuperAdmin", StringComparison.OrdinalIgnoreCase))
-        {
-            return Result<RegistrationResultDto>.Failure("Super Administrator accounts are system-reserved and cannot be registered publicly.");
-        }
-
-        var existingUser = await _context.Users.FirstOrDefaultAsync(
-            u => u.Username.ToLower() == req.Username.Trim().ToLower() || u.Email.ToLower() == req.Email.Trim().ToLower(), 
-            cancellationToken);
-
-        if (existingUser != null)
-        {
-            return Result<RegistrationResultDto>.Failure("Username or Email is already registered. Please sign in or use different credentials.");
-        }
-
-        // Map and validate role
-        var validRoles = new[] { "CentralAdmin", "StateAdmin", "DistrictAdmin", "ProjectAgency", "Citizen" };
-        var roleName = validRoles.FirstOrDefault(r => string.Equals(r, req.Role?.Trim(), StringComparison.OrdinalIgnoreCase)) ?? "Citizen";
-        
-        var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name.ToLower() == roleName.ToLower(), cancellationToken);
-        if (role == null)
-        {
-            role = new Role
-            {
-                Id = Guid.NewGuid(),
-                Name = roleName,
-                Description = $"{roleName} Operational Account"
-            };
-            _context.Roles.Add(role);
-        }
-
-        // Resolve Organization
-        Organization? org = null;
-        if (req.OrganizationId.HasValue)
-        {
-            org = await _context.Organizations.FirstOrDefaultAsync(o => o.Id == req.OrganizationId.Value, cancellationToken);
-        }
-
-        if (org == null && req.StateId.HasValue)
-        {
-            org = await _context.Organizations.FirstOrDefaultAsync(o => o.StateId == req.StateId.Value, cancellationToken);
-        }
-
-        org ??= await _context.Organizations.FirstOrDefaultAsync(cancellationToken);
-
-        if (org == null)
-        {
-            org = new Organization
-            {
-                Id = Guid.NewGuid(),
-                Name = "Ministry of Rural Development / Land Resources",
-                Code = "MoRD-HQ",
-                OrganizationType = OrganizationType.CentralMinistry,
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow
-            };
-            _context.Organizations.Add(org);
-        }
-
-        var newUser = new User
-        {
-            Id = Guid.NewGuid(),
-            Username = req.Username.Trim(),
-            Email = req.Email.Trim(),
-            PasswordHash = req.Password,
-            FirstName = string.IsNullOrWhiteSpace(req.FirstName) ? req.Username.Trim() : req.FirstName.Trim(),
-            LastName = req.LastName?.Trim() ?? "",
-            Phone = req.Phone?.Trim() ?? "",
-            OrganizationId = org.Id,
-            StateId = req.StateId ?? org.StateId,
-            DistrictId = req.DistrictId ?? org.DistrictId,
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        newUser.UserRoles.Add(new UserRole
-        {
-            UserId = newUser.Id,
-            RoleId = role.Id
-        });
-
-        _context.Users.Add(newUser);
-        await _context.SaveChangesAsync(cancellationToken);
-
-        var resultDto = new RegistrationResultDto(
-            newUser.Id,
-            newUser.Username,
-            newUser.Email,
-            role.Name,
-            "Registration successful. Please sign in using your registered credentials."
-        );
-
-        return Result<RegistrationResultDto>.Success(resultDto);
     }
 }
 #endregion

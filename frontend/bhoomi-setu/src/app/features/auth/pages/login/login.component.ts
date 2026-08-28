@@ -3,20 +3,28 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/auth/services/auth.service';
+import { GovTopBarComponent } from '../../../../shared/components/gov-top-bar/gov-top-bar.component';
+import { GovFooterComponent } from '../../../../shared/components/gov-footer/gov-footer.component';
 
-export interface EnterprisePersona {
-  roleName: string;
+export interface PortalRoleOption {
+  code: string;
+  name: string;
   badge: string;
-  username: string;
-  password: string;
-  description: string;
   icon: string;
+  description: string;
+  guidanceText: string;
 }
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    RouterModule,
+    GovTopBarComponent,
+    GovFooterComponent
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -25,73 +33,83 @@ export class LoginComponent implements OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
 
+  // Form State
   username = '';
   password = '';
   showPassword = false;
-  rememberMe = true;
+  keepSignedIn = true;
   loading = false;
   errorMessage = '';
   successMessage = '';
-  selectedPersona: string | null = null;
 
-  enterprisePersonas: EnterprisePersona[] = [
+  // Accessibility State
+  currentFontSize: 'sm' | 'md' | 'lg' = 'md';
+  currentLanguage: 'en' | 'hi' = 'en';
+
+  // Interactive Portal Selector State
+  selectedPortal: PortalRoleOption | null = null;
+
+  portalRoles: PortalRoleOption[] = [
     {
-      roleName: 'Super Administrator',
-      badge: 'Platform Governance',
-      username: 'super.admin',
-      password: 'Admin@123',
-      description: 'Full platform governance, tenant configuration & immutable audit ledger',
-      icon: '⚙️'
+      code: 'Citizen',
+      name: 'Citizen / Landowner',
+      badge: 'Public Portal',
+      icon: '🌾',
+      description: 'Track your land acquisition progress, notification status, compensation awards & PFMS DBT bank credits.',
+      guidanceText: 'You are signing in to the Citizen & Landowner Portal. Use the credentials associated with your verified citizen account.'
     },
     {
-      roleName: 'National Asset Director',
-      badge: 'Central Portfolio',
-      username: 'central.admin',
-      password: 'Central@123',
-      description: 'Macro portfolio analytics, cross-corridor tracking & capital sanctions',
-      icon: '🏛️'
+      code: 'ProjectAgency',
+      name: 'Project Implementing Agency',
+      badge: 'NHAI / DFCCIL / Railways',
+      icon: '🏗️',
+      description: 'Submit linear infrastructure proposals, upload CAD/GIS corridor alignments & monitor clearance milestones.',
+      guidanceText: 'You are signing in to the Implementing Agency Workspace. Enter your agency-authorized official credentials.'
     },
     {
-      roleName: 'State Infrastructure Director',
-      badge: 'State Operations',
-      username: 'state.admin',
-      password: 'State@123',
-      description: 'Regional corridor approvals, cadastral GIS review & land acquisition cells',
-      icon: '🏢'
+      code: 'DistrictAdmin',
+      name: 'District Administration',
+      badge: 'District Collector / CALA',
+      icon: '🏛️',
+      description: 'Conduct joint field surveys, verify cadastral records, publish Section 11 notices & execute award declarations.',
+      guidanceText: 'You are signing in to the District Collectorate / CALA Portal. Enter your district-assigned administrative account.'
     },
     {
-      roleName: 'Regional Operations Officer',
-      badge: 'District / County',
-      username: 'district.admin',
-      password: 'District@123',
-      description: 'Joint field surveys, title due-diligence verification & escrow payouts',
-      icon: '📋'
+      code: 'StateAdmin',
+      name: 'State Revenue Authority',
+      badge: 'State Govt Directorate',
+      icon: '🏢',
+      description: 'Multi-district proposal review, 3-tier state sanctions, revenue mutation oversight & fund allocation tracking.',
+      guidanceText: 'You are signing in to the State Revenue & Approval Authority. Enter your state officer credentials.'
     },
     {
-      roleName: 'Project Agency EPC Lead',
-      badge: 'Infrastructure Concessionaire',
-      username: 'agency.user',
-      password: 'Agency@123',
-      description: 'Corridor alignment CAD uploads, project workspaces & milestone tracking',
-      icon: '🏗️'
+      code: 'CentralAdmin',
+      name: 'Central Ministry Admin',
+      badge: 'PM GatiShakti / MoRD / MoRTH',
+      icon: '🇮🇳',
+      description: 'Pan-India monitoring command center, cross-state corridor tracking, bottleneck resolution & macro analytics.',
+      guidanceText: 'You are signing in to the Central Ministry Command Center. Enter your ministry-issued credentials.'
     }
   ];
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params['role']) {
-        const persona = this.enterprisePersonas.find(p => p.username === params['role'] || p.roleName.toLowerCase().includes(params['role'].toLowerCase()));
-        if (persona) {
-          this.selectPersona(persona);
+        const portal = this.portalRoles.find(p => p.code.toLowerCase() === params['role'].toLowerCase() || p.name.toLowerCase().includes(params['role'].toLowerCase()));
+        if (portal) {
+          this.selectPortal(portal);
         }
       }
     });
   }
 
-  selectPersona(persona: EnterprisePersona) {
-    this.username = persona.username;
-    this.password = persona.password;
-    this.selectedPersona = persona.roleName;
+  selectPortal(portal: PortalRoleOption) {
+    if (this.selectedPortal?.code === portal.code) {
+      // Toggle unselect
+      this.selectedPortal = null;
+    } else {
+      this.selectedPortal = portal;
+    }
     this.errorMessage = '';
   }
 
@@ -99,13 +117,22 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
+  onFontSizeChange(size: 'sm' | 'md' | 'lg') {
+    this.currentFontSize = size;
+  }
+
+  onLanguageChange(lang: 'en' | 'hi') {
+    this.currentLanguage = lang;
+  }
+
   goToHome() {
     this.router.navigate(['/']);
   }
 
   onLogin() {
-    if (!this.username.trim() || !this.password) {
-      this.errorMessage = 'Please enter your enterprise work email or corporate username.';
+    const trimmedUsername = this.username.trim();
+    if (!trimmedUsername || !this.password) {
+      this.errorMessage = 'Please enter both your registered username/email and password.';
       return;
     }
 
@@ -113,33 +140,50 @@ export class LoginComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.authService.login(this.username.trim(), this.password).subscribe({
+    this.authService.login(trimmedUsername, this.password).subscribe({
       next: (res) => {
         this.loading = false;
         if (res.success && res.data) {
           const role = res.data.user.role;
-          if (role === 'SuperAdmin') {
-            this.router.navigate(['/admin/dashboard']);
-          } else if (role === 'CentralAdmin') {
-            this.router.navigate(['/central/dashboard']);
-          } else if (role === 'StateAdmin') {
-            this.router.navigate(['/state/dashboard']);
-          } else if (role === 'DistrictAdmin') {
-            this.router.navigate(['/district/dashboard']);
-          } else if (role === 'ProjectAgency') {
-            this.router.navigate(['/agency/dashboard']);
-          } else {
-            this.router.navigate(['/dashboard']);
-          }
+          this.navigateByRole(role);
         } else {
-          this.errorMessage = res.message || 'Authentication failed. Please verify your enterprise credentials.';
+          this.errorMessage = res.message || 'Invalid username or password.';
         }
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.error?.message || 'Invalid enterprise credentials. Use a quick demo role persona below to test.';
+        if (err.status === 0) {
+          this.errorMessage = 'Unable to connect to the BhoomiSetu portal service. Please verify your network connection.';
+        } else if (err.status >= 500) {
+          this.errorMessage = 'The portal could not complete your sign-in request. Please try again later.';
+        } else {
+          this.errorMessage = err.error?.message || 'Invalid username or password.';
+        }
       }
     });
   }
-}
 
+  private navigateByRole(role: string) {
+    switch (role) {
+      case 'SuperAdmin':
+        this.router.navigate(['/admin/dashboard']);
+        break;
+      case 'CentralAdmin':
+        this.router.navigate(['/central/dashboard']);
+        break;
+      case 'StateAdmin':
+        this.router.navigate(['/state/dashboard']);
+        break;
+      case 'DistrictAdmin':
+        this.router.navigate(['/district/dashboard']);
+        break;
+      case 'ProjectAgency':
+        this.router.navigate(['/agency/dashboard']);
+        break;
+      case 'Citizen':
+      default:
+        this.router.navigate(['/dashboard']);
+        break;
+    }
+  }
+}

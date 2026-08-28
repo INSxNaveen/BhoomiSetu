@@ -73,6 +73,7 @@ builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequir
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddSingleton<IJwtTokenService, JwtTokenService>();
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
 // Register MediatR CQRS Services
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginCommand).Assembly));
