@@ -34,6 +34,98 @@ public class AuthController : ControllerBase
 
         return Ok(ApiResponse<LoginResponseDto>.Ok(result.Data!, result.Message));
     }
+
+    [HttpPost("register")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
+    {
+        var result = await _mediator.Send(new RegisterCommand(request));
+        if (!result.IsSuccess)
+        {
+            return BadRequest(ApiResponse<RegistrationResultDto>.Fail(result.Message, result.Errors));
+        }
+
+        return Ok(ApiResponse<RegistrationResultDto>.Ok(result.Data!, result.Message));
+    }
+
+    [HttpGet("roles")]
+    [AllowAnonymous]
+    public IActionResult GetRegisterableRoles()
+    {
+        var roles = new[]
+        {
+            new { 
+                code = "CentralAdmin", 
+                name = "Central Ministry Admin", 
+                badge = "MoRTH / MoRD",
+                description = "National Operations Command Center & Cross-State Corridor Tracking", 
+                level = "National",
+                icon = "🏛️"
+            },
+            new { 
+                code = "StateAdmin", 
+                name = "State Revenue Authority", 
+                badge = "State Govt",
+                description = "State Land Acquisition, Revenue Department & Compensation Oversight", 
+                level = "State",
+                icon = "🏢"
+            },
+            new { 
+                code = "DistrictAdmin", 
+                name = "District Collector / CALA", 
+                badge = "District Administration",
+                description = "Competent Authority for Land Acquisition, Survey & Award Declarations", 
+                level = "District",
+                icon = "📋"
+            },
+            new { 
+                code = "ProjectAgency", 
+                name = "Project Implementing Agency", 
+                badge = "NHAI / DFCCIL / PWD",
+                description = "Project Engineering, Alignment Surveys & Acquisition Proposals", 
+                level = "Agency",
+                icon = "🏗️"
+            },
+            new { 
+                code = "Citizen", 
+                name = "Citizen / Land Owner", 
+                badge = "Public Portal",
+                description = "Land Parcel Verification, Compensation Claims & R&R Grievances", 
+                level = "Citizen",
+                icon = "👤"
+            }
+        };
+
+        return Ok(ApiResponse<object>.Ok(roles));
+    }
+
+    [HttpGet("geography")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetGeography()
+    {
+        var states = await _context.States
+            .Include(s => s.Districts)
+            .Where(s => s.IsActive)
+            .OrderBy(s => s.Name)
+            .Select(s => new
+            {
+                id = s.Id,
+                name = s.Name,
+                code = s.Code,
+                districts = s.Districts
+                    .Where(d => d.IsActive)
+                    .OrderBy(d => d.Name)
+                    .Select(d => new
+                    {
+                        id = d.Id,
+                        name = d.Name,
+                        code = d.Code
+                    }).ToList()
+            })
+            .ToListAsync();
+
+        return Ok(ApiResponse<object>.Ok(states));
+    }
 }
 
 [ApiController]

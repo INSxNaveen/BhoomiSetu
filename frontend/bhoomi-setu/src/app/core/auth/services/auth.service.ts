@@ -3,6 +3,23 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { ApiResponse, LoginResponse, UserInfo } from '../models/auth.models';
+
+export interface RegisterRoleOption {
+  code: string;
+  name: string;
+  badge: string;
+  description: string;
+  level: string;
+  icon: string;
+}
+
+export interface StateGeography {
+  id: string;
+  name: string;
+  code: string;
+  districts: { id: string; name: string; code: string }[];
+}
+
 import { ENVIRONMENT } from '../../config/api.config';
 
 @Injectable({
@@ -28,6 +45,18 @@ export class AuthService {
           }
         })
       );
+  }
+
+  register(userData: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/register`, userData);
+  }
+
+  getRoles(): Observable<ApiResponse<RegisterRoleOption[]>> {
+    return this.http.get<ApiResponse<RegisterRoleOption[]>>(`${this.apiUrl}/roles`);
+  }
+
+  getGeography(): Observable<ApiResponse<StateGeography[]>> {
+    return this.http.get<ApiResponse<StateGeography[]>>(`${this.apiUrl}/geography`);
   }
 
   logout(): void {

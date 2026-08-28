@@ -1,272 +1,210 @@
-<div class="login-page-wrapper" [ngClass]="'font-' + currentFontSize">
+<div class="enterprise-login-wrapper">
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
 
-  <!-- Government Utility Top Bar -->
-  <app-gov-top-bar 
-    [currentFontSize]="currentFontSize" 
-    [currentLanguage]="currentLanguage"
-    (fontSizeChange)="onFontSizeChange($event)"
-    (languageChange)="onLanguageChange($event)">
-  </app-gov-top-bar>
+  <div class="login-split-container">
+    <!-- Left Showcase Panel (Enterprise Architecture & Live Status) -->
+    <div class="showcase-panel">
+      <div class="showcase-top">
+        <div class="brand-badge" (click)="goToHome()" title="Return to Platform Overview">
+          <div class="brand-logo-hex">
+            <span class="hex-icon">🌐</span>
+          </div>
+          <div class="brand-info">
+            <span class="brand-name">BhoomiSetu</span>
+            <span class="brand-tier">ENTERPRISE OS</span>
+          </div>
+        </div>
+      </div>
 
-  <main class="login-main" role="main" id="main-content">
-    <div class="login-layout-container">
-      
-      <!-- =====================================================================
-           LEFT PANEL: BHOOMISETU IDENTITY & LIFECYCLE ROADMAP
-           ===================================================================== -->
-      <aside class="identity-panel" aria-label="BhoomiSetu Platform Information">
-        
-        <div class="panel-top-nav">
-          <a routerLink="/" class="back-link" title="Return to Portal Homepage">
-            <span class="back-arrow">←</span>
-            <span>Back to Portal Home</span>
-          </a>
+      <div class="showcase-content">
+        <span class="showcase-tag">SECURE ENTERPRISE CONSOLE</span>
+        <h2 class="showcase-headline">
+          Spatial Asset Intelligence & Land Acquisition Operations
+        </h2>
+        <p class="showcase-subtext">
+          Access high-precision cadastral mapping, automated AI deed due diligence, multi-party escrow accounts, and regulatory compliance workflows.
+        </p>
+
+        <!-- Live Metrics HUD -->
+        <div class="showcase-metrics-grid">
+          <div class="metric-card">
+            <div class="metric-val text-emerald">$48.6B</div>
+            <div class="metric-label">Active Portfolio Assets</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val text-blue">1.42M</div>
+            <div class="metric-label">Acres Under Governance</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val text-purple">99.98%</div>
+            <div class="metric-label">Statutory SLA Compliance</div>
+          </div>
         </div>
 
-        <div class="identity-content">
-          
-          <!-- National Emblem & Branding -->
-          <div class="identity-brand-group">
-            <div class="emblem-wrapper" aria-hidden="true">
-              <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="46" stroke="#0B2545" stroke-width="3" fill="#FFFFFF"/>
-                <circle cx="50" cy="50" r="38" stroke="#D97706" stroke-width="1.5" stroke-dasharray="4 2"/>
-                <path d="M50 20 L53 32 L65 32 L56 40 L59 52 L50 44 L41 52 L44 40 L35 32 L47 32 Z" fill="#0B2545"/>
-                <path d="M30 60 Q50 48 70 60 L68 76 Q50 70 32 76 Z" fill="#163A70"/>
-                <circle cx="50" cy="62" r="6" stroke="#D97706" stroke-width="1.5" fill="#FFFFFF"/>
-                <text x="50" y="90" font-family="'Noto Sans Devanagari', sans-serif" font-size="9" font-weight="700" fill="#0B2545" text-anchor="middle">सत्यमेव जयते</text>
-              </svg>
-            </div>
-
-            <div class="identity-text">
-              <div class="brand-hindi">भूमि सेतु</div>
-              <h1 class="brand-english">BhoomiSetu</h1>
-              <div class="brand-sub">National Land Acquisition & Management System</div>
+        <!-- Enterprise Capabilities List -->
+        <div class="showcase-features-list">
+          <div class="feat-item">
+            <span class="feat-icon">🛰️</span>
+            <div class="feat-text">
+              <strong>Sub-Meter Cadastral Alignment</strong>
+              <span>Sub-second spatial queries for multi-state corridors</span>
             </div>
           </div>
-
-          <!-- Concise Statutory Description -->
-          <p class="identity-description">
-            A unified digital platform for transparent land acquisition, statutory valuation, fair compensation disbursement via PFMS DBT, physical possession handover, and rehabilitation management.
-          </p>
-
-          <!-- 6-Stage Statutory Lifecycle Visual -->
-          <div class="lifecycle-box">
-            <div class="lifecycle-title">
-              <span class="icon">🔄</span>
-              <span>Digital Land Acquisition Lifecycle</span>
-            </div>
-
-            <div class="lifecycle-steps-list">
-              <div class="flow-step">
-                <span class="step-badge">1</span>
-                <span class="step-label">Project Alignment & Proposal</span>
-              </div>
-              <div class="flow-arrow">↓</div>
-
-              <div class="flow-step">
-                <span class="step-badge">2</span>
-                <span class="step-label">Cadastral Survey & SIA Verification</span>
-              </div>
-              <div class="flow-arrow">↓</div>
-
-              <div class="flow-step">
-                <span class="step-badge">3</span>
-                <span class="step-label">Statutory Section 11/19 Notifications</span>
-              </div>
-              <div class="flow-arrow">↓</div>
-
-              <div class="flow-step">
-                <span class="step-badge">4</span>
-                <span class="step-label">RFCTLARR 2013 Award & PFMS DBT</span>
-              </div>
-              <div class="flow-arrow">↓</div>
-
-              <div class="flow-step">
-                <span class="step-badge">5</span>
-                <span class="step-label">Physical Possession & Revenue Mutation</span>
-              </div>
-              <div class="flow-arrow">↓</div>
-
-              <div class="flow-step">
-                <span class="step-badge">6</span>
-                <span class="step-label">Rehabilitation & Resettlement (R&R)</span>
-              </div>
+          <div class="feat-item">
+            <span class="feat-icon">💳</span>
+            <div class="feat-text">
+              <strong>ISO 20022 Institutional Escrow</strong>
+              <span>Programmatic milestone disbursement with zero leakage</span>
             </div>
           </div>
-
-          <!-- Compliance Badges -->
-          <div class="identity-trust-badges">
-            <span class="trust-badge">⚖️ RFCTLARR Act 2013</span>
-            <span class="trust-badge">🇮🇳 PM GatiShakti</span>
-            <span class="trust-badge">🛡️ DPDP Act 2023</span>
+          <div class="feat-item">
+            <span class="feat-icon">🛡️</span>
+            <div class="feat-text">
+              <strong>Zero-Trust Access Control</strong>
+              <span>Strict tenant isolation and cryptographic audit trails</span>
+            </div>
           </div>
+        </div>
+      </div>
 
+      <div class="showcase-footer">
+        <div class="security-seal">
+          <span class="seal-icon">🔒</span>
+          <span>SOC 2 Type II Certified • 256-Bit TLS Encryption</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Authentication Form Panel -->
+    <div class="form-panel">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="mobile-brand" (click)="goToHome()">
+            <span class="m-icon">🌐</span>
+            <span class="m-name">BhoomiSetu Enterprise</span>
+          </div>
+          <h2 class="auth-title">Enterprise Console Sign In</h2>
+          <p class="auth-subtitle">Enter your corporate credentials to access your designated workspace</p>
         </div>
 
-      </aside>
+        <!-- Success Alert -->
+        <div *ngIf="successMessage" class="alert-box alert-success">
+          <span class="alert-icon">✓</span>
+          <div class="alert-body">{{ successMessage }}</div>
+        </div>
 
-      <!-- =====================================================================
-           RIGHT PANEL: SECURE SIGN IN CARD
-           ===================================================================== -->
-      <section class="auth-panel" aria-label="Official Sign In Form">
-        
-        <div class="login-card">
-          
-          <!-- Card Header -->
-          <div class="card-header">
-            <h2 class="card-title">Sign in to BhoomiSetu</h2>
-            <p class="card-subtitle">
-              Access your authorized portal services using your registered account credentials.
-            </p>
+        <!-- Error Alert -->
+        <div *ngIf="errorMessage" class="alert-box alert-error">
+          <span class="alert-icon">⚠️</span>
+          <div class="alert-body">{{ errorMessage }}</div>
+        </div>
+
+        <!-- Login Form -->
+        <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="auth-form">
+          <div class="form-field-group">
+            <label for="username">
+              <span>Work Email or Corporate Username</span>
+              <span class="req-star">*</span>
+            </label>
+            <div class="input-container">
+              <span class="input-icon">👤</span>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                [(ngModel)]="username"
+                required
+                autocomplete="username"
+                placeholder="e.g. central.admin or your work email"
+                class="enterprise-form-input"
+              />
+            </div>
           </div>
 
-          <!-- Interactive "Select Portal" Role Selector -->
-          <div class="portal-selector-section">
-            <div class="selector-header">
-              <span class="selector-title">Select Portal (Optional)</span>
-              <span class="selector-hint" *ngIf="!selectedPortal">Select a role to view portal guidance</span>
+          <div class="form-field-group">
+            <div class="label-split">
+              <label for="password">
+                <span>Account Password</span>
+                <span class="req-star">*</span>
+              </label>
             </div>
-
-            <div class="portal-cards-grid" role="group" aria-label="Portal Role Selection">
-              <button 
-                type="button" 
-                *ngFor="let p of portalRoles"
-                class="portal-btn"
-                [class.active]="selectedPortal?.code === p.code"
-                (click)="selectPortal(p)"
-                [attr.aria-pressed]="selectedPortal?.code === p.code">
-                <span class="portal-icon">{{ p.icon }}</span>
-                <span class="portal-name">{{ p.name }}</span>
+            <div class="input-container">
+              <span class="input-icon">🔑</span>
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                name="password"
+                [(ngModel)]="password"
+                required
+                autocomplete="current-password"
+                placeholder="Enter your enterprise password"
+                class="enterprise-form-input"
+              />
+              <button
+                type="button"
+                class="btn-eye-toggle"
+                (click)="toggleShowPassword()"
+                [title]="showPassword ? 'Hide password' : 'Show password'"
+              >
+                {{ showPassword ? '👁️' : '🔒' }}
               </button>
             </div>
-
-            <!-- Contextual Guidance Banner -->
-            <div class="guidance-banner" *ngIf="selectedPortal">
-              <span class="guidance-icon">ℹ️</span>
-              <div class="guidance-text">
-                <strong>{{ selectedPortal.badge }}:</strong> {{ selectedPortal.guidanceText }}
-              </div>
-            </div>
           </div>
 
-          <!-- Success Alert -->
-          <div class="gov-alert success" *ngIf="successMessage" role="status">
-            <span class="alert-icon">✅</span>
-            <div class="alert-text">{{ successMessage }}</div>
+          <div class="form-meta-row">
+            <label class="remember-label">
+              <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
+              <span>Remember this enterprise device</span>
+            </label>
           </div>
 
-          <!-- Error Alert -->
-          <div class="gov-alert danger" *ngIf="errorMessage" role="alert">
-            <span class="alert-icon">⚠️</span>
-            <div class="alert-text">{{ errorMessage }}</div>
-          </div>
-
-          <!-- Main Login Form -->
-          <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form" novalidate>
-            
-            <!-- Username / Email Input -->
-            <div class="form-field">
-              <label for="usernameInput" class="gov-label">
-                Username or Official Email <span class="required">*</span>
-              </label>
-              <div class="input-with-icon">
-                <span class="field-icon" aria-hidden="true">👤</span>
-                <input 
-                  id="usernameInput" 
-                  type="text" 
-                  class="gov-input" 
-                  [(ngModel)]="username" 
-                  name="username" 
-                  placeholder="e.g. username or officer@dept.gov.in"
-                  autocomplete="username"
-                  required>
-              </div>
-            </div>
-
-            <!-- Password Input with Show/Hide -->
-            <div class="form-field">
-              <div class="label-row">
-                <label for="passwordInput" class="gov-label">
-                  Password <span class="required">*</span>
-                </label>
-              </div>
-              <div class="input-with-icon">
-                <span class="field-icon" aria-hidden="true">🔒</span>
-                <input 
-                  id="passwordInput" 
-                  [type]="showPassword ? 'text' : 'password'" 
-                  class="gov-input password-input" 
-                  [(ngModel)]="password" 
-                  name="password" 
-                  placeholder="Enter your account password"
-                  autocomplete="current-password"
-                  required>
-                <button 
-                  type="button" 
-                  class="btn-toggle-password" 
-                  (click)="toggleShowPassword()" 
-                  [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
-                  title="Toggle password visibility">
-                  {{ showPassword ? '🙈' : '👁️' }}
-                </button>
-              </div>
-            </div>
-
-            <!-- Options Row: Remember Me & Support Help -->
-            <div class="form-options-row">
-              <label class="remember-label">
-                <input 
-                  type="checkbox" 
-                  [(ngModel)]="keepSignedIn" 
-                  name="keepSignedIn" 
-                  class="gov-checkbox">
-                <span>Keep me signed in on this device</span>
-              </label>
-
-              <span class="support-contact-text">Support: helpdesk&#64;bhoomisetu.gov.in</span>
-            </div>
-
-            <!-- Primary Submit Action -->
-            <button 
-              type="submit" 
-              class="btn-submit-login" 
-              [disabled]="loading">
-              <span *ngIf="!loading">
-                Sign In to Portal <span class="arrow-icon">→</span>
-              </span>
-              <span *ngIf="loading" class="loading-state">
-                <span class="spinner" aria-hidden="true"></span>
-                <span>Signing in to BhoomiSetu...</span>
-              </span>
-            </button>
-
-          </form>
-
-          <!-- Government Provisioned Access Notice -->
-          <div class="card-access-notice">
-            <span class="notice-icon">🛡️</span>
-            <div class="notice-text">
-              <strong>Authorized Users Only:</strong> Access is provisioned by your department authority or system administrator. If you require onboarding or account assistance, please contact your nodal administrative cell.
-            </div>
-          </div>
-
-          <!-- Government Security Notice -->
-          <div class="security-footer-badge">
-            <span class="sec-icon">🔒</span>
-            <span class="sec-text">
-              <strong>Secure Government Portal:</strong> Your access is controlled through role-based authentication and authorized portal permissions.
+          <button
+            type="submit"
+            class="btn-auth-submit"
+            [disabled]="loading"
+          >
+            <span *ngIf="!loading">🔐 Sign In to Console →</span>
+            <span *ngIf="loading" class="spinner-state">
+              <span class="mini-spinner"></span> Authenticating credentials...
             </span>
+          </button>
+        </form>
+
+        <!-- Quick Enterprise Persona Selector (Demo & Evaluation) -->
+        <div class="persona-selector-section">
+          <div class="persona-header">
+            <span class="persona-tag">ONE-CLICK DEMO PERSONAS</span>
+            <span class="persona-hint">Click any role to test its console</span>
           </div>
 
+          <div class="persona-grid">
+            <button
+              *ngFor="let p of enterprisePersonas"
+              type="button"
+              class="persona-card"
+              [class.active]="selectedPersona === p.roleName"
+              (click)="selectPersona(p)"
+            >
+              <div class="persona-top">
+                <span class="p-icon">{{ p.icon }}</span>
+                <span class="p-badge">{{ p.badge }}</span>
+              </div>
+              <strong class="p-name">{{ p.roleName }}</strong>
+              <span class="p-user">&#64;{{ p.username }}</span>
+            </button>
+          </div>
         </div>
 
-      </section>
-
+        <!-- Footer Links -->
+        <div class="auth-footer">
+          <a routerLink="/" class="back-link">← Return to Public Overview</a>
+          <span class="footer-dot">•</span>
+          <span class="sso-hint">SAML / Okta SSO Enabled</span>
+        </div>
+      </div>
     </div>
-  </main>
-
-  <!-- Unified Government Footer -->
-  <app-gov-footer></app-gov-footer>
-
+  </div>
 </div>
+

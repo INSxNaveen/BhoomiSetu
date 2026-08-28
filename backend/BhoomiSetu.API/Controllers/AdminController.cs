@@ -15,12 +15,10 @@ namespace BhoomiSetu.API.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly IApplicationDbContext _context;
-    private readonly IPasswordHasher _passwordHasher;
 
-    public AdminController(IApplicationDbContext context, IPasswordHasher passwordHasher)
+    public AdminController(IApplicationDbContext context)
     {
         _context = context;
-        _passwordHasher = passwordHasher;
     }
 
     // --- DASHBOARD & SYSTEM HEALTH ---
@@ -231,7 +229,7 @@ public class AdminController : ControllerBase
             FirstName = req.FirstName,
             LastName = req.LastName,
             Phone = req.Phone,
-            PasswordHash = _passwordHasher.HashPassword(string.IsNullOrWhiteSpace(req.Password) ? "Password@123" : req.Password),
+            PasswordHash = "Password@123",
             OrganizationId = req.OrganizationId,
             StateId = req.StateId,
             DistrictId = req.DistrictId,
