@@ -1,554 +1,638 @@
-// ==========================================================================
-// BHOOMISETU ENTERPRISE AUTHENTICATION CONSOLE — WHITE & PURPLE THEME
-// ==========================================================================
+/* ==========================================================================
+   BHOOMISETU ENTERPRISE LOGIN — GOVERNMENT DPI SCSS
+   Digital Public Infrastructure (DPI) & Government of India Styling
+   ========================================================================== */
 
-.enterprise-login-wrapper {
+.login-page-wrapper {
+  background-color: var(--color-bg-app, #F7F9FC);
+  color: var(--color-text-primary, #172033);
+  font-family: var(--font-family-base, 'Plus Jakarta Sans', system-ui, sans-serif);
   min-height: 100vh;
-  background: #f5f3ff;
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #1e1b4b;
-  position: relative;
-  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+
+  /* Font Accessibility Resizing */
+  &.font-sm {
+    font-size: 13px;
+  }
+  &.font-md {
+    font-size: 15px;
+  }
+  &.font-lg {
+    font-size: 17px;
+  }
+}
+
+.login-main {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1.5rem;
-
-  .ambient-glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(140px);
-    pointer-events: none;
-    opacity: 0.35;
-    z-index: 0;
-
-    &.glow-1 {
-      width: 550px;
-      height: 550px;
-      background: #c084fc;
-      top: -150px;
-      left: -100px;
-    }
-
-    &.glow-2 {
-      width: 500px;
-      height: 500px;
-      background: #a855f7;
-      bottom: -150px;
-      right: -100px;
-    }
-  }
+  padding: 40px 20px;
 }
 
-.login-split-container {
-  max-width: 1240px;
+.login-layout-container {
+  max-width: 1200px;
   width: 100%;
-  min-height: 720px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  background: #ffffff;
-  border: 1px solid rgba(124, 58, 237, 0.2);
-  border-radius: 24px;
-  box-shadow: 0 25px 60px -15px rgba(109, 40, 217, 0.15), 0 0 40px rgba(124, 58, 237, 0.08);
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
-
-  @media (max-width: 980px) {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: 1.05fr 1.15fr;
+  gap: 36px;
+  align-items: stretch;
 }
 
-// --------------------------------------------------------------------------
-// Left Showcase Panel
-// --------------------------------------------------------------------------
-.showcase-panel {
-  background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #141238 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 3rem;
+/* ==========================================================================
+   LEFT PANEL: IDENTITY & LIFECYCLE ROADMAP
+   ========================================================================== */
+.identity-panel {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
+  border: 1px solid var(--color-border, #D9E1EC);
+  border-radius: 12px;
+  padding: 36px 32px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  box-shadow: 0 4px 16px rgba(11, 37, 69, 0.05);
+}
 
-  @media (max-width: 980px) {
-    display: none;
+.panel-top-nav {
+  margin-bottom: 24px;
+}
+
+.back-link {
+  color: var(--color-deep-blue, #163A70);
+  text-decoration: none;
+  font-size: 0.825rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border, #D9E1EC);
+  border-radius: 6px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: #EFF6FF;
+    border-color: #BFDBFE;
+    color: var(--color-primary-blue, #1D4ED8);
   }
 
-  .showcase-top {
-    .brand-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.85rem;
-      cursor: pointer;
+  .back-arrow {
+    font-size: 1rem;
+  }
+}
 
-      .brand-logo-hex {
-        width: 42px;
-        height: 42px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #7c3aed, #c026d3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 0 16px rgba(168, 85, 247, 0.4);
+.identity-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
-        .hex-icon {
-          font-size: 1.25rem;
-        }
-      }
+.identity-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
 
-      .brand-info {
-        display: flex;
-        flex-direction: column;
+.emblem-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-        .brand-name {
-          font-size: 1.35rem;
-          font-weight: 800;
-          color: #ffffff;
-          letter-spacing: -0.02em;
-          line-height: 1.1;
-        }
+.identity-text {
+  display: flex;
+  flex-direction: column;
 
-        .brand-tier {
-          font-size: 0.65rem;
-          font-weight: 700;
-          color: #c084fc;
-          letter-spacing: 0.12em;
-        }
-      }
-    }
+  .brand-hindi {
+    font-family: var(--font-family-hindi, 'Noto Sans Devanagari', sans-serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-saffron, #D97706);
+    line-height: 1.2;
   }
 
-  .showcase-content {
-    margin: 2.5rem 0;
-
-    .showcase-tag {
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      color: #e879f9;
-      display: block;
-      margin-bottom: 0.75rem;
-    }
-
-    .showcase-headline {
-      font-size: 2.15rem;
-      font-weight: 800;
-      color: #ffffff;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-    }
-
-    .showcase-subtext {
-      font-size: 0.95rem;
-      color: #c7d2fe;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-    }
-
-    .showcase-metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
-
-      .metric-card {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 10px;
-        padding: 1rem 0.85rem;
-        text-align: center;
-
-        .metric-val {
-          font-size: 1.45rem;
-          font-weight: 800;
-          margin-bottom: 0.2rem;
-
-          &.text-emerald { color: #34d399; }
-          &.text-blue    { color: #c084fc; }
-          &.text-purple  { color: #e879f9; }
-        }
-
-        .metric-label {
-          font-size: 0.68rem;
-          font-weight: 600;
-          color: #a5b4fc;
-          line-height: 1.2;
-        }
-      }
-    }
-
-    .showcase-features-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-
-      .feat-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.85rem;
-
-        .feat-icon {
-          font-size: 1.25rem;
-          line-height: 1.2;
-        }
-
-        .feat-text {
-          strong {
-            display: block;
-            font-size: 0.88rem;
-            color: #ffffff;
-            font-weight: 700;
-            margin-bottom: 0.15rem;
-          }
-
-          span {
-            display: block;
-            font-size: 0.78rem;
-            color: #c7d2fe;
-          }
-        }
-      }
-    }
+  .brand-english {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--color-gov-navy, #0B2545);
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
   }
 
-  .showcase-footer {
+  .brand-sub {
+    font-size: 0.775rem;
+    font-weight: 600;
+    color: var(--color-text-secondary, #475569);
+    margin-top: 2px;
+  }
+}
+
+.identity-description {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #475569);
+  line-height: 1.55;
+  margin: 0 0 24px;
+}
+
+/* Lifecycle Steps Box */
+.lifecycle-box {
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border, #D9E1EC);
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  flex: 1;
+
+  .lifecycle-title {
+    font-size: 0.825rem;
+    font-weight: 800;
+    color: var(--color-gov-navy, #0B2545);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 8px;
+  }
+}
 
-    .compliance-pill {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #c7d2fe;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 0.3rem 0.65rem;
-      border-radius: 6px;
+.lifecycle-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+
+  .step-badge {
+    width: 22px;
+    height: 22px;
+    background-color: var(--color-deep-blue, #163A70);
+    color: #FFFFFF;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #172033);
+  }
+}
+
+.flow-arrow {
+  color: #CBD5E1;
+  font-size: 0.75rem;
+  margin-left: 7px;
+  line-height: 1;
+}
+
+.identity-trust-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px solid #E2E8F0;
+
+  .trust-badge {
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    font-size: 0.725rem;
+    font-weight: 700;
+    color: var(--color-text-secondary, #475569);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+}
+
+/* ==========================================================================
+   RIGHT PANEL: SECURE SIGN IN CARD
+   ========================================================================== */
+.auth-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-card {
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border, #D9E1EC);
+  border-radius: 12px;
+  padding: 36px 32px;
+  box-shadow: 0 4px 20px rgba(11, 37, 69, 0.07);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header {
+  margin-bottom: 20px;
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-gov-navy, #0B2545);
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+  }
+
+  .card-subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #475569);
+    line-height: 1.45;
+    margin: 0;
+  }
+}
+
+/* Interactive Portal Selector */
+.portal-selector-section {
+  margin-bottom: 20px;
+  background-color: #F8FAFC;
+  border: 1px solid var(--color-border, #D9E1EC);
+  border-radius: 8px;
+  padding: 14px;
+
+  .selector-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .selector-title {
+    font-size: 0.775rem;
+    font-weight: 800;
+    color: var(--color-gov-navy, #0B2545);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .selector-hint {
+    font-size: 0.725rem;
+    color: var(--color-text-muted, #64748B);
+  }
+}
+
+.portal-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+}
+
+.portal-btn {
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border, #D9E1EC);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--color-text-primary, #172033);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+
+  &:hover {
+    background-color: #EFF6FF;
+    border-color: #BFDBFE;
+    color: var(--color-primary-blue, #1D4ED8);
+  }
+
+  &.active {
+    background-color: #EFF6FF;
+    border-color: var(--color-primary-blue, #1D4ED8);
+    color: var(--color-primary-blue, #1D4ED8);
+    box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.2);
+    font-weight: 700;
+  }
+
+  .portal-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .portal-name {
+    line-height: 1.2;
+  }
+}
+
+.guidance-banner {
+  background-color: #FFFFFF;
+  border: 1px solid #BFDBFE;
+  border-left: 3px solid var(--color-primary-blue, #1D4ED8);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.775rem;
+  color: var(--color-deep-blue, #163A70);
+  line-height: 1.4;
+
+  .guidance-icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+}
+
+/* Alerts */
+.gov-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+  line-height: 1.45;
+
+  &.danger {
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: var(--color-error, #B91C1C);
+  }
+
+  &.success {
+    background-color: #ECFDF5;
+    border: 1px solid #A7F3D0;
+    color: var(--color-emerald, #059669);
+  }
+
+  .alert-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .alert-text {
+    font-weight: 600;
+  }
+}
+
+/* Form Styles */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .gov-label {
+    font-size: 0.825rem;
+    font-weight: 700;
+    color: var(--color-gov-navy, #0B2545);
+
+    .required {
+      color: var(--color-error, #B91C1C);
+    }
+  }
+
+  .input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .field-icon {
+    position: absolute;
+    left: 12px;
+    font-size: 0.95rem;
+    color: var(--color-text-muted, #64748B);
+    pointer-events: none;
+  }
+
+  .gov-input {
+    width: 100%;
+    padding: 11px 14px 11px 38px;
+    font-size: 0.925rem;
+    font-family: inherit;
+    color: var(--color-text-primary, #172033);
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border, #D9E1EC);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+
+    &.password-input {
+      padding-right: 42px;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary-blue, #1D4ED8);
+      box-shadow: var(--gov-focus-ring);
+    }
+  }
+
+  .btn-toggle-password {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 6px;
+    border-radius: 4px;
+    color: var(--color-text-muted, #64748B);
+    line-height: 1;
+
+    &:hover {
+      background-color: #F1F5F9;
+      color: var(--color-text-primary, #172033);
     }
   }
 }
 
-// --------------------------------------------------------------------------
-// Right Form Panel
-// --------------------------------------------------------------------------
-.login-form-panel {
-  padding: 3rem;
+.form-options-row {
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
-  background: #ffffff;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8rem;
 
-  @media (max-width: 600px) {
-    padding: 2rem 1.5rem;
-  }
-
-  .form-header {
-    margin-bottom: 2rem;
-
-    .back-home-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      color: #6d28d9;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-bottom: 1.25rem;
-      text-decoration: none;
-      transition: all 0.15s ease;
-
-      &:hover {
-        color: #4c1d95;
-        transform: translateX(-2px);
-      }
-    }
-
-    .form-title {
-      font-size: 1.85rem;
-      font-weight: 800;
-      color: #1e1b4b;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.4rem;
-    }
-
-    .form-subtitle {
-      font-size: 0.92rem;
-      color: #475569;
-    }
-  }
-
-  .enterprise-login-form {
+  .remember-label {
     display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-
-    .alert-banner {
-      padding: 0.85rem 1rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-
-      &.alert-error {
-        background: #fee2e2;
-        border: 1px solid #ef4444;
-        color: #991b1b;
-      }
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-
-      .group-label-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        label {
-          font-size: 0.82rem;
-          font-weight: 700;
-          color: #1e1b4b;
-        }
-
-        .forgot-password-link {
-          font-size: 0.78rem;
-          color: #7c3aed;
-          font-weight: 700;
-          cursor: pointer;
-          text-decoration: none;
-
-          &:hover {
-            color: #5b21b6;
-            text-decoration: underline;
-          }
-        }
-      }
-
-      .input-wrapper {
-        position: relative;
-
-        .input-icon {
-          position: absolute;
-          left: 1rem;
-          top: 50%;
-          transform: translateY(-50%);
-          font-size: 1.05rem;
-          color: #7c3aed;
-        }
-
-        .auth-input {
-          width: 100%;
-          background: #fafafe;
-          border: 1.5px solid rgba(124, 58, 237, 0.2);
-          color: #1e1b4b;
-          padding: 0.85rem 1rem 0.85rem 2.85rem;
-          border-radius: 10px;
-          font-size: 0.92rem;
-          font-weight: 600;
-          outline: none;
-          transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-          &:focus {
-            border-color: #7c3aed;
-            box-shadow: 0 0 16px rgba(124, 58, 237, 0.2);
-            background: #ffffff;
-          }
-
-          &::placeholder {
-            color: #94a3b8;
-          }
-
-          &.input-error {
-            border-color: #ef4444;
-          }
-        }
-
-        .password-toggle-btn {
-          position: absolute;
-          right: 0.85rem;
-          top: 50%;
-          transform: translateY(-50%);
-          background: none;
-          border: none;
-          color: #7c3aed;
-          font-size: 1rem;
-          cursor: pointer;
-          padding: 0.25rem;
-        }
-      }
-
-      .field-error-msg {
-        font-size: 0.75rem;
-        color: #dc2626;
-        font-weight: 600;
-      }
-    }
-
-    .form-options-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .remember-checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.82rem;
-        color: #475569;
-        font-weight: 600;
-        cursor: pointer;
-
-        input[type="checkbox"] {
-          accent-color: #7c3aed;
-          width: 16px;
-          height: 16px;
-          cursor: pointer;
-        }
-      }
-    }
-
-    .btn-auth-submit {
-      margin-top: 0.5rem;
-      background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 50%, #9333ea 100%);
-      color: #ffffff;
-      border: none;
-      padding: 0.95rem;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      box-shadow: 0 6px 20px rgba(109, 40, 217, 0.35);
-      transition: all 0.2s ease;
-
-      &:hover:not(:disabled) {
-        background: linear-gradient(135deg, #5b21b6 0%, #6d28d9 50%, #7c3aed 100%);
-        box-shadow: 0 8px 26px rgba(109, 40, 217, 0.5);
-        transform: translateY(-1px);
-      }
-
-      &:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-      }
-
-      .btn-spinner {
-        width: 18px;
-        height: 18px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-top-color: #ffffff;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-      }
-    }
+    align-items: center;
+    gap: 6px;
+    color: var(--color-text-secondary, #475569);
+    cursor: pointer;
+    user-select: none;
+    font-weight: 500;
   }
 
-  // --------------------------------------------------------------------------
-  // Demo Personas Section
-  // --------------------------------------------------------------------------
-  .demo-personas-section {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(124, 58, 237, 0.12);
-
-    .demo-personas-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-
-      .demo-section-label {
-        font-size: 0.72rem;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        color: #6b21a8;
-      }
-
-      .demo-hint {
-        font-size: 0.72rem;
-        color: #7c3aed;
-        font-weight: 600;
-      }
-    }
-
-    .demo-persona-chips {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      .persona-chip-btn {
-        background: #f5f3ff;
-        border: 1px solid rgba(124, 58, 237, 0.18);
-        border-radius: 8px;
-        padding: 0.6rem 0.85rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        cursor: pointer;
-        transition: all 0.15s ease;
-        text-align: left;
-
-        &:hover {
-          background: #ede9fe;
-          border-color: rgba(124, 58, 237, 0.45);
-          transform: translateX(2px);
-        }
-
-        .chip-left {
-          display: flex;
-          align-items: center;
-          gap: 0.65rem;
-
-          .chip-icon {
-            font-size: 1.1rem;
-          }
-
-          .chip-info {
-            display: flex;
-            flex-direction: column;
-
-            .chip-title {
-              font-size: 0.82rem;
-              font-weight: 700;
-              color: #1e1b4b;
-            }
-
-            .chip-desc {
-              font-size: 0.7rem;
-              color: #64748b;
-            }
-          }
-        }
-
-        .chip-role-tag {
-          font-size: 0.65rem;
-          font-weight: 700;
-          color: #6d28d9;
-          background: #ffffff;
-          padding: 0.15rem 0.45rem;
-          border-radius: 4px;
-          border: 1px solid rgba(124, 58, 237, 0.15);
-        }
-      }
-    }
+  .gov-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary-blue, #1D4ED8);
+    cursor: pointer;
   }
 
-  .login-footer-info {
-    margin-top: 1.5rem;
-    text-align: center;
-    font-size: 0.75rem;
-    color: #64748b;
+  .support-contact-text {
+    color: var(--color-text-muted, #64748B);
+    font-size: 0.775rem;
+    font-weight: 500;
+  }
+}
+
+.btn-submit-login {
+  background-color: var(--color-gov-navy, #0B2545);
+  color: #FFFFFF;
+  border: 1px solid #061528;
+  padding: 13px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+  box-shadow: 0 2px 6px rgba(11, 37, 69, 0.12);
+
+  &:hover:not(:disabled) {
+    background-color: #12345A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(11, 37, 69, 0.18);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: wait;
+  }
+
+  .arrow-icon {
+    font-size: 1.1rem;
+  }
+
+  .loading-state {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #FFFFFF;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
   }
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* Government Access Notice */
+.card-access-notice {
+  margin-top: 20px;
+  padding: 12px 14px;
+  background-color: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  .notice-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+    margin-top: 2px;
+  }
+
+  .notice-text {
+    font-size: 0.775rem;
+    color: #1E3A8A;
+    line-height: 1.45;
+
+    strong {
+      font-weight: 700;
+      color: #172554;
+    }
+  }
+}
+
+/* Security Notice */
+.security-footer-badge {
+  background-color: #F8FAFC;
+  border: 1px solid var(--color-border, #D9E1EC);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-top: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #475569);
+  line-height: 1.4;
+
+  .sec-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  strong {
+    color: var(--color-gov-navy, #0B2545);
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE LAYOUT
+   ========================================================================== */
+@media (max-width: 960px) {
+  .login-layout-container {
+    grid-template-columns: 1fr;
+    max-width: 580px;
+  }
+
+  .identity-panel {
+    order: 2;
+  }
+
+  .auth-panel {
+    order: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card, .identity-panel {
+    padding: 24px 18px;
+  }
+
+  .portal-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-options-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

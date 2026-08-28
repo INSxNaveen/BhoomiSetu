@@ -15,3 +15,9 @@ public interface IJwtTokenService
 {
     string GenerateJwtToken(Guid userId, string username, string role, Guid? organizationId, Guid? stateId, Guid? districtId, IEnumerable<string> permissions);
 }
+
+public interface IPasswordHasher
+{
+    string HashPassword(string password);
+    bool VerifyPassword(string password, string passwordHash);
+}
