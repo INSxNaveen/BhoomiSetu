@@ -1,0 +1,270 @@
+<div class="register-wrapper">
+  <!-- National Tricolor Top Stripe -->
+  <div class="tricolor-stripe"></div>
+
+  <!-- Background decorative pattern -->
+  <div class="bg-pattern"></div>
+
+  <div class="register-container">
+    <div class="register-card">
+      <!-- Portal Header -->
+      <div class="register-header">
+        <div class="header-brand" (click)="goToHome()" title="Return to Portal Home">
+          <div class="emblem-box">🏛️</div>
+          <div class="brand-titles">
+            <span class="gov-tag">भारत सरकार • GOVERNMENT OF INDIA</span>
+            <h1 class="main-title">BhoomiSetu Official Registration</h1>
+            <p class="sub-title">National Land Acquisition, Rehabilitation & Resettlement Management System</p>
+          </div>
+        </div>
+        <div class="header-action">
+          <span class="already-account">Already have an active account?</span>
+          <a routerLink="/login" class="btn-goto-login">Sign In →</a>
+        </div>
+      </div>
+
+      <!-- Error / Success Alert -->
+      <div *ngIf="errorMessage" class="alert error-alert">
+        <span class="alert-icon">⚠️</span>
+        <div class="alert-msg">{{ errorMessage }}</div>
+      </div>
+
+      <div *ngIf="successMessage" class="alert success-alert">
+        <span class="alert-icon">✅</span>
+        <div class="alert-msg">{{ successMessage }}</div>
+      </div>
+
+      <!-- Registration Form -->
+      <form (ngSubmit)="onRegister()" #regForm="ngForm" class="form-layout">
+        <!-- STEP 1: OPERATIONAL ROLE SELECTION -->
+        <div class="form-section">
+          <div class="section-title-row">
+            <span class="step-badge">1</span>
+            <div class="section-heading">
+              <h3>Select Your Operational Role</h3>
+              <p>Choose the role corresponding to your official government designation or stakeholder status</p>
+            </div>
+          </div>
+
+          <div class="roles-grid">
+            <div
+              *ngFor="let r of roles"
+              class="role-card"
+              [class.selected]="regData.role === r.code"
+              (click)="selectRole(r.code)"
+            >
+              <div class="role-card-header">
+                <span class="role-icon">{{ r.icon }}</span>
+                <span class="role-badge">{{ r.badge }}</span>
+              </div>
+              <h4 class="role-name">{{ r.name }}</h4>
+              <p class="role-desc">{{ r.description }}</p>
+              <div class="role-select-indicator">
+                <span *ngIf="regData.role === r.code">✓ Selected</span>
+                <span *ngIf="regData.role !== r.code">Select Role</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: JURISDICTION & DETAILS -->
+        <div class="form-section">
+          <div class="section-title-row">
+            <span class="step-badge">2</span>
+            <div class="section-heading">
+              <h3>Jurisdiction & Official Details</h3>
+              <p>Provide contact information and department assignment</p>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="firstName">First Name <span class="req">*</span></label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                [(ngModel)]="regData.firstName"
+                required
+                placeholder="e.g. Ramesh"
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="lastName">Last Name <span class="req">*</span></label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                [(ngModel)]="regData.lastName"
+                required
+                placeholder="e.g. Verma"
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Official / Contact Email <span class="req">*</span></label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                [(ngModel)]="regData.email"
+                required
+                placeholder="e.g. ramesh.verma@gov.in"
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Mobile Number (SMS / OTP Alerts) <span class="req">*</span></label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                [(ngModel)]="regData.phone"
+                required
+                placeholder="+91 98765 43210"
+                class="form-control"
+              />
+            </div>
+
+            <!-- State Jurisdiction (for StateAdmin, DistrictAdmin, ProjectAgency, Citizen) -->
+            <div class="form-group" *ngIf="regData.role !== 'CentralAdmin'">
+              <label for="stateId">State Jurisdiction <span class="req">*</span></label>
+              <select
+                id="stateId"
+                name="stateId"
+                [(ngModel)]="regData.stateId"
+                (change)="onStateChange()"
+                class="form-control select-control"
+              >
+                <option value="">-- Select State / UT --</option>
+                <option *ngFor="let s of statesList" [value]="s.id">
+                  {{ s.name }} ({{ s.code }})
+                </option>
+              </select>
+            </div>
+
+            <!-- District Jurisdiction (for DistrictAdmin, Citizen, ProjectAgency) -->
+            <div class="form-group" *ngIf="regData.role === 'DistrictAdmin' || regData.role === 'Citizen'">
+              <label for="districtId">District Jurisdiction <span class="req">*</span></label>
+              <select
+                id="districtId"
+                name="districtId"
+                [(ngModel)]="regData.districtId"
+                [disabled]="!regData.stateId"
+                class="form-control select-control"
+              >
+                <option value="">{{ regData.stateId ? '-- Select District --' : '-- Choose State First --' }}</option>
+                <option *ngFor="let d of filteredDistricts" [value]="d.id">
+                  {{ d.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: ACCOUNT CREDENTIALS -->
+        <div class="form-section">
+          <div class="section-title-row">
+            <span class="step-badge">3</span>
+            <div class="section-heading">
+              <h3>Account Credentials & Security</h3>
+              <p>Create your unique login identifier and strong password</p>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group full-width">
+              <label for="username">Desired Username <span class="req">*</span></label>
+              <div class="input-with-prefix">
+                <span class="prefix-icon">👤</span>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  [(ngModel)]="regData.username"
+                  required
+                  placeholder="e.g. ramesh.officer or central.user"
+                  class="form-control"
+                />
+              </div>
+              <span class="field-hint">Used for all subsequent logins across BhoomiSetu.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Account Password <span class="req">*</span></label>
+              <div class="input-with-prefix">
+                <span class="prefix-icon">🔒</span>
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="password"
+                  name="password"
+                  [(ngModel)]="regData.password"
+                  required
+                  placeholder="Minimum 6 characters"
+                  class="form-control"
+                />
+                <button
+                  type="button"
+                  class="btn-eye"
+                  (click)="toggleShowPassword()"
+                >
+                  {{ showPassword ? '👁️' : '🔒' }}
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password <span class="req">*</span></label>
+              <div class="input-with-prefix">
+                <span class="prefix-icon">🔒</span>
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  [(ngModel)]="confirmPassword"
+                  required
+                  placeholder="Re-enter identical password"
+                  class="form-control"
+                />
+              </div>
+              <span
+                *ngIf="confirmPassword && regData.password !== confirmPassword"
+                class="field-error"
+              >
+                Passwords do not match
+              </span>
+              <span
+                *ngIf="confirmPassword && regData.password === confirmPassword"
+                class="field-success"
+              >
+                ✓ Passwords match
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compliance & Submit -->
+        <div class="submit-section">
+          <p class="terms-note">
+            By registering, you certify that provided credentials and jurisdiction declarations adhere to the Government of India Digital Data Governance Policy.
+          </p>
+
+          <button
+            type="submit"
+            class="btn-register-submit"
+            [disabled]="loading"
+          >
+            <span *ngIf="!loading">🚀 Complete Registration & Enter Portal →</span>
+            <span *ngIf="loading" class="spinner-inline">
+              <span class="spinner"></span> Registering your account...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

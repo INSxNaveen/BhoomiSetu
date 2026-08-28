@@ -1,924 +1,1191 @@
-<div class="bhoomi-portal-wrapper" [ngClass]="'font-' + currentFontSize">
+<!-- ==========================================================================
+     BHOOMISETU — UNIFIED NATIONAL LAND ACQUISITION & INFRASTRUCTURE PORTAL
+     Government of India | PM GatiShakti National Master Plan (v4.0)
+     ========================================================================== -->
 
-  <!-- =========================================================================
-       SECTION 1: GOVERNMENT UTILITY TOP STRIP
-       ========================================================================= -->
-  <app-gov-top-bar 
-    [currentFontSize]="currentFontSize" 
-    [currentLanguage]="currentLanguage"
-    (fontSizeChange)="onFontSizeChange($event)"
-    (languageChange)="onLanguageChange($event)">
-  </app-gov-top-bar>
+<div class="goi-landing-wrapper">
 
-  <!-- =========================================================================
-       SECTION 2: MAIN GOVERNMENT HEADER
-       ========================================================================= -->
-  <app-gov-header></app-gov-header>
+  <!-- TOP GOVERNMENT OF INDIA UTILITY STRIP -->
+  <div class="goi-top-utility-bar">
+    <div class="utility-container">
+      <div class="utility-left">
+        <span class="tricolor-badge">🇮🇳</span>
+        <span class="goi-text">भारत सरकार | <strong>Government of India</strong></span>
+        <span class="utility-divider">•</span>
+        <span class="ministry-text">Ministry of Rural Development (DoLR) &bull; PM GatiShakti NMP</span>
+      </div>
+      <div class="utility-right">
+        <a class="util-link" href="#gis-cockpit">Screen Reader Access</a>
+        <span class="utility-divider">|</span>
+        <span class="text-resizer-group">
+          <button type="button" class="btn-resizer" aria-label="Decrease text size">A-</button>
+          <button type="button" class="btn-resizer" aria-label="Normal text size">A</button>
+          <button type="button" class="btn-resizer" aria-label="Increase text size">A+</button>
+        </span>
+        <span class="utility-divider">|</span>
+        <div class="lang-selector">
+          <span class="lang-active">English</span>
+          <span class="utility-divider">/</span>
+          <span class="lang-alt">हिंदी</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <main id="main-content" role="main">
-
-    <!-- =======================================================================
-         SECTION 3: HERO SECTION
-         ======================================================================= -->
-    <section class="gov-hero-section" id="hero">
-      <div class="gov-hero-container">
-        
-        <div class="hero-left-column">
-          <!-- Official DPI Tag -->
-          <div class="gov-pill-badge">
-            <span class="pill-dot"></span>
-            <span>National Digital Public Infrastructure &bull; Land Acquisition & Management</span>
-          </div>
-
-          <!-- Main Bilingual Headings -->
-          <h1 class="hero-main-title">
-            <span class="hero-eng">Transparent Land Acquisition.<br>Fair Compensation.<br>Better Governance.</span>
-            <span class="hero-hindi">पारदर्शी भूमि अधिग्रहण। उचित मुआवज़ा। बेहतर शासन।</span>
-          </h1>
-
-          <!-- Concise Supporting Subtitle -->
-          <p class="hero-subtext">
-            BhoomiSetu brings project authorities, district collectorates, state revenue departments, central ministries, and citizens together under a unified, transparent digital land acquisition lifecycle.
-          </p>
-
-          <!-- Core Action Buttons -->
-          <div class="hero-cta-group">
-            <a href="#citizen-inquiry" class="btn-gov-hero-primary">
-              <span class="icon">🌾</span>
-              <span>Access Citizen Services</span>
-            </a>
-
-            <button type="button" class="btn-gov-hero-secondary" (click)="navigateToLogin()">
-              <span class="icon">🏛️</span>
-              <span>Official Login</span>
-              <span class="arrow">→</span>
-            </button>
-          </div>
-
-          <!-- Key Trust Badges -->
-          <div class="hero-trust-strip">
-            <div class="trust-item">
-              <span class="trust-icon">⚖️</span>
-              <span class="trust-label">RFCTLARR Act 2013 Compliance</span>
-            </div>
-            <div class="trust-item">
-              <span class="trust-icon">💳</span>
-              <span class="trust-label">PFMS Direct Benefit Transfer</span>
-            </div>
-            <div class="trust-item">
-              <span class="trust-icon">🗺️</span>
-              <span class="trust-label">Geo-Spatial Boundary Demarcation</span>
-            </div>
-          </div>
+  <!-- MAIN GOVERNMENT NAVIGATION HEADER -->
+  <header class="goi-main-header">
+    <div class="header-container">
+      
+      <!-- Brand & Emblem -->
+      <div class="header-brand" (click)="navigateToLogin()">
+        <div class="national-emblem-box">
+          <div class="emblem-lion">🏛️</div>
+          <div class="emblem-caption">सत्यमेव जयते</div>
         </div>
 
-        <!-- Hero Right Graphic: National Infrastructure Graphic & Workflow Card -->
-        <div class="hero-right-column">
-          <div class="hero-visual-card">
-            
-            <div class="visual-header">
-              <div class="visual-title">
-                <span class="icon">🛰️</span>
-                <span>PM GatiShakti Multi-Modal Infrastructure Alignments</span>
-              </div>
-              <span class="status-indicator">
-                <span class="pulse"></span> Live Gateway
-              </span>
-            </div>
+        <div class="brand-text-block">
+          <div class="brand-hindi-title">भूमि सेतु</div>
+          <div class="brand-english-title">BhoomiSetu <span class="portal-tag">PM GATISHAKTI</span></div>
+          <div class="brand-subline">National Land Acquisition & Infrastructure Management Portal</div>
+        </div>
+      </div>
 
-            <div class="visual-body">
-              <!-- Corridor Matrix Preview -->
-              <div class="corridor-preview-item">
-                <div class="corridor-meta">
-                  <span class="agency-tag nhai">NHAI</span>
-                  <span class="corridor-name">Delhi - Mumbai Expressway (NE-4)</span>
-                </div>
-                <div class="corridor-progress-bar">
-                  <div class="progress-fill" style="width: 96%"></div>
-                </div>
-                <div class="corridor-stats-row">
-                  <span>Land Acquired: <strong>15,480 Ha</strong></span>
-                  <span class="stage-tag success">Stage 6: Possession</span>
-                </div>
-              </div>
+      <!-- Nav Links -->
+      <nav class="header-nav-links">
+        <a href="#gis-cockpit">GatiShakti GIS</a>
+        <a href="#ulpin-explorer">Bhu-Aadhaar Search</a>
+        <a href="#corridors-section">National Corridors</a>
+        <a href="#solatium-calculator">LARR 2013 Calculator</a>
+        <a href="#seven-engines">7 Engines</a>
+        <a href="#faq-section">Citizen Help</a>
+      </nav>
 
-              <div class="corridor-preview-item">
-                <div class="corridor-meta">
-                  <span class="agency-tag dfccil">DFCCIL</span>
-                  <span class="corridor-name">Western Dedicated Freight Corridor (WDFC)</span>
-                </div>
-                <div class="corridor-progress-bar">
-                  <div class="progress-fill" style="width: 99%"></div>
-                </div>
-                <div class="corridor-stats-row">
-                  <span>Land Acquired: <strong>11,200 Ha</strong></span>
-                  <span class="stage-tag success">Stage 6: Handover</span>
-                </div>
-              </div>
+      <!-- Action Buttons -->
+      <div class="header-action-buttons">
+        <button type="button" class="btn-grievance-trigger" (click)="openGrievanceModal()">
+          <span class="icon">📢</span> CPGRAMS Helpdesk
+        </button>
 
-              <div class="corridor-preview-item">
-                <div class="corridor-meta">
-                  <span class="agency-tag nhsrcl">NHSRCL</span>
-                  <span class="corridor-name">Mumbai - Ahmedabad High Speed Rail</span>
-                </div>
-                <div class="corridor-progress-bar">
-                  <div class="progress-fill" style="width: 92%"></div>
-                </div>
-                <div class="corridor-stats-row">
-                  <span>Land Acquired: <strong>1,434 Ha</strong></span>
-                  <span class="stage-tag warning">Stage 5: DBT Settlement</span>
-                </div>
-              </div>
+        <button type="button" class="btn-parichay-signin" (click)="navigateToLogin()">
+          <span class="icon">🔐</span> Officer Login
+          <span class="arrow-icon">→</span>
+        </button>
+      </div>
 
-              <div class="card-footer-note">
-                <span>🔐 Protected Spatial Records &bull; Authorised Access Only</span>
-              </div>
-            </div>
+    </div>
+  </header>
 
+  <!-- TRICOLOR ACCENT RIBBON -->
+  <div class="tricolor-accent-ribbon">
+    <div class="ribbon-saffron"></div>
+    <div class="ribbon-white"></div>
+    <div class="ribbon-green"></div>
+  </div>
+
+  <!-- ========================================================================
+       HERO SECTION WITH LIVE PM GATISHAKTI GIS COCKPIT
+       ======================================================================== -->
+  <section class="goi-hero-section" id="gis-cockpit">
+    <div class="hero-bg-mesh">
+      <div class="mesh-glow saffron-glow"></div>
+      <div class="mesh-glow green-glow"></div>
+      <div class="mesh-glow navy-glow"></div>
+    </div>
+
+    <div class="hero-container">
+      <div class="hero-content-block">
+        
+        <!-- National Initiative Badge -->
+        <div class="initiative-badge">
+          <span class="pulse-indicator"></span>
+          <span class="badge-text">डिजिटल इंडिया • <strong>Digital India Land Records Modernization Programme (DILRMP)</strong></span>
+          <span class="badge-code">GOI-2026</span>
+        </div>
+
+        <h1 class="hero-main-heading">
+          Unified National Land Acquisition &amp; <br />
+          <span class="highlight-text">PM GatiShakti Spatial Intelligence</span>
+        </h1>
+
+        <p class="hero-subheading">
+          Empowering 28 States &amp; 8 Union Territories with sub-meter ISRO Bhuvan satellite cadastral mapping, 
+          automated <strong>RFCTLARR Act 2013</strong> solatium computation, and direct PFMS Aadhaar-linked compensation 
+          transfers to <strong>14.8+ Lakh Indian farmer and landowner families</strong>.
+        </p>
+
+        <!-- Hero Actions -->
+        <div class="hero-cta-group">
+          <button type="button" class="btn-cta-primary" (click)="navigateToLogin()">
+            <span class="btn-icon">⚡</span> Access GatiShakti Portal
+            <span class="btn-arrow">→</span>
+          </button>
+          
+          <a href="#ulpin-explorer" class="btn-cta-secondary">
+            <span class="btn-icon">🔍</span> Search 14-Digit Bhu-Aadhaar (ULPIN)
+          </a>
+
+          <a href="#solatium-calculator" class="btn-cta-kisan">
+            <span class="btn-icon">🌾</span> किसान मुआवजा कैलकुलेटर
+          </a>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="hero-trust-matrix">
+          <div class="trust-pill">
+            <span class="dot saffron"></span>
+            <span>PM GatiShakti National Master Plan</span>
+          </div>
+          <div class="trust-pill">
+            <span class="dot green"></span>
+            <span>RFCTLARR Act 2013 Statutory Compliance</span>
+          </div>
+          <div class="trust-pill">
+            <span class="dot navy"></span>
+            <span>ISRO Bhuvan &amp; NGIS Satellite GIS</span>
+          </div>
+          <div class="trust-pill">
+            <span class="dot emerald"></span>
+            <span>100% PFMS Aadhaar Direct Benefit Transfer</span>
           </div>
         </div>
 
       </div>
-    </section>
 
-    <!-- =======================================================================
-         SECTION 4: CITIZEN LAND & COMPENSATION STATUS CHECKER (PROMINENT)
-         ======================================================================= -->
-    <section class="citizen-search-section" id="citizen-inquiry">
-      <div class="gov-section-container">
+      <!-- LIVE PM GATISHAKTI GIS COCKPIT FRAME -->
+      <div class="gis-cockpit-wrapper">
+        <div class="cockpit-header-bar">
+          <div class="cockpit-status-tag">
+            <span class="live-dot"></span>
+            <strong>LIVE BHUVAN GIS LAYER</strong> &bull; NIC-NGIS-GRID-v4.2
+          </div>
+
+          <div class="cockpit-layer-controls">
+            <button 
+              type="button" 
+              class="layer-toggle-btn"
+              [class.active]="activePreviewLayer === 'bhuvan'"
+              (click)="setPreviewLayer('bhuvan')">
+              🛰️ ISRO Bhuvan LiDAR
+            </button>
+            <button 
+              type="button" 
+              class="layer-toggle-btn"
+              [class.active]="activePreviewLayer === 'cadastral'"
+              (click)="setPreviewLayer('cadastral')">
+              📐 e-Khasra / Bhu-Naksha
+            </button>
+            <button 
+              type="button" 
+              class="layer-toggle-btn"
+              [class.active]="activePreviewLayer === 'notification'"
+              (click)="setPreviewLayer('notification')">
+              ⚖️ Section 11/19 Gazette
+            </button>
+            <button 
+              type="button" 
+              class="layer-toggle-btn"
+              [class.active]="activePreviewLayer === 'dbt'"
+              (click)="setPreviewLayer('dbt')">
+              💳 PFMS / DBT Escrow
+            </button>
+          </div>
+        </div>
+
+        <!-- Cockpit Interactive Canvas -->
+        <div class="cockpit-viewport">
+          <div class="gis-grid-map">
+            
+            <!-- Infrastructure Corridor Paths -->
+            <div class="corridor-path expressway-path" title="Delhi-Mumbai Expressway Alignment (NE-4)"></div>
+            <div class="corridor-path dfc-rail-path" title="Western Dedicated Freight Corridor (WDFC)"></div>
+
+            <!-- NavIC / Bhuvan GPS Beacons -->
+            <div class="navic-beacon beacon-delhi">
+              <div class="beacon-ring"></div>
+              <div class="beacon-pin"></div>
+              <div class="beacon-label">📍 NCR Cluster &bull; 28.61° N, 77.20° E</div>
+            </div>
+
+            <div class="navic-beacon beacon-mumbai">
+              <div class="beacon-ring"></div>
+              <div class="beacon-pin"></div>
+              <div class="beacon-label">📍 JNPT Port Spine &bull; 18.94° N, 72.94° E</div>
+            </div>
+
+            <div class="navic-beacon beacon-gujarat">
+              <div class="beacon-ring"></div>
+              <div class="beacon-pin"></div>
+              <div class="beacon-label">📍 Khavda Solar 30GW &bull; 23.85° N, 69.75° E</div>
+            </div>
+
+            <!-- Cadastral Land Parcels -->
+            <div class="khasra-parcel parcel-1" [class.highlighted]="activePreviewLayer === 'cadastral'">
+              <div class="parcel-info-badge">
+                <span class="p-num">Khasra 142/3A</span>
+                <strong class="p-status">ULPIN-MH-892041</strong>
+                <span class="p-stat">3.51 Acres &bull; MAHSR Package C-4</span>
+              </div>
+            </div>
+
+            <div class="khasra-parcel parcel-2" [class.highlighted]="activePreviewLayer === 'notification'">
+              <div class="parcel-info-badge warning">
+                <span class="p-num">Khasra 318/12</span>
+                <strong class="p-status">ULPIN-UP-410299</strong>
+                <span class="p-stat">Sec 19 Award &bull; Jewar Airport Link</span>
+              </div>
+            </div>
+
+            <div class="khasra-parcel parcel-3" [class.highlighted]="activePreviewLayer === 'dbt'">
+              <div class="parcel-info-badge success">
+                <span class="p-num">Survey 248/B</span>
+                <strong class="p-status">ULPIN-GJ-301188</strong>
+                <span class="p-stat">100% DBT Credited &bull; WDFC Palanpur</span>
+              </div>
+            </div>
+
+            <!-- Floating Telemetry HUD -->
+            <div class="cockpit-hud hud-top-left">
+              <div class="hud-tag"><span class="hud-dot live"></span> NATIONAL MASTER PLAN MONITOR</div>
+              <div class="hud-data-row">
+                <span class="hud-lbl">Active Acquisition Projects:</span>
+                <strong class="hud-val text-navy">1,420 Corridors</strong>
+              </div>
+              <div class="hud-data-row">
+                <span class="hud-lbl">Satellite RTK Precision:</span>
+                <strong class="hud-val text-green">&plusmn; 0.04m Sub-meter</strong>
+              </div>
+            </div>
+
+            <div class="cockpit-hud hud-bottom-right">
+              <div class="hud-tag"><span class="hud-dot success"></span> PFMS DBT SETTLEMENT LEDGER</div>
+              <div class="hud-data-row">
+                <span class="hud-lbl">24-Hour DBT Payout:</span>
+                <strong class="hud-val text-green">₹142.8 Crore</strong>
+              </div>
+              <div class="hud-data-row">
+                <span class="hud-lbl">Aadhaar Auth Rate:</span>
+                <strong class="hud-val text-navy">99.85% Instant</strong>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="cockpit-footer-banner">
+          <span>🛡️ Government of India Secure Land Ledger &bull; Certified by National Informatics Centre (NIC) &bull; PM GatiShakti NMP Compliant</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       NATIONAL IMPACT & DBT TELEMETRY MATRIX
+       ======================================================================== -->
+  <section class="goi-telemetry-section">
+    <div class="section-container">
+      
+      <div class="telemetry-header-bar">
+        <span class="bar-tag">🇮🇳 राष्ट्रीय भूमि अधिग्रहण सांख्यिकी | NATIONAL ACQUISITION &amp; DBT TELEMETRY</span>
+        <span class="bar-update">Live Real-Time Sync &bull; 28 States &amp; 8 UTs</span>
+      </div>
+
+      <div class="telemetry-grid">
         
-        <div class="citizen-search-box">
-          <div class="search-box-header">
-            <div class="header-icon-box">🔍</div>
-            <div class="header-text">
-              <h2 class="search-title">Check Your Land & Compensation Status</h2>
-              <p class="search-subtitle">
-                Track your land acquisition progress, notification stage, compensation determination, and rehabilitation status under active statutory projects.
-              </p>
+        <!-- Metric 1: Total Land -->
+        <div class="telemetry-card card-saffron">
+          <div class="t-accent"></div>
+          <div class="t-top">
+            <span class="t-label">TOTAL LAND NOTIFIED &amp; DIGITIZED</span>
+            <span class="t-pill">Bhu-Naksha Grid</span>
+          </div>
+          <div class="t-value">8,42,500+ <span class="unit">Hectares</span></div>
+          <div class="t-desc">Mapped across 4,200+ Revenue Villages with sub-meter ISRO drone LiDAR accuracy</div>
+        </div>
+
+        <!-- Metric 2: DBT Compensation -->
+        <div class="telemetry-card card-green">
+          <div class="t-accent"></div>
+          <div class="t-top">
+            <span class="t-label">TOTAL COMPENSATION DISBURSED (DBT)</span>
+            <span class="t-pill">PFMS / Aadhaar</span>
+          </div>
+          <div class="t-value">₹1,84,650 <span class="unit">Crore</span></div>
+          <div class="t-desc">Direct electronic bank transfer to farmer accounts with 100% statutory solatium</div>
+        </div>
+
+        <!-- Metric 3: Kisan Beneficiaries -->
+        <div class="telemetry-card card-navy">
+          <div class="t-accent"></div>
+          <div class="t-top">
+            <span class="t-label">BENEFICIARY KISAN FAMILIES</span>
+            <span class="t-pill">Zero Middlemen</span>
+          </div>
+          <div class="t-value">14.85 <span class="unit">Lakh Kisans</span></div>
+          <div class="t-desc">Transparent Aadhaar-verified payout notifications via SMS and DigiLocker certificates</div>
+        </div>
+
+        <!-- Metric 4: Integrated States -->
+        <div class="telemetry-card card-orange">
+          <div class="t-accent"></div>
+          <div class="t-top">
+            <span class="t-label">STATES &amp; UNION TERRITORIES LIVE</span>
+            <span class="t-pill">Unified Grid</span>
+          </div>
+          <div class="t-value">28 States <span class="unit">&amp; 8 UTs</span></div>
+          <div class="t-desc">Unified integration across Revenue Departments, Survey of India, and NHAI/Railways</div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       BHU-AADHAAR (ULPIN) & KHASRA DUE DILIGENCE EXPLORER
+       ======================================================================== -->
+  <section class="goi-explorer-section" id="ulpin-explorer">
+    <div class="section-container">
+      
+      <div class="section-title-centered">
+        <span class="sec-badge">भू-आधार (ULPIN) एवं खसरा खोज प्रणाली &bull; CITIZEN LAND VERIFICATION</span>
+        <h2 class="sec-heading">14-Digit Bhu-Aadhaar (ULPIN) &amp; Khasra Due Diligence Explorer</h2>
+        <p class="sec-subheading">
+          Search any land parcel by its 14-Digit Unique Land Parcel Identification Number (ULPIN), Khasra Number, 
+          or Infrastructure Corridor code to verify Section 11/19 notification status, circle rates, and PFMS DBT awards.
+        </p>
+      </div>
+
+      <div class="explorer-card">
+        
+        <!-- Search Input Bar -->
+        <div class="search-bar-row">
+          <div class="input-container">
+            <span class="search-icon">🔍</span>
+            <input 
+              type="text" 
+              class="goi-search-input"
+              [(ngModel)]="searchQuery" 
+              (keyup.enter)="performSearch()"
+              placeholder="Enter 14-Digit ULPIN (e.g., 14-ULPIN-MH-892041) or Khasra No. / Project Name..." />
+          </div>
+
+          <select class="state-select" [(ngModel)]="searchState">
+            <option value="All States">All States &amp; UTs</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Rajasthan">Rajasthan</option>
+          </select>
+
+          <button type="button" class="btn-search-execute" (click)="performSearch()">
+            <span class="btn-icon">⚡</span> Search Record
+          </button>
+        </div>
+
+        <!-- Quick Demo Chips -->
+        <div class="demo-chips-bar">
+          <span class="chip-label">Quick Government Demo Records:</span>
+          <button type="button" class="demo-chip" (click)="setDemoQuery('14-ULPIN-MH-892041')">
+            🚅 MAHSR Bullet Train (Thane &bull; ULPIN-MH-892041)
+          </button>
+          <button type="button" class="demo-chip" (click)="setDemoQuery('14-ULPIN-UP-410299')">
+            ✈️ Jewar Airport Multi-Modal Link (Khasra 318/12 &bull; UP)
+          </button>
+          <button type="button" class="demo-chip" (click)="setDemoQuery('14-ULPIN-GJ-301188')">
+            🚂 Western DFC Freight Spine (Survey 248/B &bull; Gujarat)
+          </button>
+        </div>
+
+        <!-- Search Result Showcase -->
+        <div *ngIf="searchResult" class="search-result-container">
+          
+          <div class="result-top-strip">
+            <div class="result-title-group">
+              <div class="ulpin-badge">
+                <span class="flag-icon">🇮🇳</span>
+                <strong>BHU-AADHAAR: {{ searchResult.ulpin }}</strong>
+                <span class="sub-badge">{{ searchResult.khasraNo }}</span>
+              </div>
+              <h3 class="project-name-heading">{{ searchResult.projectName }}</h3>
+              <div class="location-breadcrumbs">
+                <span>📍 <strong>Village:</strong> {{ searchResult.village }}</span>
+                <span>&bull;</span>
+                <span><strong>Tehsil:</strong> {{ searchResult.tehsil }}</span>
+                <span>&bull;</span>
+                <span><strong>District:</strong> {{ searchResult.district }}, {{ searchResult.state }}</span>
+                <span>&bull;</span>
+                <span><strong>Agency:</strong> {{ searchResult.implementingAgency }}</span>
+              </div>
+            </div>
+
+            <div class="result-status-badge" [ngClass]="'status-' + searchResult.statusType">
+              <span class="status-icon">✓</span>
+              {{ searchResult.notificationStatus }}
             </div>
           </div>
 
-          <!-- Search Form -->
-          <form class="search-form-grid" (ngSubmit)="performInquiry()">
+          <!-- KPI Metric Boxes -->
+          <div class="result-kpis-grid">
             
-            <div class="form-group">
-              <label for="surveyInput" class="gov-label">
-                Survey Number / Khasra Number <span class="required">*</span>
-              </label>
+            <div class="kpi-card">
+              <span class="kpi-label">TOTAL ACQUIRED AREA</span>
+              <div class="kpi-value text-navy">{{ searchResult.areaAcres }}</div>
+              <span class="kpi-sub">Equivalent to {{ searchResult.areaHectares }}</span>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-label">BASE CIRCLE RATE</span>
+              <div class="kpi-value text-navy">{{ searchResult.circleRate }}</div>
+              <span class="kpi-sub">Market Valuation: {{ searchResult.marketValuation }}</span>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-label">RFCTLARR 2013 MULTIPLIER</span>
+              <div class="kpi-value text-green">{{ searchResult.multiplierFactor }}</div>
+              <span class="kpi-sub">Mandatory 100% Solatium: {{ searchResult.solatiumAmount }}</span>
+            </div>
+
+            <div class="kpi-card highlight-card">
+              <span class="kpi-label">TOTAL KISAN COMPENSATION</span>
+              <div class="kpi-value text-saffron">{{ searchResult.totalCompensation }}</div>
+              <span class="kpi-sub">PFMS Ref: {{ searchResult.pfmsReference }}</span>
+            </div>
+
+          </div>
+
+          <div class="result-footer-row">
+            <div class="dbt-status-line">
+              <span class="check-icon">🛡️</span>
+              <span><strong>PFMS DBT Status:</strong> {{ searchResult.dbtStatus }}</span>
+            </div>
+            <button type="button" class="btn-download-ror" (click)="navigateToLogin()">
+              📄 Download Certified e-Khatauni &amp; Award Copy
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       PM GATISHAKTI MULTI-MODAL INFRASTRUCTURE CORRIDORS
+       ======================================================================== -->
+  <section class="goi-corridors-section" id="corridors-section">
+    <div class="section-container">
+      
+      <div class="section-title-centered">
+        <span class="sec-badge">राष्ट्रीय अवसंरचना पाइपलाइन &bull; PM GATISHAKTI MASTER CORRIDORS</span>
+        <h2 class="sec-heading">National Multi-Modal Infrastructure Corridors</h2>
+        <p class="sec-subheading">
+          Real-time acquisition tracking across high-speed rail, dedicated freight corridors (DFC), 
+          Bharatmala expressways, mega renewable energy zones, and Sagarmala port intermodal spines.
+        </p>
+      </div>
+
+      <!-- Sector Filter Tabs -->
+      <div class="corridor-filter-tabs">
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeCorridorFilter === 'All'"
+          (click)="setCorridorFilter('All')">
+          🇮🇳 All National Projects ({{ corridors.length }})
+        </button>
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeCorridorFilter === 'Bharatmala Highways'"
+          (click)="setCorridorFilter('Bharatmala Highways')">
+          🛣️ Bharatmala Expressways (NHAI)
+        </button>
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeCorridorFilter === 'Railways & DFC'"
+          (click)="setCorridorFilter('Railways & DFC')">
+          🚆 Railways &amp; Freight Corridors (MoR)
+        </button>
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeCorridorFilter === 'Solar & Green Energy'"
+          (click)="setCorridorFilter('Solar & Green Energy')">
+          ☀️ Ultra Mega Solar Parks (MNRE)
+        </button>
+        <button 
+          type="button" 
+          class="tab-btn" 
+          [class.active]="activeCorridorFilter === 'Sagarmala Ports'"
+          (click)="setCorridorFilter('Sagarmala Ports')">
+          ⚓ Sagarmala Port Links (MoPSW)
+        </button>
+      </div>
+
+      <!-- Corridors Cards Grid -->
+      <div class="corridors-grid">
+        <div *ngFor="let c of filteredCorridors" class="corridor-card">
+          
+          <div class="card-accent-bar"></div>
+
+          <div class="card-top-info">
+            <span class="agency-pill">{{ c.agency }}</span>
+            <span class="code-tag">{{ c.code }}</span>
+          </div>
+
+          <h3 class="corridor-title">{{ c.name }}</h3>
+
+          <div class="corridor-specs-list">
+            <div class="spec-row">
+              <span class="spec-lbl">📍 State Alignment:</span>
+              <strong class="spec-val">{{ c.states }}</strong>
+            </div>
+            <div class="spec-row">
+              <span class="spec-lbl">📏 Project Span:</span>
+              <strong class="spec-val">{{ c.lengthOrArea }} &bull; Budget: {{ c.capitalBudget }}</strong>
+            </div>
+            <div class="spec-row">
+              <span class="spec-lbl">🌾 Land Handover:</span>
+              <strong class="spec-val text-green">{{ c.landAcquiredHectares }} ({{ c.farmersBenefited }})</strong>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="progress-section">
+            <div class="progress-lbl-row">
+              <span>Land Handover Progress:</span>
+              <strong class="progress-pct">{{ c.progress }}% Complete</strong>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" [style.width.%]="c.progress"></div>
+            </div>
+          </div>
+
+          <div class="card-bottom-row">
+            <span class="status-text">⚡ {{ c.status }}</span>
+            <button type="button" class="btn-inspect-gis" (click)="navigateToLogin()">
+              Inspect GIS Alignment &rarr;
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       KISAN COMPENSATION & SOLATIUM CALCULATOR (RFCTLARR ACT 2013)
+       ======================================================================== -->
+  <section class="goi-calculator-section" id="solatium-calculator">
+    <div class="section-container">
+      
+      <div class="calculator-card">
+        
+        <div class="calc-header-block">
+          <span class="calc-badge">🌾 पारदर्शी किसान मुआवजा गणक &bull; RFCTLARR ACT 2013 SCHEDULE 1</span>
+          <h2 class="calc-title">Interactive Kisan Solatium &amp; Fair Compensation Calculator</h2>
+          <p class="calc-desc">
+            Calculate statutory compensation entitlements under the Right to Fair Compensation and Transparency 
+            in Land Acquisition, Rehabilitation and Resettlement Act, 2013. Direct 100% Solatium guarantee with 
+            rural multiplier factor (1.0x - 2.0x) and 12% statutory interest.
+          </p>
+        </div>
+
+        <div class="calculator-layout-grid">
+          
+          <!-- Left Controls -->
+          <div class="calc-controls-panel">
+            
+            <!-- Area Slider -->
+            <div class="calc-control-group">
+              <div class="control-label-row">
+                <label for="landAreaInput"><strong>Land Area to be Acquired:</strong></label>
+                <span class="control-value">{{ calcLandAreaAcres }} Acres ({{ (calcLandAreaAcres * 0.4046).toFixed(2) }} Ha)</span>
+              </div>
               <input 
-                id="surveyInput" 
-                type="text" 
-                class="gov-input" 
-                [(ngModel)]="inquiryQuery" 
-                name="inquiryQuery" 
-                placeholder="e.g. UP-MRT-101 or Khasra No. 142/3A" 
-                required>
+                id="landAreaInput"
+                type="range" 
+                min="0.5" 
+                max="25" 
+                step="0.5" 
+                class="goi-slider" 
+                [(ngModel)]="calcLandAreaAcres" />
+              <div class="slider-bounds">
+                <span>0.5 Acre</span>
+                <span>12.5 Acres</span>
+                <span>25 Acres</span>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="stateSelect" class="gov-label">State / UT</label>
-              <select 
-                id="stateSelect" 
-                class="gov-select" 
-                [(ngModel)]="selectedState" 
-                name="selectedState" 
-                (change)="onStateChanged()">
-                <option value="All States">All States</option>
-                <option *ngFor="let s of statesList" [value]="s.stateName">{{ s.stateName }}</option>
-                <option *ngIf="statesList.length === 0" value="Uttar Pradesh">Uttar Pradesh</option>
-                <option *ngIf="statesList.length === 0" value="Maharashtra">Maharashtra</option>
-                <option *ngIf="statesList.length === 0" value="Gujarat">Gujarat</option>
-              </select>
+            <!-- Circle Rate Slider -->
+            <div class="calc-control-group">
+              <div class="control-label-row">
+                <label for="circleRateInput"><strong>Circle Rate / Base Market Value:</strong></label>
+                <span class="control-value">₹{{ (calcCircleRatePerAcre / 100000).toFixed(1) }} Lakh / Acre</span>
+              </div>
+              <input 
+                id="circleRateInput"
+                type="range" 
+                min="500000" 
+                max="10000000" 
+                step="250000" 
+                class="goi-slider" 
+                [(ngModel)]="calcCircleRatePerAcre" />
+              <div class="slider-bounds">
+                <span>₹5 Lakh/Acre</span>
+                <span>₹50 Lakh/Acre</span>
+                <span>₹1.00 Crore/Acre</span>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="districtSelect" class="gov-label">District</label>
-              <select 
-                id="districtSelect" 
-                class="gov-select" 
-                [(ngModel)]="selectedDistrict" 
-                name="selectedDistrict">
-                <option value="">All Districts</option>
-                <option *ngFor="let d of filteredDistricts" [value]="d.districtName">{{ d.districtName }}</option>
-                <option *ngIf="filteredDistricts.length === 0" value="Meerut">Meerut</option>
-                <option *ngIf="filteredDistricts.length === 0" value="Gautam Buddha Nagar">Gautam Buddha Nagar</option>
-              </select>
+            <!-- Rural vs Urban Radio Switch -->
+            <div class="calc-control-group">
+              <label><strong>Land Classification (Schedule 1 Multiplier):</strong></label>
+              <div class="radio-toggle-group">
+                <label class="radio-card" [class.selected]="calcAreaType === 'rural'">
+                  <input type="radio" name="areaType" value="rural" [(ngModel)]="calcAreaType" />
+                  <div class="radio-content">
+                    <strong>🌾 Rural Agricultural Land (2.0x Multiplier)</strong>
+                    <span>Applies 2.0x factor for rural area parcels as per RFCTLARR Act 2013</span>
+                  </div>
+                </label>
+
+                <label class="radio-card" [class.selected]="calcAreaType === 'urban'">
+                  <input type="radio" name="areaType" value="urban" [(ngModel)]="calcAreaType" />
+                  <div class="radio-content">
+                    <strong>🏙️ Urban / Municipal Land (1.0x Multiplier)</strong>
+                    <span>Applies 1.0x base factor for notified municipal limits</span>
+                  </div>
+                </label>
+              </div>
             </div>
 
-            <div class="form-actions">
-              <button type="submit" class="btn-check-status" [disabled]="inquiryLoading">
-                <span *ngIf="!inquiryLoading">Check Status</span>
-                <span *ngIf="inquiryLoading">Verifying...</span>
-              </button>
+            <!-- Additional Interest Slider -->
+            <div class="calc-control-group">
+              <div class="control-label-row">
+                <label for="yearsSinceNotification"><strong>Time Since Section 11 Notification (12% p.a. Interest):</strong></label>
+                <span class="control-value">{{ calcYearsSinceNotification }} Years (+{{ (calcYearsSinceNotification * 12).toFixed(0) }}%)</span>
+              </div>
+              <input 
+                id="yearsSinceNotification"
+                type="range" 
+                min="0" 
+                max="5" 
+                step="0.5" 
+                class="goi-slider" 
+                [(ngModel)]="calcYearsSinceNotification" />
             </div>
 
-          </form>
-
-          <!-- Sample Quick Search Pills -->
-          <div class="sample-pills-row">
-            <span class="pills-label">Sample Gazetted Corridors:</span>
-            <button type="button" class="sample-btn" (click)="setSampleSearch('UP-MRT-101', 'Uttar Pradesh', 'Meerut')">
-              Meerut (UP-MRT-101)
-            </button>
-            <button type="button" class="sample-btn" (click)="setSampleSearch('UP-GBN-204', 'Uttar Pradesh', 'Gautam Buddha Nagar')">
-              Jewar Airport (UP-GBN-204)
-            </button>
-            <button type="button" class="sample-btn" (click)="setSampleSearch('14-ULPIN-MH-892041', 'Maharashtra', 'Pune')">
-              Bullet Train (MH-892041)
-            </button>
           </div>
 
-          <!-- Error Alert -->
-          <div class="gov-alert danger" *ngIf="inquiryErrorMessage">
-            <span class="alert-icon">⚠️</span>
-            <span>{{ inquiryErrorMessage }}</span>
-          </div>
-
-          <!-- Live Inquiry Result Card -->
-          <div class="inquiry-result-panel" *ngIf="inquirySubmitted && inquiryResult">
+          <!-- Right Breakdown Panel -->
+          <div class="calc-breakdown-panel">
             
-            <div class="result-header" [class.success]="inquiryResult.found" [class.warning]="!inquiryResult.found">
-              <div class="result-status-title">
-                <span class="status-badge" *ngIf="inquiryResult.found">✅ Active Acquisition Record Verified</span>
-                <span class="status-badge not-found" *ngIf="!inquiryResult.found">ℹ️ Record Not Found</span>
-                <h3>{{ inquiryResult.found ? inquiryResult.projectName : 'No Active Gazetted Notification' }}</h3>
-              </div>
-              <div class="result-reference" *ngIf="inquiryResult.found">
-                <span>Survey No: <strong>{{ inquiryResult.surveyNumber }}</strong></span>
-              </div>
+            <div class="breakdown-header">
+              <h3>Statutory Payout Breakdown (First Schedule)</h3>
+              <span class="guarantee-badge">🛡️ 100% Solatium Guaranteed</span>
             </div>
 
-            <div class="result-details-grid" *ngIf="inquiryResult.found">
-              <div class="detail-cell">
-                <span class="detail-label">Location</span>
-                <span class="detail-val">{{ inquiryResult.villageName }}, {{ inquiryResult.tehsilName }}, {{ inquiryResult.districtName }}, {{ inquiryResult.stateName }}</span>
-              </div>
-              <div class="detail-cell">
-                <span class="detail-label">Implementing Authority</span>
-                <span class="detail-val">{{ inquiryResult.implementingAgency }}</span>
-              </div>
-              <div class="detail-cell">
-                <span class="detail-label">Land Category & Area</span>
-                <span class="detail-val">{{ inquiryResult.landType }} ({{ inquiryResult.areaHectares }} Hectares)</span>
-              </div>
-              <div class="detail-cell highlight">
-                <span class="detail-label">Current Statutory Stage</span>
-                <span class="detail-val status-text">{{ inquiryResult.notificationStatus }}</span>
-              </div>
-            </div>
-
-            <!-- Mandatory Privacy & Citizen Login Notice -->
-            <div class="privacy-callout">
-              <div class="callout-icon">🛡️</div>
-              <div class="callout-content">
-                <strong>Digital Personal Data Protection Notice:</strong>
-                <p>{{ inquiryResult.dataPrivacyNotice }}</p>
-                <div class="callout-actions">
-                  <button type="button" class="btn-gov-login-citizen" (click)="navigateToLogin()">
-                    Sign In with Citizen Credentials to View Personal Bank DBT Receipts →
-                  </button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- =======================================================================
-         SECTION 5: BHOOMISETU CORE SERVICES GRID
-         ======================================================================= -->
-    <section class="gov-section" id="services">
-      <div class="gov-section-container">
-        
-        <div class="section-header-centered">
-          <span class="section-tag">Core Modules</span>
-          <h2 class="section-heading">BhoomiSetu Digital Services</h2>
-          <p class="section-lead">
-            Standardized end-to-end digital services covering every dimension of statutory land acquisition.
-          </p>
-        </div>
-
-        <div class="services-cards-grid">
-          
-          <!-- Card 1: Land & Parcel -->
-          <div class="service-card">
-            <div class="service-icon-box">🗺️</div>
-            <h3 class="service-title">Land & Parcel Cadastre</h3>
-            <p class="service-desc">
-              View geo-referenced cadastral parcel boundaries, verified Khasra survey numbers, and ownership records aligned with state revenue registers.
-            </p>
-            <a href="#citizen-inquiry" class="service-link">View Land Records &rarr;</a>
-          </div>
-
-          <!-- Card 2: Acquisition Status -->
-          <div class="service-card">
-            <div class="service-icon-box">📜</div>
-            <h3 class="service-title">Acquisition Lifecycle Tracking</h3>
-            <p class="service-desc">
-              Monitor real-time progress across statutory gazette stages from Section 4 SIA to Section 19 Declarations and final awards.
-            </p>
-            <a href="#how-it-works" class="service-link">Track Stages &rarr;</a>
-          </div>
-
-          <!-- Card 3: Compensation & DBT -->
-          <div class="service-card">
-            <div class="service-icon-box">💰</div>
-            <h3 class="service-title">Fair Compensation & DBT</h3>
-            <p class="service-desc">
-              Statutory valuation as per RFCTLARR Act 2013 First Schedule (Market Value + 100% Solatium + 12% Interest) with PFMS bank settlement.
-            </p>
-            <a href="#solatium-calculator" class="service-link">Calculate Compensation &rarr;</a>
-          </div>
-
-          <!-- Card 4: GIS Spatial Map -->
-          <div class="service-card">
-            <div class="service-icon-box">🛰️</div>
-            <h3 class="service-title">National GIS Infrastructure Map</h3>
-            <p class="service-desc">
-              Inspect authorized spatial map layers, project alignments, village boundaries, and intersection overlays with PM GatiShakti corridors.
-            </p>
-            <a href="#gis-preview" class="service-link">Explore GIS Map &rarr;</a>
-          </div>
-
-          <!-- Card 5: Physical Possession -->
-          <div class="service-card">
-            <div class="service-icon-box">🏗️</div>
-            <h3 class="service-title">Physical Possession & Handover</h3>
-            <p class="service-desc">
-              Section 38 possession tracking with joint field verification certificates, geo-tagged drone imagery, and revenue record mutation.
-            </p>
-            <a href="#roles" class="service-link">Possession Records &rarr;</a>
-          </div>
-
-          <!-- Card 6: Rehabilitation & Resettlement -->
-          <div class="service-card">
-            <div class="service-icon-box">🏡</div>
-            <h3 class="service-title">Rehabilitation & Resettlement</h3>
-            <p class="service-desc">
-              Comprehensive Second Schedule R&R entitlement tracking, alternative homestead allotments, annuity schemes, and family benefits.
-            </p>
-            <a href="#roles" class="service-link">R&R Entitlements &rarr;</a>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- =======================================================================
-         SECTION 6: HOW BHOOMISETU WORKS (7-STAGE STATUTORY LIFECYCLE)
-         ======================================================================= -->
-    <section class="gov-section bg-alt" id="how-it-works">
-      <div class="gov-section-container">
-        
-        <div class="section-header-centered">
-          <span class="section-tag">Statutory Workflow</span>
-          <h2 class="section-heading">How BhoomiSetu Works</h2>
-          <p class="section-lead">
-            The standard 7-stage digital lifecycle under the RFCTLARR Act 2013 ensuring complete legal compliance and transparency.
-          </p>
-        </div>
-
-        <div class="lifecycle-timeline">
-          
-          <div class="timeline-step">
-            <div class="step-num">1</div>
-            <div class="step-content">
-              <h4 class="step-title">Project Proposal</h4>
-              <p class="step-desc">Agency submits corridor alignment, DPR, and preliminary land schedule.</p>
-              <span class="step-badge">Section 4 SIA</span>
-            </div>
-          </div>
-
-          <div class="timeline-connector">→</div>
-
-          <div class="timeline-step">
-            <div class="step-num">2</div>
-            <div class="step-content">
-              <h4 class="step-title">Land Identification & Survey</h4>
-              <p class="step-desc">District collectorate conducts joint cadastral survey and drone demarcation.</p>
-              <span class="step-badge">Field Demarcation</span>
-            </div>
-          </div>
-
-          <div class="timeline-connector">→</div>
-
-          <div class="timeline-step">
-            <div class="step-num">3</div>
-            <div class="step-content">
-              <h4 class="step-title">Notification & Hearing</h4>
-              <p class="step-desc">Gazette publication and 60-day public objection hearing under Collector.</p>
-              <span class="step-badge">Section 11 & 15</span>
-            </div>
-          </div>
-
-          <div class="timeline-connector">→</div>
-
-          <div class="timeline-step">
-            <div class="step-num">4</div>
-            <div class="step-content">
-              <h4 class="step-title">Award & Valuation</h4>
-              <p class="step-desc">Determination of market value, 100% solatium, and final award declaration.</p>
-              <span class="step-badge">Section 23/30</span>
-            </div>
-          </div>
-
-          <div class="timeline-connector">→</div>
-
-          <div class="timeline-step">
-            <div class="step-num">5</div>
-            <div class="step-content">
-              <h4 class="step-title">Direct Benefit Transfer</h4>
-              <p class="step-desc">Direct PFMS token disbursement into Aadhaar-linked beneficiary accounts.</p>
-              <span class="step-badge">PFMS / DBT</span>
-            </div>
-          </div>
-
-          <div class="timeline-connector">→</div>
-
-          <div class="timeline-step">
-            <div class="step-num">6</div>
-            <div class="step-content">
-              <h4 class="step-title">Physical Possession</h4>
-              <p class="step-desc">Certificate of possession issued and land handed over to project authority.</p>
-              <span class="step-badge">Section 38</span>
-            </div>
-          </div>
-
-          <div class="timeline-connector">→</div>
-
-          <div class="timeline-step">
-            <div class="step-num">7</div>
-            <div class="step-content">
-              <h4 class="step-title">R&R Settlement</h4>
-              <p class="step-desc">Provision of resettlement allowances, housing sites, and rehabilitation packages.</p>
-              <span class="step-badge">Schedule 2 R&R</span>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- =======================================================================
-         SECTION 7: ROLE-BASED ACCESS (ONE PLATFORM. DIFFERENT RESPONSIBILITIES)
-         ======================================================================= -->
-    <section class="gov-section" id="roles">
-      <div class="gov-section-container">
-        
-        <div class="section-header-centered">
-          <span class="section-tag">Role-Based Governance</span>
-          <h2 class="section-heading">One Platform. Different Responsibilities.</h2>
-          <p class="section-lead">
-            Dedicated digital workspaces tailored for each stakeholder in the national land acquisition ecosystem.
-          </p>
-        </div>
-
-        <div class="roles-grid">
-          
-          <!-- Role 1: Citizen / Landowner -->
-          <div class="role-card citizen">
-            <div class="role-header">
-              <span class="role-icon">🌾</span>
-              <div>
-                <h3 class="role-name">Citizen / Landowner</h3>
-                <span class="role-scope">Public & Beneficiary Access</span>
-              </div>
-            </div>
-            <p class="role-desc">
-              Track personal land parcel status, compensation calculation, DBT disbursement receipts, and submit R&R entitlement claims.
-            </p>
-            <ul class="role-capabilities">
-              <li>✓ Check Khasra / Survey Status</li>
-              <li>✓ Calculate Entitled Solatium</li>
-              <li>✓ Submit CPGRAMS Objections</li>
-            </ul>
-            <button type="button" class="btn-role-action" (click)="navigateToLogin()">Access Citizen Portal &rarr;</button>
-          </div>
-
-          <!-- Role 2: District Administration -->
-          <div class="role-card district">
-            <div class="role-header">
-              <span class="role-icon">🏛️</span>
-              <div>
-                <h3 class="role-name">District Administration</h3>
-                <span class="role-scope">Collector & Land Acquisition Officer</span>
-              </div>
-            </div>
-            <p class="role-desc">
-              Conduct joint surveys, verify revenue records, publish Section 11 notices, declare Section 23 awards, and execute physical possession.
-            </p>
-            <ul class="role-capabilities">
-              <li>✓ Joint Cadastral Verification</li>
-              <li>✓ Section 4 - 19 Declarations</li>
-              <li>✓ PFMS Compensation Approval</li>
-            </ul>
-            <button type="button" class="btn-role-action" (click)="navigateToLogin()">District Officer Login &rarr;</button>
-          </div>
-
-          <!-- Role 3: State Government -->
-          <div class="role-card state">
-            <div class="role-header">
-              <span class="role-icon">🏢</span>
-              <div>
-                <h3 class="role-name">State Government</h3>
-                <span class="role-scope">Revenue & Approval Authority</span>
-              </div>
-            </div>
-            <p class="role-desc">
-              Multi-district proposal review, 3-tier state approvals, district progress oversight, compensation fund allocation, and audit tracking.
-            </p>
-            <ul class="role-capabilities">
-              <li>✓ State-level Proposal Approvals</li>
-              <li>✓ Inter-district Corridor Monitoring</li>
-              <li>✓ Revenue Mutation Synchronization</li>
-            </ul>
-            <button type="button" class="btn-role-action" (click)="navigateToLogin()">State Authority Login &rarr;</button>
-          </div>
-
-          <!-- Role 4: Central Ministry -->
-          <div class="role-card central">
-            <div class="role-header">
-              <span class="role-icon">🇮🇳</span>
-              <div>
-                <h3 class="role-name">Central Ministry</h3>
-                <span class="role-scope">PM GatiShakti & MoRD / MoRTH</span>
-              </div>
-            </div>
-            <p class="role-desc">
-              Pan-India monitoring dashboard, national bottleneck resolution, infrastructure corridor velocity analytics, and cross-state coordination.
-            </p>
-            <ul class="role-capabilities">
-              <li>✓ National Macro-Level Dashboard</li>
-              <li>✓ Cross-State Corridor Tracking</li>
-              <li>✓ Cabinet Oversight Analytics</li>
-            </ul>
-            <button type="button" class="btn-role-action" (click)="navigateToLogin()">Central Ministry Login &rarr;</button>
-          </div>
-
-          <!-- Role 5: Project Implementing Agency -->
-          <div class="role-card agency">
-            <div class="role-header">
-              <span class="role-icon">🏗️</span>
-              <div>
-                <h3 class="role-name">Project Agency</h3>
-                <span class="role-scope">NHAI, DFCCIL, Railways, SECI</span>
-              </div>
-            </div>
-            <p class="role-desc">
-              Create land acquisition proposals via a 5-step wizard, upload GIS alignments and DPR documents, and track corridor clearance handover.
-            </p>
-            <ul class="role-capabilities">
-              <li>✓ 5-Step Proposal Preparation Wizard</li>
-              <li>✓ Corridor Document & DPR Repository</li>
-              <li>✓ Tenant-Scoped Workspace Access</li>
-            </ul>
-            <button type="button" class="btn-role-action" (click)="navigateToLogin()">Agency Portal Login &rarr;</button>
-          </div>
-
-          <!-- Role 6: Platform Administration -->
-          <div class="role-card admin">
-            <div class="role-header">
-              <span class="role-icon">⚙️</span>
-              <div>
-                <h3 class="role-name">System Administration</h3>
-                <span class="role-scope">Platform Super Administrator</span>
-              </div>
-            </div>
-            <p class="role-desc">
-              Manage organization registries, administrative users, RBAC role-permission matrix, digital audit trails, and system health.
-            </p>
-            <ul class="role-capabilities">
-              <li>✓ RBAC Permissions Control</li>
-              <li>✓ Ministry & Organization Registry</li>
-              <li>✓ Immutable Audit Trail Logging</li>
-            </ul>
-            <button type="button" class="btn-role-action" (click)="navigateToLogin()">Admin Console Login &rarr;</button>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- =======================================================================
-         SECTION 8: NATIONAL PLATFORM MONITORING (REAL DB METRICS)
-         ======================================================================= -->
-    <section class="gov-section bg-alt" id="national-stats">
-      <div class="gov-section-container">
-        
-        <div class="section-header-centered">
-          <span class="section-tag">Platform Analytics</span>
-          <h2 class="section-heading">National Platform Overview</h2>
-          <p class="section-lead">
-            Live operational statistics aggregated directly from active projects and database records on BhoomiSetu.
-          </p>
-        </div>
-
-        <!-- Demonstration Provenance Banner -->
-        <div class="provenance-banner">
-          <span class="prov-icon">ℹ️</span>
-          <div class="prov-text">
-            <strong>Data Integrity Notice:</strong> The metrics below represent verified active records inside the 
-            <em>{{ stats.dataSource }}</em>. Real-time updates reflect active test and demonstration corridor portfolios.
-          </div>
-        </div>
-
-        <div class="stats-counter-grid">
-          
-          <div class="stat-counter-card">
-            <span class="stat-icon">📁</span>
-            <div class="stat-value">{{ stats.totalProjects }}</div>
-            <div class="stat-label">Projects Under Monitoring</div>
-            <div class="stat-sub">Across {{ stats.statesCoveredCount }} States & {{ stats.districtsCoveredCount }} Districts</div>
-          </div>
-
-          <div class="stat-counter-card">
-            <span class="stat-icon">📐</span>
-            <div class="stat-value">{{ stats.totalLandRequiredHectares | number:'1.2-2' }} <span class="unit">Ha</span></div>
-            <div class="stat-label">Land Required in Corridors</div>
-            <div class="stat-sub">{{ stats.totalLandAcquiredHectares | number:'1.2-2' }} Ha Possession Completed</div>
-          </div>
-
-          <div class="stat-counter-card">
-            <span class="stat-icon">💰</span>
-            <div class="stat-value">{{ formatInr(stats.totalCompensationAssessedInr) }}</div>
-            <div class="stat-label">Compensation Assessed</div>
-            <div class="stat-sub">{{ formatInr(stats.totalCompensationDisbursedInr) }} Disbursed via PFMS DBT</div>
-          </div>
-
-          <div class="stat-counter-card">
-            <span class="stat-icon">🏛️</span>
-            <div class="stat-value">{{ stats.organizationsCount }}</div>
-            <div class="stat-label">Active Authorities & Agencies</div>
-            <div class="stat-sub">MoRTH, NHAI, DFCCIL, PWD, Collectorates</div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- =======================================================================
-         SECTION 9: GIS SECTION (LAND ACQUISITION ON THE MAP)
-         ======================================================================= -->
-    <section class="gov-section" id="gis-preview">
-      <div class="gov-section-container">
-        
-        <div class="section-header-centered">
-          <span class="section-tag">Spatial Intelligence</span>
-          <h2 class="section-heading">Land Acquisition on the Map</h2>
-          <p class="section-lead">
-            Authorised spatial visualization linking revenue village maps, Khasra parcel polygons, and linear infrastructure corridor alignments.
-          </p>
-        </div>
-
-        <div class="gis-feature-box">
-          <div class="gis-map-mockup">
-            <div class="gis-map-header">
-              <div class="gis-layer-pills">
-                <span class="layer-pill active">National Master Alignments</span>
-                <span class="layer-pill">Cadastral Boundary Overlay</span>
-                <span class="layer-pill">Possession Status Layer</span>
-              </div>
-              <span class="gis-live-badge">Leaflet GIS Engine Active</span>
-            </div>
-
-            <!-- Stylized Map Graphic Preview -->
-            <div class="gis-map-canvas">
-              <div class="canvas-grid-lines"></div>
+            <div class="breakdown-rows-list">
               
-              <!-- Corridor Alignment Line -->
-              <svg class="corridor-svg" viewBox="0 0 800 300">
-                <path d="M 50 220 Q 250 80 500 180 T 750 100" fill="none" stroke="#1D4ED8" stroke-width="6" stroke-dasharray="10 4"/>
-                <circle cx="50" cy="220" r="8" fill="#0B2545" stroke="#FFFFFF" stroke-width="2"/>
-                <circle cx="280" cy="115" r="8" fill="#059669" stroke="#FFFFFF" stroke-width="2"/>
-                <circle cx="500" cy="180" r="8" fill="#D97706" stroke="#FFFFFF" stroke-width="2"/>
-                <circle cx="750" cy="100" r="8" fill="#0B2545" stroke="#FFFFFF" stroke-width="2"/>
-              </svg>
-
-              <div class="map-callout c1">
-                <span class="badge-success">Delhi-Mumbai NE-4</span>
-                <span>Package 14: Mutation Complete</span>
+              <div class="breakdown-row">
+                <span class="row-lbl">1. Base Market Valuation:</span>
+                <span class="row-calc">({{ calcLandAreaAcres }} Acres &times; ₹{{ (calcCircleRatePerAcre / 100000).toFixed(1) }}L)</span>
+                <strong class="row-val">{{ formattedBaseValue }}</strong>
               </div>
 
-              <div class="map-callout c2">
-                <span class="badge-warning">WDFC Rewari-Palanpur</span>
-                <span>Section 19 Award Declared</span>
+              <div class="breakdown-row highlight-sub">
+                <span class="row-lbl">2. Rural Multiplier Factor:</span>
+                <span class="row-calc">&times; {{ multiplier }}.0x Factor</span>
+                <strong class="row-val">{{ formattedBaseValue }} &times; {{ multiplier }}</strong>
               </div>
 
-              <div class="map-overlay-banner">
-                <p>Authorized spatial datasets with precision vertex coordinates (ULPIN / Bhu-Aadhaar) are accessible via the Official GIS Module.</p>
-                <button type="button" class="btn-gov-primary" (click)="navigateToLogin()">
-                  Open National GIS Gateway &rarr;
-                </button>
+              <div class="breakdown-row">
+                <span class="row-lbl">3. Mandatory 100% Solatium:</span>
+                <span class="row-calc">100% of Multiplied Base Value</span>
+                <strong class="row-val text-green">+{{ formattedSolatium }}</strong>
               </div>
+
+              <div class="breakdown-row">
+                <span class="row-lbl">4. Section 30(3) 12% p.a. Interest:</span>
+                <span class="row-calc">12% &times; {{ calcYearsSinceNotification }} Years</span>
+                <strong class="row-val text-navy">+{{ formattedInterest }}</strong>
+              </div>
+
             </div>
 
+            <!-- Total Box -->
+            <div class="total-payout-box">
+              <span class="total-lbl">ESTIMATED DIRECT BANK TRANSFER (DBT) PAYOUT:</span>
+              <div class="total-amount">{{ formattedTotalCompensation }}</div>
+              <span class="total-sub">Direct credit to farmer's Aadhaar-linked Bank Account via PFMS</span>
+            </div>
+
+            <button type="button" class="btn-print-estimate" (click)="openGrievanceModal()">
+              📥 Submit for District LAC Verification
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       PM GATISHAKTI 7 ENGINES ARCHITECTURE TABS
+       ======================================================================== -->
+  <section class="goi-engines-section" id="seven-engines">
+    <div class="section-container">
+      
+      <div class="section-title-centered">
+        <span class="sec-badge">पीएम गतिशक्ति के 7 इंजन &bull; MULTI-MODAL INFRASTRUCTURE PILLARS</span>
+        <h2 class="sec-heading">PM GatiShakti Multi-Modal Infrastructure Engines</h2>
+        <p class="sec-subheading">
+          Integrated GIS master planning breaking inter-ministerial silos for seamless national connectivity.
+        </p>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <div class="engines-tabs-nav">
+        <button 
+          type="button" 
+          class="engine-tab-btn" 
+          [class.active]="activeEngineTab === 'highways'"
+          (click)="setEngineTab('highways')">
+          🛣️ 1. National Highways (NHAI)
+        </button>
+        <button 
+          type="button" 
+          class="engine-tab-btn" 
+          [class.active]="activeEngineTab === 'railways'"
+          (click)="setEngineTab('railways')">
+          🚆 2. Indian Railways &amp; DFC
+        </button>
+        <button 
+          type="button" 
+          class="engine-tab-btn" 
+          [class.active]="activeEngineTab === 'solar'"
+          (click)="setEngineTab('solar')">
+          ☀️ 3. Green Energy &amp; Solar
+        </button>
+        <button 
+          type="button" 
+          class="engine-tab-btn" 
+          [class.active]="activeEngineTab === 'ports'"
+          (click)="setEngineTab('ports')">
+          ⚓ 4. Sagarmala Ports &amp; Waterways
+        </button>
+        <button 
+          type="button" 
+          class="engine-tab-btn" 
+          [class.active]="activeEngineTab === 'digital'"
+          (click)="setEngineTab('digital')">
+          🌐 5. Digital Bhu-Aadhaar Grid
+        </button>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="engines-content-box">
+        
+        <div *ngIf="activeEngineTab === 'highways'" class="engine-pane">
+          <div class="pane-details">
+            <span class="engine-tag">MoRTH &bull; NATIONAL HIGHWAYS AUTHORITY OF INDIA</span>
+            <h3>Bharatmala Pariyojana &amp; Access-Controlled Expressways</h3>
+            <p>
+              Automating land acquisition for 35,000+ km of economic corridors and expressways. 
+              Integrated with BhoomiSetu for real-time RoR verification, toll plaza setbacks, 
+              and automated Section 3A/3D gazette notifications.
+            </p>
+            <ul class="engine-features-list">
+              <li>✓ Automated 3D Alignment Overlay with Drone LiDAR Orthomosaics</li>
+              <li>✓ Direct integration with District LACs across 550+ Districts</li>
+              <li>✓ Instant RoR mutation via State e-Dharti &amp; Bhu-Lekh APIs</li>
+            </ul>
+          </div>
+          <div class="pane-stats-card">
+            <h4>Highway Engine Metrics</h4>
+            <div class="metric-row"><span>Total Network Mapped:</span><strong>65,000+ km</strong></div>
+            <div class="metric-row"><span>Active Land Notifications:</span><strong>3,420 Packages</strong></div>
+            <div class="metric-row"><span>Average Acquisition Time:</span><strong>Reduced by 58%</strong></div>
+          </div>
+        </div>
+
+        <div *ngIf="activeEngineTab === 'railways'" class="engine-pane">
+          <div class="pane-details">
+            <span class="engine-tag">MINISTRY OF RAILWAYS &bull; DFCCIL &amp; NHSRCL</span>
+            <h3>Dedicated Freight Corridors &amp; High-Speed Bullet Rail</h3>
+            <p>
+              Accelerating right-of-way (RoW) acquisition for Eastern/Western DFC and High-Speed Rail networks. 
+              Zero duplicate parcel boundary disputes with 14-digit Bhu-Aadhaar geometry coordinates.
+            </p>
+            <ul class="engine-features-list">
+              <li>✓ Automated Chain-of-Title verification for railway alignments</li>
+              <li>✓ Integrated with Indian Railways GatiShakti Cargo Terminals (GCT)</li>
+              <li>✓ 100% PFMS direct compensation settlement to verified landowners</li>
+            </ul>
+          </div>
+          <div class="pane-stats-card">
+            <h4>Railway Engine Metrics</h4>
+            <div class="metric-row"><span>Freight Track Span:</span><strong>3,360+ km</strong></div>
+            <div class="metric-row"><span>Land Handover Status:</span><strong>98.4% Transferred</strong></div>
+            <div class="metric-row"><span>Bullet Train Parcels:</span><strong>100% Cleared (GJ)</strong></div>
+          </div>
+        </div>
+
+        <div *ngIf="activeEngineTab === 'solar'" class="engine-pane">
+          <div class="pane-details">
+            <span class="engine-tag">MINISTRY OF NEW AND RENEWABLE ENERGY (MNRE)</span>
+            <h3>500GW Non-Fossil Green Energy &amp; Mega Solar Parks</h3>
+            <p>
+              Aggregating wasteland, desert terrain, and non-arable revenue land for 30GW Khavda Hybrid Park, 
+              Rewa Solar Park, and National Green Hydrogen corridors without encroaching on fertile agricultural land.
+            </p>
+            <ul class="engine-features-list">
+              <li>✓ Automated Environmental Sensitivity &amp; Forest Clearance Screening</li>
+              <li>✓ 30-Year Long-Term State Leasehold Automation with Landowner Annuity</li>
+              <li>✓ Green Energy Corridor (GEC) High-Voltage Intertie Mapping</li>
+            </ul>
+          </div>
+          <div class="pane-stats-card">
+            <h4>Green Energy Metrics</h4>
+            <div class="metric-row"><span>Renewable Land Pool:</span><strong>1,20,000+ Ha</strong></div>
+            <div class="metric-row"><span>Khavda Hybrid Zone:</span><strong>72,600 Hectares</strong></div>
+            <div class="metric-row"><span>Solar Parks Live:</span><strong>42 Mega Parks</strong></div>
+          </div>
+        </div>
+
+        <div *ngIf="activeEngineTab === 'ports'" class="engine-pane">
+          <div class="pane-details">
+            <span class="engine-tag">MINISTRY OF PORTS, SHIPPING AND WATERWAYS</span>
+            <h3>Sagarmala Port-Led Industrialization &amp; Deepwater Terminals</h3>
+            <p>
+              Interlinking major ports (JNPT, Mundra, Paradip, Vadhavan) with rail-sea-road multi-modal logistics parks 
+              (MMLPs) and national inland waterways (NW-1 Ganga &amp; NW-2 Brahmaputra).
+            </p>
+            <ul class="engine-features-list">
+              <li>✓ Coastal Regulation Zone (CRZ) Compliance Automated Clearance</li>
+              <li>✓ Multi-Modal Logistics Parks (MMLPs) Land Assembly Portal</li>
+              <li>✓ Hinterland rail-corridor right-of-way digital handover</li>
+            </ul>
+          </div>
+          <div class="pane-stats-card">
+            <h4>Maritime Engine Metrics</h4>
+            <div class="metric-row"><span>Port Projects Tracked:</span><strong>802 Projects</strong></div>
+            <div class="metric-row"><span>MMLP Land Aggregated:</span><strong>14,800 Acres</strong></div>
+            <div class="metric-row"><span>Intermodal Efficiency:</span><strong>+34% Faster Turnaround</strong></div>
+          </div>
+        </div>
+
+        <div *ngIf="activeEngineTab === 'digital'" class="engine-pane">
+          <div class="pane-details">
+            <span class="engine-tag">DEPARTMENT OF LAND RESOURCES (DoLR) &amp; MeitY</span>
+            <h3>Bhu-Aadhaar (ULPIN) &amp; Digital India Land Records</h3>
+            <p>
+              Unifying 28 State Revenue Systems into a single interoperable National Geospatial Grid with 14-digit 
+              Bhu-Aadhaar geometry coordinates, blockchain-ready mutation ledgers, and DigiLocker integration.
+            </p>
+            <ul class="engine-features-list">
+              <li>✓ 100% STQC &amp; Cert-In Certified Sovereign Security</li>
+              <li>✓ Aadhaar e-Sign &amp; Jan Parichay Single Sign-On Enabled</li>
+              <li>✓ Seamless DigiLocker Document Pushes for Landowners</li>
+            </ul>
+          </div>
+          <div class="pane-stats-card">
+            <h4>Digital Grid Metrics</h4>
+            <div class="metric-row"><span>ULPIN Generated:</span><strong>18.4 Crore Parcels</strong></div>
+            <div class="metric-row"><span>Cadastral Maps Digitized:</span><strong>95.8% National Total</strong></div>
+            <div class="metric-row"><span>States on Unified Grid:</span><strong>28 States &amp; 8 UTs</strong></div>
           </div>
         </div>
 
       </div>
-    </section>
 
-    <!-- =======================================================================
-         SECTION 10: TRANSPARENCY & GOVERNANCE
-         ======================================================================= -->
-    <section class="gov-section bg-alt" id="about">
-      <div class="gov-section-container">
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       STATUTORY 6-STAGE LARR 2013 LIFECYCLE
+       ======================================================================== -->
+  <section class="goi-lifecycle-section">
+    <div class="section-container">
+      
+      <div class="section-title-centered">
+        <span class="sec-badge">पारदर्शी प्रक्रिया &bull; STATUTORY ACQUISITION WORKFLOW</span>
+        <h2 class="sec-heading">RFCTLARR Act 2013 Statutory Lifecycle</h2>
+        <p class="sec-subheading">
+          Step-by-step transparent acquisition process ensuring full landowner rights, social impact assessment, and direct compensation.
+        </p>
+      </div>
+
+      <div class="lifecycle-steps-grid">
         
-        <div class="section-header-centered">
-          <span class="section-tag">Governance Principles</span>
-          <h2 class="section-heading">Transparent & Accountable Governance</h2>
-          <p class="section-lead">
-            Built to eliminate administrative delays, protect landowner rights, and expedite infrastructure development.
-          </p>
+        <div class="step-card">
+          <span class="step-num">चरण 1</span>
+          <div class="step-icon">📋</div>
+          <h4>Social Impact Assessment (SIA)</h4>
+          <p>Gram Sabha public hearing &amp; preliminary Social Impact Management Plan (SIMP) under Section 4.</p>
         </div>
 
-        <div class="governance-grid">
+        <div class="step-card">
+          <span class="step-num">चरण 2</span>
+          <div class="step-icon">📜</div>
+          <h4>Section 11 Notification</h4>
+          <p>Official State Gazette publication with 60-day window for citizen objections and hearing under Section 15.</p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-num">चरण 3</span>
+          <div class="step-icon">🛰️</div>
+          <h4>Drone LiDAR Cadastral Survey</h4>
+          <p>Joint measurement survey (JMS) with sub-meter RTK coordinates to establish Bhu-Aadhaar boundary.</p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-num">चरण 4</span>
+          <div class="step-icon">⚖️</div>
+          <h4>Section 19 Declaration</h4>
+          <p>Final declaration of acquisition &amp; Rehabilitation and Resettlement (R&amp;R) scheme approval.</p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-num">चरण 5</span>
+          <div class="step-icon">💰</div>
+          <h4>Section 23 Award Declaration</h4>
+          <p>LAC passes formal compensation award with 100% Solatium &amp; 12% interest calculation.</p>
+        </div>
+
+        <div class="step-card highlight-step">
+          <span class="step-num">चरण 6</span>
+          <div class="step-icon">💳</div>
+          <h4>PFMS Direct Benefit Transfer</h4>
+          <p>100% direct bank credit to farmer's Aadhaar account &amp; digital mutation in revenue records.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       FAQ SECTION
+       ======================================================================== -->
+  <section class="goi-faq-section" id="faq-section">
+    <div class="section-container">
+      
+      <div class="section-title-centered">
+        <span class="sec-badge">नागरिक सहायता &bull; CITIZEN FREQUENTLY ASKED QUESTIONS</span>
+        <h2 class="sec-heading">Frequently Asked Questions</h2>
+        <p class="sec-subheading">
+          Essential information on compensation rules, Bhu-Aadhaar verification, and grievance redressal.
+        </p>
+      </div>
+
+      <div class="faq-accordion">
+        <div 
+          *ngFor="let faq of faqs; let i = index" 
+          class="faq-item"
+          [class.active]="activeFaqIndex === i"
+          (click)="toggleFaq(i)">
           
-          <div class="gov-principle-card">
-            <div class="principle-icon">🔒</div>
-            <h3 class="principle-title">Role-Based Data Isolation</h3>
-            <p class="principle-desc">Strict organizational boundaries and permission matrices prevent unauthorized cross-agency record access.</p>
+          <div class="faq-question-row">
+            <span class="faq-q-text">{{ faq.q }}</span>
+            <span class="faq-icon">{{ activeFaqIndex === i ? '−' : '+' }}</span>
           </div>
 
-          <div class="gov-principle-card">
-            <div class="principle-icon">📜</div>
-            <h3 class="principle-title">Digital Audit Trails</h3>
-            <p class="principle-desc">Every status transition, document upload, and approval is immutably logged with timestamp and officer ID.</p>
+          <div *ngIf="activeFaqIndex === i" class="faq-answer-body">
+            <p>{{ faq.a }}</p>
           </div>
 
-          <div class="gov-principle-card">
-            <div class="principle-icon">💳</div>
-            <h3 class="principle-title">PFMS DBT Direct Transfer</h3>
-            <p class="principle-desc">Eliminates intermediary cash points by settling compensation directly into verified bank accounts.</p>
-          </div>
+        </div>
+      </div>
 
-          <div class="gov-principle-card">
-            <div class="principle-icon">🛰️</div>
-            <h3 class="principle-title">Geo-Fenced Field Surveys</h3>
-            <p class="principle-desc">Ground survey teams record parcel boundaries with GPS accuracy to prevent double acquisition claims.</p>
-          </div>
+    </div>
+  </section>
 
+  <!-- ========================================================================
+       GOVERNMENT OF INDIA FOOTER
+       ======================================================================== -->
+  <footer class="goi-footer">
+    
+    <div class="footer-top-strip">
+      <div class="section-container footer-top-container">
+        <div class="footer-brand-block">
+          <div class="footer-emblem">🏛️</div>
+          <div class="footer-titles">
+            <strong>भूमि सेतु &bull; BhoomiSetu</strong>
+            <span>Unified National Land Acquisition Portal &bull; PM GatiShakti National Master Plan</span>
+          </div>
+        </div>
+
+        <div class="footer-cert-badges">
+          <span class="cert-pill">🛡️ STQC Certified</span>
+          <span class="cert-pill">🔐 NIC Cloud Hosted</span>
+          <span class="cert-pill">🇮🇳 Digital India</span>
+          <span class="cert-pill">📜 Cert-In Audited</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-main-grid">
+      <div class="section-container grid-4-cols">
+        
+        <div class="footer-col">
+          <h5>Central Ministries</h5>
+          <ul>
+            <li><a href="#gis-cockpit">Ministry of Rural Development (DoLR)</a></li>
+            <li><a href="#corridors-section">Ministry of Road Transport &amp; Highways (MoRTH)</a></li>
+            <li><a href="#corridors-section">Ministry of Railways &bull; DFCCIL</a></li>
+            <li><a href="#seven-engines">Ministry of New &amp; Renewable Energy (MNRE)</a></li>
+            <li><a href="#seven-engines">Ministry of Ports, Shipping &amp; Waterways</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Citizen Services</h5>
+          <ul>
+            <li><a href="#ulpin-explorer">14-Digit Bhu-Aadhaar (ULPIN) Search</a></li>
+            <li><a href="#solatium-calculator">Kisan Solatium Calculator (LARR 2013)</a></li>
+            <li><a (click)="openGrievanceModal()">CPGRAMS Public Grievance Portal</a></li>
+            <li><a href="#faq-section">Social Impact Assessment (SIA) Notices</a></li>
+            <li><a (click)="navigateToLogin()">Track PFMS DBT Bank Credit</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>GatiShakti GIS &amp; Tech</h5>
+          <ul>
+            <li><a href="#gis-cockpit">ISRO Bhuvan Satellite Portal</a></li>
+            <li><a href="#gis-cockpit">National Geo-Information System (NGIS)</a></li>
+            <li><a href="#seven-engines">Survey of India (SoI) Drone Registry</a></li>
+            <li><a href="#ulpin-explorer">State Bhu-Naksha &amp; e-Khatauni APIs</a></li>
+            <li><a (click)="navigateToLogin()">Officer Single Sign-On (Parichay)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>24x7 Citizen Helpline</h5>
+          <div class="helpline-card">
+            <div class="phone-number">📞 1800-11-2026</div>
+            <span class="hl-desc">Toll-Free Kisan &amp; Landowner Support (All Indian Languages)</span>
+            <div class="email-text">✉️ support-bhoomisetu&#64;gov.in</div>
+            <div class="address-text">Department of Land Resources, Niti Aayog / Krishi Bhawan, New Delhi - 110001</div>
+          </div>
         </div>
 
       </div>
-    </section>
+    </div>
 
-    <!-- =======================================================================
-         SECTION 11: STATUTORY NOTICES & GAZETTE CIRCULARS
-         ======================================================================= -->
-    <section class="gov-section" id="notices">
-      <div class="gov-section-container">
-        
-        <div class="section-header-centered">
-          <span class="section-tag">Public Information</span>
-          <h2 class="section-heading">Statutory Notices & Gazette Notifications</h2>
-          <p class="section-lead">
-            Recent land acquisition preliminary notifications and award declarations published under RFCTLARR Act 2013.
-          </p>
+    <div class="footer-bottom-bar">
+      <div class="section-container bottom-container">
+        <div class="bottom-left">
+          <span>&copy; 2026 Government of India. Designed, Developed and Hosted by <strong>National Informatics Centre (NIC)</strong>.</span>
         </div>
-
-        <div class="notices-table-container">
-          <table class="gov-data-table" *ngIf="notices.length > 0">
-            <thead>
-              <tr>
-                <th>Notice Number</th>
-                <th>Project & Alignment</th>
-                <th>Authority</th>
-                <th>District / State</th>
-                <th>Statutory Stage</th>
-                <th>Published Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let n of notices">
-                <td><strong class="notice-code">{{ n.noticeNumber }}</strong></td>
-                <td>{{ n.projectName }}</td>
-                <td><span class="agency-pill">{{ n.implementingAgency }}</span></td>
-                <td>{{ n.districtName }}, {{ n.stateName }}</td>
-                <td><span class="stage-tag" [class.success]="n.stage.includes('19')" [class.warning]="n.stage.includes('11')">{{ n.stage }}</span></td>
-                <td>{{ n.publishedDate | date:'dd MMM yyyy' }}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="notices-loading" *ngIf="noticesLoading">
-            <span>Loading active statutory gazette notices from database...</span>
-          </div>
+        <div class="bottom-right">
+          <a href="#gis-cockpit">Terms of Use</a>
+          <span>|</span>
+          <a href="#gis-cockpit">Privacy Policy</a>
+          <span>|</span>
+          <a href="#gis-cockpit">Hyperlinking Policy</a>
+          <span>|</span>
+          <a href="#gis-cockpit">Accessibility Statement</a>
         </div>
-
       </div>
-    </section>
+    </div>
 
-    <!-- =======================================================================
-         SECTION 12: CITIZEN HELP, FAQ & KISAN SOLATIUM CALCULATOR
-         ======================================================================= -->
-    <section class="gov-section bg-alt" id="help">
-      <div class="gov-section-container">
-        
-        <div class="section-header-centered">
-          <span class="section-tag">Citizen Support & FAQs</span>
-          <h2 class="section-heading">Frequently Asked Questions</h2>
-          <p class="section-lead">
-            Clear answers to help citizens, landowners, and field officers navigate the land acquisition process.
-          </p>
+  </footer>
+
+  <!-- ========================================================================
+       CPGRAMS CITIZEN GRIEVANCE MODAL
+       ======================================================================== -->
+  <div *ngIf="showGrievanceModal" class="goi-modal-overlay" (click)="closeGrievanceModal()">
+    <div class="goi-modal-card" (click)="$event.stopPropagation()">
+      
+      <button type="button" class="modal-close-btn" (click)="closeGrievanceModal()">✕</button>
+
+      <div *ngIf="!grievanceSubmitted" class="modal-body-form">
+        <div class="modal-header">
+          <div class="modal-icon">🏛️</div>
+          <h3>CPGRAMS Citizen &amp; Farmer Grievance Redressal</h3>
+          <p>Direct submission to Central Land Acquisition Collector &amp; District Magistrate</p>
         </div>
 
-        <div class="faq-calculator-grid">
-          
-          <!-- Left: Accordion FAQ -->
-          <div class="faq-accordion-column">
-            <div class="faq-item" *ngFor="let f of faqs; let i = index" [class.expanded]="activeFaqIndex === i">
-              <button type="button" class="faq-question-btn" (click)="toggleFaq(i)" [attr.aria-expanded]="activeFaqIndex === i">
-                <span>{{ f.q }}</span>
-                <span class="accordion-icon">{{ activeFaqIndex === i ? '−' : '+' }}</span>
-              </button>
-              <div class="faq-answer-panel" *ngIf="activeFaqIndex === i">
-                <p>{{ f.a }}</p>
-              </div>
+        <form (ngSubmit)="submitGrievance()" class="grievance-form">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Full Name (as in Aadhaar) *</label>
+              <input type="text" [(ngModel)]="grievanceData.fullName" name="gName" required placeholder="Shri / Smt..." />
+            </div>
+            <div class="form-group">
+              <label>Mobile Number (for SMS Tracking) *</label>
+              <input type="tel" [(ngModel)]="grievanceData.mobileNumber" name="gMobile" required placeholder="10-Digit Mobile No." />
             </div>
           </div>
 
-          <!-- Right: Kisan Compensation Calculator (RFCTLARR 2013) -->
-          <div class="calculator-column" id="solatium-calculator">
-            <div class="calc-card">
-              
-              <div class="calc-header">
-                <div class="calc-icon">🧮</div>
-                <div>
-                  <h3 class="calc-title">RFCTLARR 2013 Compensation Estimator</h3>
-                  <span class="calc-subtitle">First Schedule Statutory Formula</span>
-                </div>
-              </div>
-
-              <div class="calc-body">
-                <div class="calc-input-group">
-                  <label for="landArea" class="gov-label">Acquired Land Area (in Acres)</label>
-                  <input id="landArea" type="number" class="gov-input" [(ngModel)]="calcLandAreaAcres" min="0.1" step="0.5">
-                </div>
-
-                <div class="calc-input-group">
-                  <label for="circleRate" class="gov-label">Collector Circle Rate / Market Value (₹ / Acre)</label>
-                  <input id="circleRate" type="number" class="gov-input" [(ngModel)]="calcCircleRatePerAcre" step="100000">
-                </div>
-
-                <div class="calc-input-group">
-                  <label for="areaType" class="gov-label">Land Classification</label>
-                  <select id="areaType" class="gov-select" [(ngModel)]="calcAreaType">
-                    <option value="rural">Rural Area (2.0x Multiplier Factor)</option>
-                    <option value="urban">Urban Area (1.0x Multiplier Factor)</option>
-                  </select>
-                </div>
-
-                <!-- Breakdown Results -->
-                <div class="calc-breakdown">
-                  <div class="breakdown-row">
-                    <span>Base Value:</span>
-                    <strong>{{ formatInr(calcBaseMarketValue) }}</strong>
-                  </div>
-                  <div class="breakdown-row">
-                    <span>Rural Multiplied Value ({{ calcMultiplier }}x):</span>
-                    <strong>{{ formatInr(calcMultipliedValue) }}</strong>
-                  </div>
-                  <div class="breakdown-row highlight">
-                    <span>Mandatory 100% Solatium:</span>
-                    <strong>+ {{ formatInr(calcSolatiumAmount) }}</strong>
-                  </div>
-                  <div class="breakdown-row">
-                    <span>12% p.a. Additional Interest (1.5 yrs):</span>
-                    <strong>+ {{ formatInr(calcAdditionalInterest) }}</strong>
-                  </div>
-                  <div class="breakdown-total">
-                    <span>Estimated Total Compensation:</span>
-                    <span class="total-val">{{ formatInr(calcTotalEstimatedCompensation) }}</span>
-                  </div>
-                </div>
-
-                <div class="calc-disclaimer">
-                  * Estimated calculation as per First Schedule of RFCTLARR Act 2013. Final award is officially assessed by the Land Acquisition Collector.
-                </div>
-              </div>
-
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>State *</label>
+              <select [(ngModel)]="grievanceData.state" name="gState">
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Rajasthan">Rajasthan</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Khasra No. or 14-Digit ULPIN</label>
+              <input type="text" [(ngModel)]="grievanceData.khasraUlpin" name="gUlpin" placeholder="e.g. 14-ULPIN-MH-892041" />
             </div>
           </div>
 
+          <div class="form-group">
+            <label>Grievance Category *</label>
+            <select [(ngModel)]="grievanceData.grievanceType" name="gType">
+              <option value="Compensation Delayed under PFMS">Compensation Delayed under PFMS / DBT</option>
+              <option value="Incorrect Boundary / Khasra Area Demarcation">Incorrect Boundary / Khasra Area Demarcation</option>
+              <option value="Dispute in Solatium Multiplier under LARR 2013">Dispute in Solatium Multiplier under LARR 2013</option>
+              <option value="Social Impact Assessment (SIA) Public Hearing Objection">Social Impact Assessment (SIA) Public Hearing Objection</option>
+              <option value="Rehabilitation & Resettlement (R&R) Package Query">Rehabilitation &amp; Resettlement (R&amp;R) Package Query</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Detailed Description of Grievance *</label>
+            <textarea [(ngModel)]="grievanceData.description" name="gDesc" rows="3" placeholder="Provide full details of your land record, award notice number, and bank account status..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit-grievance">
+            🇮🇳 Submit to CPGRAMS District Collectorate
+          </button>
+        </form>
+      </div>
+
+      <div *ngIf="grievanceSubmitted" class="modal-success-state">
+        <div class="success-icon">✓</div>
+        <h3>Grievance Registered Successfully</h3>
+        <p>Your complaint has been forwarded to the District Land Acquisition Officer (LAC) and Ministry of Rural Development.</p>
+        
+        <div class="ticket-badge">
+          <span>CPGRAMS Token:</span>
+          <strong>CPGRAMS-GOI-2026-{{ (100000 + (grievanceData.mobileNumber.length * 12345)) }}</strong>
         </div>
 
+        <p class="sms-notice">📲 Confirmation SMS and tracking link have been dispatched to your mobile number.</p>
+
+        <button type="button" class="btn-done" (click)="closeGrievanceModal()">Done</button>
       </div>
-    </section>
 
-  </main>
-
-  <!-- =========================================================================
-       SECTION 13: GOVERNMENT FOOTER
-       ========================================================================= -->
-  <app-gov-footer></app-gov-footer>
+    </div>
+  </div>
 
 </div>

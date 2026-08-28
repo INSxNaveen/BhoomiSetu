@@ -371,8 +371,7 @@ public record CreateAdminUserRequestDto(
     Guid OrganizationId,
     Guid? StateId,
     Guid? DistrictId,
-    bool IsActive = true,
-    string? Password = null
+    bool IsActive = true
 );
 
 public record UpdateAdminUserRequestDto(
